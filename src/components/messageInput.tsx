@@ -21,7 +21,7 @@ const MessageInput = ({ onSubmit }: MsgProps) => {
     target,
   }: React.ChangeEvent<HTMLTextAreaElement>) => {
     // check if there is atleast one character in the message
-    if (/\w+/g.test(target.value)) setReadyToSend(true);
+    if (/[\w\S]+/g.test(target.value)) setReadyToSend(true);
     else setReadyToSend(false);
 
     setMessage(target.value);
