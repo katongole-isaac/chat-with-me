@@ -1,0 +1,4 @@
+{
+  "chatUrl": "/api/chat",
+  "websocketUrl": "ws://localhost:3001/"
+}

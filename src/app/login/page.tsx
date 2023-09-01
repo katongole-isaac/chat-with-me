@@ -11,6 +11,8 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import Input from "@/components/input";
 import firebaseApp from "@/lib/firebaseApp";
 import { useCurrentUser } from "@/helpers/user";
+import SignInWithGoogle from "@/components/signInWithGoogle";
+import SignInWithFacebook from "@/components/signInWithFacebook";
 
 const auth = getAuth(firebaseApp);
 
@@ -56,6 +58,10 @@ export default function Home() {
     }
   };
 
+  const onSuccess = () => {
+    router.replace("/");
+  };
+
   return (
     <React.Fragment>
       <div className="w-screen h-screen flex items-center justify-center bg-neutral-50">
@@ -86,6 +92,15 @@ export default function Home() {
               </button>
             </Form>
           </Formik>
+
+          <div className="my-4">
+            <SignInWithGoogle onError={setLoginError} onSuccess={onSuccess} />
+          </div>
+
+          <div className="my-4">
+            <SignInWithFacebook onError={setLoginError} onSuccess={onSuccess} />
+          </div>
+
           <div className="mt-3 text-[13px]">
             <p>
               Sign up for new acount
