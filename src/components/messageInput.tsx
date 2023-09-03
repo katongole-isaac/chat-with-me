@@ -63,7 +63,7 @@ const MessageInput = ({ onSubmit }: MsgProps) => {
     <div className=" w-full  py-4 px-2 bg-zinc-100 space-x-2 ">
       <div className="w-full flex items-center justify-center gap-4">
         <textarea
-          className="text-[13px] p-3 border rounded-md w-2/6 focus:outline-neutral-200 resize-none"
+          className="text-[13px] p-3 border rounded-md w-full focus:outline-neutral-200 resize-none"
           placeholder="Type a message"
           value={message}
           ref={msgInputRef}

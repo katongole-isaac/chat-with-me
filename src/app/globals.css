@@ -2,4 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-
+@layer components {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+    position: relative;
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 6px;
+  }
+}
