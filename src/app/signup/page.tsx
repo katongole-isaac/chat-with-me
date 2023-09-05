@@ -7,7 +7,6 @@
 
 import * as yup from "yup";
 import Link from "next/link";
-import Image from "next/image";
 import { Formik, Form } from "formik";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -17,7 +16,7 @@ import firebaseApp from "@/lib/firebaseApp";
 import { getCurrentUser, setAuthUser } from "@/helpers/user";
 import config from '@/config/defaults.json';
 
-import Input from "@/components/input";
+import Input from "@/components/common/input";
 import SignInWithFacebook from "@/components/signInWithFacebook";
 import SignInWithGoogle from "@/components/signInWithGoogle";
 

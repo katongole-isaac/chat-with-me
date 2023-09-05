@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 import { getCurrentUser } from "@/helpers/user";
-import LoadingUI from "@/components/loading";
+import LoadingUI from "@/components/common/loading";
 
 function withAuth(Component: React.ComponentType) {
   return function ({ ...props }) {

@@ -5,6 +5,8 @@
 import { useEffect } from "react";
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
 
+import UserDetails from "./userDetails";
+
 export default function Profile({
   onClose,
   showProfile,
@@ -12,6 +14,7 @@ export default function Profile({
   onClose: Function;
   showProfile: boolean;
 }) {
+  
   const handleCloseProfile = (e: KeyboardEvent) => {
     console.log(e);
     if (e.code === "Escape" && showProfile) onClose(false);
@@ -26,10 +29,16 @@ export default function Profile({
   });
 
   return (
-    <div className=" absolute top-0 z-10 w-full h-full bg-slate-300">
-      <div className="w-full p-3 bg-gray-400  ">
-        <MdOutlineKeyboardBackspace size={30} onClick={() => onClose(false)} />
+    <div className=" w-full h-full max-h-full bg-stone-100 relative ">
+      <div className="w-full z-10 px-3 bg-zinc-300 py-4 sticky top-0 ">
+        <MdOutlineKeyboardBackspace
+          size={30}
+          onClick={() => onClose(false)}
+          className="cursor-pointer text-slate-800"
+        />
       </div>
+
+      <UserDetails />
     </div>
   );
 }

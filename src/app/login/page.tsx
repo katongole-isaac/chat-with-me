@@ -9,7 +9,7 @@ import React, { useEffect, useState } from "react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 import config from "@/config/defaults.json";
-import Input from "@/components/input";
+import Input from "@/components/common/input";
 import firebaseApp from "@/lib/firebaseApp";
 import { setAuthUser, useCurrentUser } from "@/helpers/user";
 import SignInWithGoogle from "@/components/signInWithGoogle";

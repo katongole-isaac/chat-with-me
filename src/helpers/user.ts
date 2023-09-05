@@ -23,7 +23,13 @@ function setAuthUser(user: object) {
   localStorage.setItem("user", JSON.stringify(user));
 }
 
-function getCurrentUser(): null | object {
+function removeAuthUser() {
+  if (!(typeof window !== "undefined" && window.localStorage)) return;
+
+  localStorage.removeItem("user");
+}
+
+function getCurrentUser() {
   
   if (!(typeof window !== "undefined" && window.localStorage)) return null;
 
@@ -34,4 +40,4 @@ function getCurrentUser(): null | object {
   return JSON.parse(user);
 }
 
-export { useCurrentUser, setAuthUser, getCurrentUser };
+export { useCurrentUser, setAuthUser, getCurrentUser, removeAuthUser };
