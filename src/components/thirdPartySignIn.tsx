@@ -39,10 +39,13 @@ const useThirdPartyAuthSignIn = ({
 
       if (onSuccess) onSuccess();
 
-      console.log(result.user);
-      console.log(token);
+
     } catch (error: any) {
-      onError(error?.message);
+      const errorMessage = error?.message
+        .match(/\b(?!Firebase:)\w+\b/g)
+        .join(" ");
+
+      onError(errorMessage);
     }
   };
 

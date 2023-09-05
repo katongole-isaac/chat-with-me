@@ -29,14 +29,7 @@ const ChatMenu = ({ onProfileClick }: ChatMenuProps) => {
             role="button"
             onClick={() => onProfileClick()}
           >
-            {photoURL ? (
-              <UserAvatar photoURL={photoURL} displayName={displayName} />
-            ) : (
-              <RiAccountCircleFill
-                size={40}
-                className="text-slate-500 cursor-pointer"
-              />
-            )}
+            <UserAvatar photoURL={photoURL} displayName={displayName} />
           </div>
         </div>
         {/* logout */}

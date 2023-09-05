@@ -17,7 +17,7 @@ import SignInWithFacebook from "@/components/signInWithFacebook";
 
 const auth = getAuth(firebaseApp);
 
-export default function Home() {
+export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
   const router = useRouter();
