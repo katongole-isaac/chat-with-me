@@ -8,9 +8,10 @@ import { Formik, Form } from "formik";
 import React, { useEffect, useState } from "react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
+import config from "@/config/defaults.json";
 import Input from "@/components/input";
 import firebaseApp from "@/lib/firebaseApp";
-import { useCurrentUser } from "@/helpers/user";
+import { setAuthUser, useCurrentUser } from "@/helpers/user";
 import SignInWithGoogle from "@/components/signInWithGoogle";
 import SignInWithFacebook from "@/components/signInWithFacebook";
 
@@ -20,7 +21,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
   const router = useRouter();
-  useCurrentUser;
+  
   const user = useCurrentUser();
 
   const initialValues = {
@@ -38,6 +39,7 @@ export default function Home() {
 
   const handleSubmit = async (values: { email: string; password: string }) => {
     try {
+      
       setIsLoading(true);
       setLoginError("");
 
@@ -47,19 +49,21 @@ export default function Home() {
         values.password
       );
 
-      console.log(userCredential);
-      localStorage.setItem("user", JSON.stringify(userCredential));
+      setAuthUser(userCredential.user);
 
-      router.push("/");
+      router.push(config.onSuccessRouteUrl);
+
     } catch (error: any) {
+
       setLoginError("Invalid email or password");
+
     } finally {
       setIsLoading(false);
     }
   };
 
   const onSuccess = () => {
-    router.replace("/");
+    router.replace(config.onSuccessRouteUrl);
   };
 
   return (

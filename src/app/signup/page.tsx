@@ -13,13 +13,16 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 
-import Input from "@/components/input";
 import firebaseApp from "@/lib/firebaseApp";
 import { getCurrentUser, setAuthUser } from "@/helpers/user";
+import config from '@/config/defaults.json';
+
+import Input from "@/components/input";
 import SignInWithFacebook from "@/components/signInWithFacebook";
 import SignInWithGoogle from "@/components/signInWithGoogle";
 
 const auth = getAuth(firebaseApp);
+
 
 export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
@@ -61,7 +64,7 @@ export default function Login() {
       // store user credentials
       setAuthUser(userCredential.user);
 
-      router.replace("/");
+      router.replace(config.onSuccessRouteUrl);
     } catch (error: any) {
       console.log(error?.message);
 
@@ -76,7 +79,7 @@ export default function Login() {
   };
 
   const onSuccess = () => {
-    router.replace("/");
+    router.replace(config.onSuccessRouteUrl);
   };
 
   return (

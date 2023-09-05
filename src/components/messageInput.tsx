@@ -9,13 +9,18 @@ import { IoSendSharp } from "react-icons/io5";
 
 type MsgProps = {
   onSubmit: Function;
+  chatDivRef?: any;
 };
 
-const MessageInput = ({ onSubmit }: MsgProps) => {
+const MessageInput = ({ onSubmit, chatDivRef }: MsgProps) => {
   const [message, setMessage] = useState("");
   const msgInputRef = useRef<HTMLTextAreaElement>(null);
 
   const [readyToSend, setReadyToSend] = useState(false);
+
+  useEffect(() => {
+    chatDivRef.current.scrollTop = chatDivRef.current.scrollHeight;
+  }, [message]);
 
   const handleOnChange = ({
     target,
@@ -35,7 +40,7 @@ const MessageInput = ({ onSubmit }: MsgProps) => {
       !(e.shiftKey && e.code === "Enter")
     ) {
       e.preventDefault();
-      onSubmit(message);
+      onSubmit(message.trim());
       msgInputRef.current!.value = "";
       setMessage("");
       setReadyToSend(false);
@@ -45,7 +50,7 @@ const MessageInput = ({ onSubmit }: MsgProps) => {
   const handleSendClick = (msg: string) => {
     if (!(readyToSend && message)) return;
 
-    onSubmit(msg);
+    onSubmit(msg.trim());
     msgInputRef.current!.value = "";
     setMessage("");
     setReadyToSend(false);
@@ -86,4 +91,6 @@ const MessageInput = ({ onSubmit }: MsgProps) => {
   );
 };
 
-export default MessageInput;
+export default React.forwardRef((props: any, ref) => (
+  <MessageInput {...props} chatDivRef={ref} />
+));

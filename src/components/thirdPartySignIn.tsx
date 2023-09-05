@@ -25,6 +25,7 @@ const useThirdPartyAuthSignIn = ({
   Provider: typeof GoogleAuthProvider | typeof FacebookAuthProvider;
 }) => {
   const handleClick = async () => {
+    onError("");
     const provider = new Provider();
 
     try {
