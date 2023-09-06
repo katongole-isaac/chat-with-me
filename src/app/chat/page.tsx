@@ -4,7 +4,7 @@
  */
 "use client";
 
-import React, { startTransition, useMemo, useRef, useState } from "react";
+import React, { startTransition, useMemo, useRef, useState, useEffect } from "react";
 
 import config from "@/config/defaults.json";
 import ChatDisplay from "@/components/chat/chatDisplay";
@@ -13,6 +13,7 @@ import ChatMenu from "@/components/chat/chatMenu";
 import Profile from "@/components/user/profile";
 import withAuth from "@/lib/auth/withAuth";
 import { getCurrentUser } from "@/helpers/user";
+import authenicateUser from "@/lib/auth/authenicateUser";
 
 type ChatMessage = {
   from: string;
@@ -32,6 +33,7 @@ export interface MyContext {
 export const UserContext = React.createContext<MyContext | null>(null);
 
 const Chat = () => {
+
   const wss = useMemo(() => new WebSocket(config.websocketUrl, ["json"]), []);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [showProfile, setShowProfile] = useState(false);
@@ -39,6 +41,20 @@ const Chat = () => {
   const chatRef = useRef<HTMLDivElement>(null);
 
   const user = getCurrentUser();
+
+  useEffect(() => {
+
+    // first authenticate on the server
+    (async()=>{
+
+     await authenicateUser();
+
+
+
+    })();
+
+
+  }, []);
 
   wss.onopen = function (ev) {
     wss.send("hi");
@@ -56,7 +72,7 @@ const Chat = () => {
     wss.send(msg);
   };
 
-  const handleProfileClick = () => {
+  const handleProfileClick =  () => {
     startTransition(() => {
       setShowProfile((prev) => !prev);
     });
