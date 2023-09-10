@@ -4,75 +4,97 @@
  */
 "use client";
 
-import React, { startTransition, useMemo, useRef, useState, useEffect } from "react";
+import React, { startTransition, useRef, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
 
+import withAuth from "@/lib/auth/withAuth";
 import config from "@/config/defaults.json";
+import { getCurrentUser, logout } from "@/helpers/user";
+import { firebaseAuth } from "@/lib/firebaseApp";
+import authenicateUser from "@/lib/auth/authenicateUser";
+import type { ChatMessage, LoggedInUser } from "@/misc/types";
+
+import Profile from "@/components/user/profile";
+import ChatMenu from "@/components/chat/chatMenu";
 import ChatDisplay from "@/components/chat/chatDisplay";
 import MessageInput from "@/components/chat/messageInput";
-import ChatMenu from "@/components/chat/chatMenu";
-import Profile from "@/components/user/profile";
-import withAuth from "@/lib/auth/withAuth";
-import { getCurrentUser } from "@/helpers/user";
-import authenicateUser from "@/lib/auth/authenicateUser";
+import DefaultToaster from "@/components/toasts/toasterSetting";
+import NotifyToast from "@/components/toasts/notify";
 
-type ChatMessage = {
-  from: string;
-  to: string;
-  message: string;
-  sentAt: Date;
-  seen?: Boolean;
-};
 
-export interface MyContext {
-  [index: string]: any;
-  user: {
-    [index: string]: any;
-  };
-}
 
-export const UserContext = React.createContext<MyContext | null>(null);
+export const UserContext = React.createContext<LoggedInUser | null>(null);
 
 const Chat = () => {
-
-  const wss = useMemo(() => new WebSocket(config.websocketUrl, ["json"]), []);
+  const [wss, setWss] = useState<WebSocket | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [showProfile, setShowProfile] = useState(false);
+  const [token, setToken] = useState<string | null>(null);
+  const [showProfile, setShowProfile] = useState<boolean>(false);
 
   const chatRef = useRef<HTMLDivElement>(null);
 
   const user = getCurrentUser();
 
+  const router = useRouter();
+
   useEffect(() => {
-
-    // first authenticate on the server
-    (async()=>{
-
-     await authenicateUser();
-
-
-
-    })();
-
-
+    // getting the logged in user's token
+    firebaseAuth.onAuthStateChanged(async (_user) => {
+      setToken((await _user?.getIdToken(true)) as string);
+    });
   }, []);
 
-  wss.onopen = function (ev) {
-    wss.send("hi");
-    console.log("Connected");
-  };
+  useEffect(() => {
+    // first authenticate on the server
+    (async () => {
+      if (token) {
+        const res = await authenicateUser(token);
 
-  wss.onmessage = function (event) {
-    console.log(event.data);
-    setMessages((prev) => [...prev, event.data]);
-  };
+        // if valid token, go ahead
+        // and create websocket connection
+        if (res?.message === "ok")
+          setWss(new WebSocket(`${config.websocketUrl}`, ["json"]));
+
+        // when the user token is invalid (wrong)
+        // u need to logout the user 
+        if (res?.redirectUrl) {
+          toast.custom(
+            <NotifyToast message="Failed to authenticate request, Please try again" ErrorIcon />
+          );
+
+          setTimeout(async() => {
+            await logout(firebaseAuth);
+            router.replace('/login')
+          }, 5000);
+
+        }
+      }
+    })();
+
+  }, [token]);
+
+  useEffect(() => {
+    if (wss) {
+      wss.onopen = function (ev) {
+        wss.send("hi");
+        console.log("Connected");
+      };
+
+      wss.onmessage = function (event) {
+        console.log(event.data);
+        setMessages((prev) => [...prev, event.data]);
+      };
+    }
+  }, [wss]);
 
   const handleSubmitMsg = (msg: string) => {
     console.log(msg);
     // setMessages((prev) => [...prev, msg]);
-    wss.send(msg);
+    // wss.send(msg);
   };
 
-  const handleProfileClick =  () => {
+  const handleProfileClick = () => {
     startTransition(() => {
       setShowProfile((prev) => !prev);
     });
@@ -112,6 +134,7 @@ const Chat = () => {
           </div>
         </div>
       </div>
+      <DefaultToaster />
     </UserContext.Provider>
   );
 };

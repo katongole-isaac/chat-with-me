@@ -7,11 +7,11 @@ import Image from "next/image";
 import { useContext } from "react";
 import  {MdDriveFileRenameOutline}  from 'react-icons/md'
 
-import { MyContext, UserContext } from "@/app/chat/page";
+import { LoginedUser, UserContext } from "@/app/chat/page";
 import UserAvatar from "./avatar";
 
 export default function UserDetails() {
-  const { user } = useContext(UserContext) as MyContext;
+  const { user } = useContext(UserContext) as LoginedUser;
 
   if (!user) return null;
 

@@ -22,7 +22,7 @@ const UserAvatar = ({
 }: Props) => {
   return (
     <React.Fragment>
-      {photoURL ? (
+      {photoURL !== null ? (
         <Image
           width={100}
           height={100}

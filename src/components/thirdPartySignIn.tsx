@@ -10,10 +10,9 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 
-import firebaseApp from "@/lib/firebaseApp";
+import { firebaseAuth } from "@/lib/firebaseApp";
 import { setAuthUser } from "@/helpers/user";
 
-const auth = getAuth(firebaseApp);
 
 const useThirdPartyAuthSignIn = ({
   onError,
@@ -29,17 +28,17 @@ const useThirdPartyAuthSignIn = ({
     const provider = new Provider();
 
     try {
-      const result = await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(firebaseAuth, provider);
       const credential = Provider.credentialFromResult(result);
 
-      // token used to access other info for Google APIs
-      const token = credential?.accessToken;
+      // apiToken used to access other info for Google APIs
+      const apiToken = credential?.accessToken;
+
+      const token = await result.user.getIdToken(true);
 
       setAuthUser(result.user);
 
       if (onSuccess) onSuccess();
-
-
     } catch (error: any) {
       const errorMessage = error?.message
         .match(/\b(?!Firebase:)\w+\b/g)

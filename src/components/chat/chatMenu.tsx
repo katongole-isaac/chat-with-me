@@ -4,21 +4,21 @@
  */
 
 import { useContext } from "react";
-import { RiAccountCircleFill } from "react-icons/ri";
 
-import { MyContext, UserContext } from "@/app/chat/page";
-import UserAvatar from "../user/avatar";
 import SignOut from "../signOut";
+import UserAvatar from "../user/avatar";
+import {  UserContext } from "@/app/chat/page";
+import type { LoggedInUser } from "@/misc/types"; 
 
 type ChatMenuProps = {
   onProfileClick: Function;
 };
 
 const ChatMenu = ({ onProfileClick }: ChatMenuProps) => {
-  const { user } = useContext(UserContext) as MyContext;
-
-  const { photoURL, displayName } = user?.providerData[0];
   
+  const { user } = useContext(UserContext) as LoggedInUser;
+console.log("HERERE ", user);
+  const { photoURL, displayName } = user?.providerData[0];
 
   return (
     <div className="w-full bg-zinc-300 p-2">

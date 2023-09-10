@@ -23,7 +23,7 @@ const SignInWithGoogle = ({
   return (
     <div className="w-full">
       <button
-        onClick={handleClick}
+        onClick={ () => handleClick()}
         className="flex items-center justify-center gap-2 border p-1 px-2 w-full hover:bg-slate-100 rounded-md"
       >
         <FcGoogle size={20} className="text-blue-700" color="blue" />

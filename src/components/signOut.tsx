@@ -3,25 +3,22 @@
  *
  */
 
-import { getAuth } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { BiLogOutCircle } from "react-icons/bi";
 
-import firebaseApp from "@/lib/firebaseApp";
-import { removeAuthUser } from "@/helpers/user";
+import { logout, removeAuthUser } from "@/helpers/user";
+import { firebaseAuth } from "@/lib/firebaseApp";
 
-const auth = getAuth(firebaseApp);
 
 export default function SignOut() {
 
   const router = useRouter();
 
   const handleSignOutClick = async () => {
-    
-    await auth.signOut();
 
-    removeAuthUser();
-    router.replace('/login');
+     await logout(firebaseAuth);
+    
+    router.replace("/login");
 
   };
 

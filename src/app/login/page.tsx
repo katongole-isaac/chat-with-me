@@ -11,7 +11,7 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import config from "@/config/defaults.json";
 import Input from "@/components/common/input";
 import firebaseApp from "@/lib/firebaseApp";
-import { setAuthUser, useCurrentUser } from "@/helpers/user";
+import { getCurrentUser, setAuthUser, useCurrentUser, useRedirectToChat } from "@/helpers/user";
 import SignInWithGoogle from "@/components/signInWithGoogle";
 import SignInWithFacebook from "@/components/signInWithFacebook";
 
@@ -20,10 +20,9 @@ const auth = getAuth(firebaseApp);
 export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
+
   const router = useRouter();
   
-  const user = useCurrentUser();
-
   const initialValues = {
     email: "",
     password: "",
@@ -36,6 +35,10 @@ export default function Login() {
       .required("This field is required"),
     password: yup.string().required(),
   });
+
+ // if the user is logged in
+ // redirect to '/chat'
+  useRedirectToChat();
 
   const handleSubmit = async (values: { email: string; password: string }) => {
     try {
@@ -54,7 +57,7 @@ export default function Login() {
       router.push(config.onSuccessRouteUrl);
 
     } catch (error: any) {
-
+      console.log({...error});
       setLoginError("Invalid email or password");
 
     } finally {
@@ -90,7 +93,10 @@ export default function Login() {
               <Input name="password" type="password" placeholder="Password" />
               <button
                 type="submit"
-                className="border p-1 bg-blue-600 text-white rounded-md "
+                disabled={isLoading}
+                className={`border p-1 bg-blue-600  text-white rounded-md ${
+                  isLoading ? "disabled:opacity-40 disabled:curso-de" : ""
+                }`}
               >
                 {!isLoading ? "login" : "loading..."}
               </button>

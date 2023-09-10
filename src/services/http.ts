@@ -7,12 +7,30 @@
 import axios from "axios";
 import config from "@/config/defaults.json";
 import { getCurrentUser } from "@/helpers/user";
+import { toast } from "react-hot-toast";
+import NotifyToast from "@/components/toasts/notify";
+
 
 // you can set the defaults
 
 axios.defaults.baseURL = config.serverBaseURL;
 
-// set x-auth-token header
+axios.interceptors.response.use(null, (error) => {
+
+  // if error has no response
+ // means we lost connectivity
+  if (! error.hasOwnProperty("response") )
+    toast.custom((t) =>
+      NotifyToast({
+        message: "Connectivity lost",
+        ErrorIcon: true,
+        toastId: t.id,
+      })
+    );
+
+  return Promise.reject(error);
+});
+
 function setAuthHeader() {
   const user = getCurrentUser();
   if (user) {
@@ -21,7 +39,7 @@ function setAuthHeader() {
   }
 }
 
-setAuthHeader();
+//  setAuthHeader();
 
 export default {
   get: axios.get,

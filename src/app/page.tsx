@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { Formik, Form } from "formik";
 import * as yup from "yup";
 
-import Input from "@/components/input";
+import Input from "@/components/common/input";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 import firebaseApp from "@/lib/firebaseApp";

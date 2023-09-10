@@ -13,7 +13,7 @@ import React, { useEffect, useState } from "react";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 
 import firebaseApp from "@/lib/firebaseApp";
-import { getCurrentUser, setAuthUser } from "@/helpers/user";
+import { getCurrentUser, setAuthUser, useRedirectToChat } from "@/helpers/user";
 import config from '@/config/defaults.json';
 
 import Input from "@/components/common/input";
@@ -26,18 +26,18 @@ const auth = getAuth(firebaseApp);
 export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
+
   const router = useRouter();
 
-  const user = getCurrentUser();
-
-  useEffect(() => {
-    // if (user) router.replace("/");
-  }, [user]);
+  // if the user is logged in
+  // don't show signup page
+    useRedirectToChat();
 
   const initialValues = {
     email: "",
     password: "",
   };
+  
   const validationSchema = yup.object({
     email: yup
       .string()

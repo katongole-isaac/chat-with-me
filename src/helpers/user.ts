@@ -3,19 +3,57 @@
  *
  */
 
+import { Auth } from "firebase/auth";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const useCurrentUser = () => {
+  const [ user , setUser ]  = useState<null | any >(null);
+
+  useEffect(()=> {
+
+    const checkUser = ()=> {
+
+      const storedUser = localStorage.getItem("user");;
+      
+      if (!storedUser) return ;
+
+      const result = JSON.parse(storedUser) as object
+
+      setUser(result);
+
+    }
+
+    checkUser();
+    
+  } , []);
+  
+  return { user };
+
+  
+};
+
+const useRedirectToChat = ( ) => {
+
+  const { user } = useCurrentUser();
+  
   const router = useRouter();
 
-  if (!(typeof window !== "undefined" && window.localStorage)) return;
+  useEffect(() => {
+    if (user) router.replace("/chat");
+  }, [user]);
 
-  const user = localStorage.getItem("user");
+}
 
-  if (!user) return router.replace("/login");
+ async function logout(auth : Auth){
 
-  return JSON.parse(user);
-};
+    await auth.signOut();
+
+     setTimeout(() => {
+       removeAuthUser();
+     });
+   
+}
 
 function setAuthUser(user: object) {
   if (!(typeof window !== "undefined" && window.localStorage)) return;
@@ -40,4 +78,4 @@ function getCurrentUser() {
   return JSON.parse(user);
 }
 
-export { useCurrentUser, setAuthUser, getCurrentUser, removeAuthUser };
+export { useCurrentUser, setAuthUser, getCurrentUser, removeAuthUser, useRedirectToChat, logout };
