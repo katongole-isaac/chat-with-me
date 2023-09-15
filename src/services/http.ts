@@ -8,6 +8,7 @@ import axios from "axios";
 import config from "@/config/defaults.json";
 import { getCurrentUser } from "@/helpers/user";
 import { toast } from "react-hot-toast";
+import { AiOutlineWifi } from 'react-icons/ai'
 import NotifyToast from "@/components/toasts/notify";
 
 
@@ -23,7 +24,7 @@ axios.interceptors.response.use(null, (error) => {
     toast.custom((t) =>
       NotifyToast({
         message: "Connectivity lost",
-        ErrorIcon: true,
+        Icon: AiOutlineWifi,
         toastId: t.id,
       })
     );

@@ -10,10 +10,11 @@ import { toast } from "react-hot-toast";
 
 import withAuth from "@/lib/auth/withAuth";
 import config from "@/config/defaults.json";
+import { genUserId } from "@/helpers/genUserId";
 import { getCurrentUser, logout } from "@/helpers/user";
 import { firebaseAuth } from "@/lib/firebaseApp";
 import authenicateUser from "@/lib/auth/authenicateUser";
-import type { ChatMessage, LoggedInUser } from "@/misc/types";
+import type { ChatMessage, LoggedInUser, MessageFormat } from "@/misc/types";
 
 import Profile from "@/components/user/profile";
 import ChatMenu from "@/components/chat/chatMenu";
@@ -21,8 +22,6 @@ import ChatDisplay from "@/components/chat/chatDisplay";
 import MessageInput from "@/components/chat/messageInput";
 import DefaultToaster from "@/components/toasts/toasterSetting";
 import NotifyToast from "@/components/toasts/notify";
-
-
 
 export const UserContext = React.createContext<LoggedInUser | null>(null);
 
@@ -38,10 +37,57 @@ const Chat = () => {
 
   const router = useRouter();
 
+  // open event
+  const handleWebsocketOnOpen = (ev: Event) => {
+    console.log("Connected");
+
+    const checkOnlineStatus: MessageFormat = {
+      type: "login",
+    };
+
+    wss!.send(JSON.stringify(checkOnlineStatus));
+
+    // wss.onmessage = function(ev) {
+    //   console.log("Initally: ", JSON.stringify(ev.data));
+    // }
+  };
+
+  // message event
+  const handleWebsocketOnMessage = (ev: MessageEvent) => {
+    wss!.onmessage = function (event) {
+      console.log(event.data);
+      setMessages((prev) => [...prev, event.data]);
+    };
+  };
+
+  const handleWebsocketOnError = (ev: Event) => {};
+
+   const handleSubmitMsg = (msg: string) => {
+     console.log(msg);
+     // setMessages((prev) => [...prev, msg]);
+     if (wss) {
+       wss.send(`{msg: null}`);
+     }
+   };
+
+   const handleProfileClick = () => {
+     startTransition(() => {
+       setShowProfile((prev) => !prev);
+     });
+   };
+
   useEffect(() => {
     // getting the logged in user's token
+
     firebaseAuth.onAuthStateChanged(async (_user) => {
-      setToken((await _user?.getIdToken(true)) as string);
+      try {
+        setToken((await _user?.getIdToken(true)) as string);
+      } catch (err) {
+        // here something went wrong when fetching firebase user token
+        toast.custom(
+          <NotifyToast message="Failed to fetch user token" ErrorIcon />
+        );
+      }
     });
   }, []);
 
@@ -51,57 +97,54 @@ const Chat = () => {
       if (token) {
         const res = await authenicateUser(token);
 
+        // userId uniquely identifies user on the server
+        const userId = genUserId() as string;
+
         // if valid token, go ahead
         // and create websocket connection
         if (res?.message === "ok")
-          setWss(new WebSocket(`${config.websocketUrl}`, ["json"]));
-
-        // when the user token is invalid (wrong)
-        // u need to logout the user 
-        if (res?.redirectUrl) {
-          toast.custom(
-            <NotifyToast message="Failed to authenticate request, Please try again" ErrorIcon />
+          setWss(
+            new WebSocket(`${config.websocketUrl}/?token=${token}`, ["json"])
           );
 
-          setTimeout(async() => {
-            await logout(firebaseAuth);
-            router.replace('/login')
-          }, 5000);
+        // when the user token is invalid (wrong)
+        // u need to logout the user
+        if (res?.redirectUrl) {
+          toast.custom(
+            <NotifyToast
+              message="Failed to authenticate request, Please try again"
+              ErrorIcon
+            />
+          );
 
+          setTimeout(async () => {
+            await logout(firebaseAuth);
+            router.replace("/login");
+          }, 5000);
         }
       }
     })();
-
   }, [token]);
 
   useEffect(() => {
     if (wss) {
-      wss.onopen = function (ev) {
-        wss.send("hi");
-        console.log("Connected");
-      };
+      wss.addEventListener("open", handleWebsocketOnOpen);
+      wss.addEventListener("message", handleWebsocketOnMessage);
+      wss.addEventListener("error", handleWebsocketOnError);
 
-      wss.onmessage = function (event) {
-        console.log(event.data);
-        setMessages((prev) => [...prev, event.data]);
+      // unsubcribe to events
+      return () => {
+        wss.removeEventListener("open", handleWebsocketOnOpen);
+        wss.removeEventListener("message", handleWebsocketOnMessage);
+        wss.removeEventListener('error', handleWebsocketOnError);
       };
     }
   }, [wss]);
 
-  const handleSubmitMsg = (msg: string) => {
-    console.log(msg);
-    // setMessages((prev) => [...prev, msg]);
-    // wss.send(msg);
-  };
-
-  const handleProfileClick = () => {
-    startTransition(() => {
-      setShowProfile((prev) => !prev);
-    });
-  };
+ 
 
   return (
-    <UserContext.Provider value={{ user }}>
+    <UserContext.Provider value={{ user, wss }}>
       <div className="w-screen h-screen bg-zinc-200">
         <div className="py-8 w-full h-full ">
           <div className="max-w-[1200px] bg-zinc-100 h-full shadow-lg  m-auto border ">

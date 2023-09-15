@@ -55,21 +55,42 @@ const useRedirectToChat = ( ) => {
    
 }
 
+function _checkForLocalStorage() {
+  if (!(typeof window !== "undefined" && window.localStorage)) return false;
+
+  return true;
+}
+
 function setAuthUser(user: object) {
-  if (!(typeof window !== "undefined" && window.localStorage)) return;
+  if (!_checkForLocalStorage()) return;
 
   localStorage.setItem("user", JSON.stringify(user));
 }
 
 function removeAuthUser() {
-  if (!(typeof window !== "undefined" && window.localStorage)) return;
+  if (!_checkForLocalStorage()) return;
 
   localStorage.removeItem("user");
 }
 
+// store online status in localstorage
+function setStoredOnlineStatus(status: boolean) {
+  if (!_checkForLocalStorage()) return;
+
+  localStorage.setItem("online", `${status}`);
+}
+
+function getStoredOnlineStatus() {
+  if (!_checkForLocalStorage()) return null;
+
+   const status  = localStorage.getItem("online");
+
+   return status ? JSON.parse(status) : null
+}
+
+
 function getCurrentUser() {
-  
-  if (!(typeof window !== "undefined" && window.localStorage)) return null;
+  if (!_checkForLocalStorage()) return null;
 
   const user = localStorage.getItem("user");
 
@@ -78,4 +99,13 @@ function getCurrentUser() {
   return JSON.parse(user);
 }
 
-export { useCurrentUser, setAuthUser, getCurrentUser, removeAuthUser, useRedirectToChat, logout };
+export {
+  useCurrentUser,
+  setAuthUser,
+  setStoredOnlineStatus,
+  getStoredOnlineStatus,
+  getCurrentUser,
+  removeAuthUser,
+  useRedirectToChat,
+  logout,
+};
