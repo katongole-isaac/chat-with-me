@@ -22,6 +22,8 @@ import ChatDisplay from "@/components/chat/chatDisplay";
 import MessageInput from "@/components/chat/messageInput";
 import DefaultToaster from "@/components/toasts/toasterSetting";
 import NotifyToast from "@/components/toasts/notify";
+import useCheckBrowserConnectivity from "@/lib/checkConnectivity";
+import LostConnectivity from "@/components/lostConnectivity";
 
 export const UserContext = React.createContext<LoggedInUser | null>(null);
 
@@ -36,6 +38,8 @@ const Chat = () => {
   const user = getCurrentUser();
 
   const router = useRouter();
+
+  useCheckBrowserConnectivity();
 
   // open event
   const handleWebsocketOnOpen = (ev: Event) => {
@@ -62,19 +66,19 @@ const Chat = () => {
 
   const handleWebsocketOnError = (ev: Event) => {};
 
-   const handleSubmitMsg = (msg: string) => {
-     console.log(msg);
-     // setMessages((prev) => [...prev, msg]);
-     if (wss) {
-       wss.send(`{msg: null}`);
-     }
-   };
+  const handleSubmitMsg = (msg: string) => {
+    console.log(msg);
+    // setMessages((prev) => [...prev, msg]);
+    if (wss) {
+      wss.send(`{msg: null}`);
+    }
+  };
 
-   const handleProfileClick = () => {
-     startTransition(() => {
-       setShowProfile((prev) => !prev);
-     });
-   };
+  const handleProfileClick = () => {
+    startTransition(() => {
+      setShowProfile((prev) => !prev);
+    });
+  };
 
   useEffect(() => {
     // getting the logged in user's token
@@ -136,12 +140,10 @@ const Chat = () => {
       return () => {
         wss.removeEventListener("open", handleWebsocketOnOpen);
         wss.removeEventListener("message", handleWebsocketOnMessage);
-        wss.removeEventListener('error', handleWebsocketOnError);
+        wss.removeEventListener("error", handleWebsocketOnError);
       };
     }
   }, [wss]);
-
- 
 
   return (
     <UserContext.Provider value={{ user, wss }}>
@@ -158,6 +160,7 @@ const Chat = () => {
                 {showProfile && (
                   <Profile onClose={setShowProfile} showProfile={showProfile} />
                 )}
+                <LostConnectivity />
               </div>
 
               {/* second grid */}
