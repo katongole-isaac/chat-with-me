@@ -12,22 +12,18 @@ const useCheckBrowserConnectivity = () => {
   const [isBrowserConnected, setIsBrowserConnected] = useState(navigator.onLine);  
 
   const handleBrowserStatusChanges = (e: Event) => {
-    let timerId;
-    
+  
     if (!navigator.onLine) {
-      // wait for some few seconds (2 seconds) to see if the connection comes back
-      // if not update the state variable
-      timerId = setTimeout(() => {
+    
         startTransition(()=> {
 
           setIsBrowserConnected(false);
 
         })
-      }, 2000);
+  
 
     } else {
-
-      if (timerId) clearTimeout(timerId);
+     
       startTransition(
         () => {
 

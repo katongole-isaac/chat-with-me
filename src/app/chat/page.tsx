@@ -41,18 +41,18 @@ const Chat = () => {
   const router = useRouter();
 
   const connect = () => {
-    const timeoutId = setInterval(() => {
+    // const timeoutId = setInterval(() => {
       if (wss === null || wss?.readyState === WebSocket.CLOSED) {
         if (token)
           setWss(
             new WebSocket(`${config.websocketUrl}/?token=${token}`, ["json"])
           );
 
-        if (!timerId) setTimerId(timeoutId);
-        if (wss) return clearInterval(timerId as NodeJS.Timeout);
+        // if (!timerId) setTimerId(timeoutId);
+        // if (wss) return clearInterval(timerId as NodeJS.Timeout);
       }
       //  else   clearInterval(timerId as NodeJS.Timeout);
-    }, 1500);
+    // }, 1500);
   };
 
   // open event
@@ -148,13 +148,7 @@ const Chat = () => {
       };
     }
 
-    // else {
-
-    //   // re-connect if wss === null
-    //   // if you didn't connect on initial render
-    //   connect();
-
-    // }
+    
   }, [wss]);
 
   return (

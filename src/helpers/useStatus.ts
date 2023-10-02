@@ -9,6 +9,7 @@ import { startTransition, useContext, useEffect, useState } from "react";
 import { UserContext } from "@/app/chat/page";
 import { LoggedInUser, MessageFormat } from "@/misc/types";
 import { getStoredOnlineStatus, setStoredOnlineStatus } from "./user";
+import useCheckBrowserConnectivity from "@/lib/checkConnectivity";
 
 const useStatus = () => {
   const { wss } = useContext(UserContext) as LoggedInUser;
@@ -16,61 +17,66 @@ const useStatus = () => {
   const storedOnlineStatus = getStoredOnlineStatus();
   const [online, setOnline] = useState<boolean>(storedOnlineStatus || false);
 
+  const { isBrowserConnected } = useCheckBrowserConnectivity();
 
-  const handleOnMessage = (ev : MessageEvent)  => {
+  const handleOnMessage = (ev: MessageEvent) => {
+    const message = JSON.parse(ev.data) as MessageFormat;
 
-     const message = JSON.parse(ev.data) as MessageFormat;
+    if (message.type === "login") {
+      const status = message.params?.isOnline;
 
-        if (message.type === "login") {
-          const status = message.params?.isOnline;
+      if (status) {
+        // store the status in localstorage
+        setStoredOnlineStatus(status);
 
-          if (status) {
-
-            // store the status in localstorage
-            setStoredOnlineStatus(status);
-
-            // update status without blocking the UI
-            startTransition(() => {
-              setOnline(status);
-            });
-          }
-        }
-
-  }
+        // update status without blocking the UI
+        startTransition(() => {
+          setOnline(status);
+        });
+      }
+    }
+  };
 
   // when the websocket is closed
-  const handleOnClose = (ev: CloseEvent ) => {
-
+  const handleOnClose = (ev: CloseEvent) => {
     // update online value in the localstorage
-      setStoredOnlineStatus(false);
+    setStoredOnlineStatus(false);
 
-      // update the UI state
-       startTransition(() => {
+    // update the UI state
+    startTransition(() => {
+      setOnline(false);
+    });
+  };
+  
+  const updateOnlineState = (state: boolean) => {
+    setOnline(state);
+    setStoredOnlineStatus(state);
+  };
 
-         setOnline( false );
 
-       });
-  }
+  // update the online status accordingly
+  // with the browser's connectivity
+  useEffect(() => {
+
+    if (isBrowserConnected) updateOnlineState(true);
+    else updateOnlineState(false);
+
+  }, [isBrowserConnected]);
 
   useEffect(() => {
     if (wss) {
+      wss.addEventListener("message", handleOnMessage);
+      wss.addEventListener("close", handleOnClose);
 
-        wss.addEventListener('message', handleOnMessage);
-        wss.addEventListener("close", handleOnClose);
-
-        return () => {
-
+      return () => {
         wss.removeEventListener("message", handleOnMessage);
         wss.removeEventListener("close", handleOnClose);
-
-        }
+      };
     } else {
-      // if there is no wss 
+      // if there is no wss
       // that means the user is offline
-      setStoredOnlineStatus(false);
-
+      if (online) updateOnlineState(false)
     }
-
   }, [wss, online]);
 
   return { online };
