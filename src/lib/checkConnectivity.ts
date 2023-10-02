@@ -52,7 +52,7 @@ const useCheckBrowserConnectivity = () => {
       };
     }
 
-}, [isBrowserConnected]);
+}, [isBrowserConnected, navigator.onLine]);
 
   return { isBrowserConnected };
 };

@@ -12,7 +12,7 @@ import useStatus from "@/helpers/useStatus";
 
 const OnlineStatus = ({ size }: { size?: number }) => {
   const { online } = useStatus();
-  console.log('ONLINE: ', online);
+  
   return (
     <div
       className={` absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 p-1

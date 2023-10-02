@@ -23,7 +23,7 @@ axios.interceptors.response.use(null, (error) => {
   if (! error.hasOwnProperty("response") )
     toast.custom((t) =>
       NotifyToast({
-        message: "Connectivity lost",
+        message: "Connectivity lost to the server",
         Icon: AiOutlineWifi,
         toastId: t.id,
       })

@@ -11,7 +11,7 @@ import { toast } from "react-hot-toast";
 import withAuth from "@/lib/auth/withAuth";
 import config from "@/config/defaults.json";
 import { genUserId } from "@/helpers/genUserId";
-import { getCurrentUser, logout } from "@/helpers/user";
+import { getCurrentUser, logout, useUserToken } from "@/helpers/user";
 import { firebaseAuth } from "@/lib/firebaseApp";
 import authenicateUser from "@/lib/auth/authenicateUser";
 import type { ChatMessage, LoggedInUser, MessageFormat } from "@/misc/types";
@@ -22,16 +22,17 @@ import ChatDisplay from "@/components/chat/chatDisplay";
 import MessageInput from "@/components/chat/messageInput";
 import DefaultToaster from "@/components/toasts/toasterSetting";
 import NotifyToast from "@/components/toasts/notify";
-import useCheckBrowserConnectivity from "@/lib/checkConnectivity";
 import LostConnectivity from "@/components/lostConnectivity";
 
 export const UserContext = React.createContext<LoggedInUser | null>(null);
 
 const Chat = () => {
+
   const [wss, setWss] = useState<WebSocket | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [token, setToken] = useState<string | null>(null);
   const [showProfile, setShowProfile] = useState<boolean>(false);
+  const [timerId, setTimerId] = useState<NodeJS.Timeout | number | null>(null);
 
   const chatRef = useRef<HTMLDivElement>(null);
 
@@ -39,21 +40,30 @@ const Chat = () => {
 
   const router = useRouter();
 
-  useCheckBrowserConnectivity();
+  const connect = () => {
+    const timeoutId = setInterval(() => {
+      if (wss === null || wss?.readyState === WebSocket.CLOSED) {
+        if (token)
+          setWss(
+            new WebSocket(`${config.websocketUrl}/?token=${token}`, ["json"])
+          );
+
+        if (!timerId) setTimerId(timeoutId);
+        if (wss) return clearInterval(timerId as NodeJS.Timeout);
+      }
+      //  else   clearInterval(timerId as NodeJS.Timeout);
+    }, 1500);
+  };
 
   // open event
   const handleWebsocketOnOpen = (ev: Event) => {
-    console.log("Connected");
+    if (timerId) clearInterval(timerId as NodeJS.Timeout);
 
     const checkOnlineStatus: MessageFormat = {
       type: "login",
     };
 
     wss!.send(JSON.stringify(checkOnlineStatus));
-
-    // wss.onmessage = function(ev) {
-    //   console.log("Initally: ", JSON.stringify(ev.data));
-    // }
   };
 
   // message event
@@ -74,26 +84,18 @@ const Chat = () => {
     }
   };
 
+  const handleWebsocketOnClose = (ev: CloseEvent) => {
+    console.log("socket closed:");
+    connect(); // reconnect;
+  };
+
   const handleProfileClick = () => {
     startTransition(() => {
       setShowProfile((prev) => !prev);
     });
   };
 
-  useEffect(() => {
-    // getting the logged in user's token
-
-    firebaseAuth.onAuthStateChanged(async (_user) => {
-      try {
-        setToken((await _user?.getIdToken(true)) as string);
-      } catch (err) {
-        // here something went wrong when fetching firebase user token
-        toast.custom(
-          <NotifyToast message="Failed to fetch user token" ErrorIcon />
-        );
-      }
-    });
-  }, []);
+  useUserToken(token, setToken);
 
   useEffect(() => {
     // first authenticate on the server
@@ -106,13 +108,10 @@ const Chat = () => {
 
         // if valid token, go ahead
         // and create websocket connection
-        if (res?.message === "ok")
-          setWss(
-            new WebSocket(`${config.websocketUrl}/?token=${token}`, ["json"])
-          );
+        if (res?.message === "ok") connect();
 
         // when the user token is invalid (wrong)
-        // u need to logout the user
+        // u need to logout the user.
         if (res?.redirectUrl) {
           toast.custom(
             <NotifyToast
@@ -121,9 +120,12 @@ const Chat = () => {
             />
           );
 
-          setTimeout(async () => {
+          let timerId = setTimeout(async () => {
             await logout(firebaseAuth);
+
             router.replace("/login");
+
+            clearTimeout(timerId);
           }, 5000);
         }
       }
@@ -135,14 +137,24 @@ const Chat = () => {
       wss.addEventListener("open", handleWebsocketOnOpen);
       wss.addEventListener("message", handleWebsocketOnMessage);
       wss.addEventListener("error", handleWebsocketOnError);
+      wss.addEventListener("close", handleWebsocketOnClose);
 
       // unsubcribe to events
       return () => {
         wss.removeEventListener("open", handleWebsocketOnOpen);
         wss.removeEventListener("message", handleWebsocketOnMessage);
         wss.removeEventListener("error", handleWebsocketOnError);
+        wss.removeEventListener("close", handleWebsocketOnClose);
       };
     }
+
+    // else {
+
+    //   // re-connect if wss === null
+    //   // if you didn't connect on initial render
+    //   connect();
+
+    // }
   }, [wss]);
 
   return (

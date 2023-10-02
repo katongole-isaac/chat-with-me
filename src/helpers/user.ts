@@ -7,31 +7,58 @@ import { Auth } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { firebaseAuth } from "@/lib/firebaseApp";
+import NotifyToast from "@/components/toasts/notify";
+import { toast } from "react-hot-toast";
+
 const useCurrentUser = () => {
-  const [ user , setUser ]  = useState<null | any >(null);
+  const [user, setUser] = useState<null | any>(null);
 
-  useEffect(()=> {
+  useEffect(() => {
+    const checkUser = () => {
+      const storedUser = localStorage.getItem("user");
 
-    const checkUser = ()=> {
+      if (!storedUser) return;
 
-      const storedUser = localStorage.getItem("user");;
-      
-      if (!storedUser) return ;
-
-      const result = JSON.parse(storedUser) as object
+      const result = JSON.parse(storedUser) as object;
 
       setUser(result);
-
-    }
+    };
 
     checkUser();
-    
-  } , []);
-  
-  return { user };
+  }, []);
 
-  
+  return { user };
 };
+
+// getting the logged in user's token
+const useUserToken = (
+  token: string | null,
+  setToken: React.Dispatch<string>
+) => {
+  let timerId: NodeJS.Timeout;
+
+  useEffect(() => {
+
+    if (!token)
+      firebaseAuth.onAuthStateChanged(async (_user) => {
+        try {
+          setToken((await _user?.getIdToken(true)) as string);
+        } catch (err) {
+          
+          // here something went wrong when fetching firebase user token
+          toast.custom(
+            NotifyToast({
+              message: "Failed to fetch user token",
+              ErrorIcon: true,
+            })
+          );
+        }
+      });
+
+  }, [token]);
+};
+
 
 const useRedirectToChat = ( ) => {
 
@@ -100,12 +127,13 @@ function getCurrentUser() {
 }
 
 export {
+  useRedirectToChat,
   useCurrentUser,
-  setAuthUser,
-  setStoredOnlineStatus,
+  useUserToken,
   getStoredOnlineStatus,
   getCurrentUser,
+  setAuthUser,
+  setStoredOnlineStatus,
   removeAuthUser,
-  useRedirectToChat,
   logout,
 };

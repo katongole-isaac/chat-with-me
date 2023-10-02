@@ -10,6 +10,7 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 import firebaseApp from "@/lib/firebaseApp";
 import Link from "next/link";
+  
 
 const auth = getAuth(firebaseApp);
 

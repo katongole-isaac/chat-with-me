@@ -64,6 +64,11 @@ const useStatus = () => {
         wss.removeEventListener("close", handleOnClose);
 
         }
+    } else {
+      // if there is no wss 
+      // that means the user is offline
+      setStoredOnlineStatus(false);
+
     }
 
   }, [wss, online]);
