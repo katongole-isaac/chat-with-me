@@ -23,6 +23,10 @@ import MessageInput from "@/components/chat/messageInput";
 import DefaultToaster from "@/components/toasts/toasterSetting";
 import NotifyToast from "@/components/toasts/notify";
 import LostConnectivity from "@/components/lostConnectivity";
+import registerServiceWorker from "@/registerServiceWorker";
+
+
+registerServiceWorker();
 
 export const UserContext = React.createContext<LoggedInUser | null>(null);
 
@@ -41,18 +45,14 @@ const Chat = () => {
   const router = useRouter();
 
   const connect = () => {
-    // const timeoutId = setInterval(() => {
+
       if (wss === null || wss?.readyState === WebSocket.CLOSED) {
         if (token)
           setWss(
             new WebSocket(`${config.websocketUrl}/?token=${token}`, ["json"])
           );
-
-        // if (!timerId) setTimerId(timeoutId);
-        // if (wss) return clearInterval(timerId as NodeJS.Timeout);
       }
-      //  else   clearInterval(timerId as NodeJS.Timeout);
-    // }, 1500);
+   
   };
 
   // open event

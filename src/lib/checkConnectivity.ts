@@ -1,54 +1,40 @@
 /**
  * Checking whether the user is online
  * (whether Browser can access internet)
- *
+ * The network results are got from the service worker
  *
  */
 
-import { useEffect, useState, startTransition } from "react";
+import { useEffect, useState } from "react";
 
 const useCheckBrowserConnectivity = () => {
 
-  const [isBrowserConnected, setIsBrowserConnected] = useState(navigator.onLine);  
+  const [isBrowserConnected, setIsBrowserConnected] = useState(
+    navigator.onLine
+  );
 
-  const handleBrowserStatusChanges = (e: Event) => {
+  const handleServiceWorkerMessage =( ev:MessageEvent) => {
+
+    const data = JSON.parse(ev.data);
   
-    if (!navigator.onLine) {
-    
-        startTransition(()=> {
-
-          setIsBrowserConnected(false);
-
-        })
+    if (!data) return;
   
+    const { type, params } = data;
+  
+    if (type !== "networkStatus") return;
+  
+    if (isBrowserConnected !== params.onLine)
+      setIsBrowserConnected(params?.onLine);
+  
+  }
 
-    } else {
-     
-      startTransition(
-        () => {
-
-          setIsBrowserConnected(true);
-
-        }
-      )
-    }
-
-  };
-
- 
   useEffect(() => {
-    if (typeof window !== "undefined" && navigator) {
-        
-      window.addEventListener("online", handleBrowserStatusChanges);
-      window.addEventListener("offline",handleBrowserStatusChanges );
+    navigator.serviceWorker.addEventListener('message', handleServiceWorkerMessage);
 
-      return () => {
-        window.removeEventListener("online", handleBrowserStatusChanges);
-        window.removeEventListener("offline", handleBrowserStatusChanges);
-      };
+    return () => {
+      navigator.serviceWorker.removeEventListener('message', handleServiceWorkerMessage )
     }
-
-}, [isBrowserConnected, navigator.onLine]);
+  }, [isBrowserConnected]);
 
   return { isBrowserConnected };
 };
