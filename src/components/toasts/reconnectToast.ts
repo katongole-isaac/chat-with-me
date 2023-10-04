@@ -3,23 +3,29 @@
  *
  */
 
-import React from "react";
+import React, { useEffect } from "react";
 import { toast } from "react-hot-toast";
+
+type Params = {
+  onSetToast: React.Dispatch<string>;
+  message: string;
+  id: string;
+  enabler: boolean;
+};
 
 export default function InfinityToast({
   onSetToast,
   message,
   id,
-}: {
-  onSetToast: React.Dispatch<string>;
-  message: string;
-  id: string;
-}) {
-  const toastId = toast.loading(message, {
-    id,
-    className: "bg-slate-800",
-  });
+  enabler,
+}: Params) {
 
-  onSetToast(toastId);
+    useEffect(() => {
+    if (enabler) {
+      const toastId = toast.loading(message, { id });
+      onSetToast(toastId);
+    }
+  }, [enabler]);
+
   return null;
 }

@@ -34,21 +34,15 @@ const useCurrentUser = () => {
 // getting the logged in user's token
 const useUserToken = (token : string|null, onToken : Function) => {
 
-  useEffect(()=> {
-
-    if(!token) 
-
+  const genToken = () => {
     firebaseAuth.onAuthStateChanged(async (_user) => {
       try {
-  
-       const token =  (await _user?.getIdToken(true)) as string;
-  
+        const token = (await _user?.getIdToken(true)) as string;
+
         onToken(token);
-  
       } catch (err) {
-  
         onToken("");
-  
+
         // here something went wrong when fetching firebase user token
         toast.custom(
           NotifyToast({
@@ -56,16 +50,26 @@ const useUserToken = (token : string|null, onToken : Function) => {
             ErrorIcon: true,
           })
         );
-  
       }
     });
+  };
+
+ 
+  useEffect(() => {
+    // get the token if its null
+    if (!token) genToken();
+
+    // get a new token every after 40 mins
+    setInterval(() => {
+      genToken();
+    }, 1000 * 60 * 40);
 
   }, [token]);
 
 
 };
 
-
+//used on login and signup
 const useRedirectToChat = ( ) => {
 
   const { user } = useCurrentUser();

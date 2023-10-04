@@ -97,15 +97,16 @@ const Chat = () => {
   };
 
   const handleWebsocketOnClose = (ev: CloseEvent) => {
+    console.log('socket closed');
     let timeout;
 
     if (!reconnecting) setReconnecting(true);
 
     timeout = setInterval(() => {
-      if (wss && wss.readyState === WebSocket.CLOSED) connect(); // reconnect;
+       connect(); // reconnect;
     }, 1000);
 
-    if (!timerId) setTimerId(timeout);
+     setTimerId(timeout);
   };
 
   const handleProfileClick = () => {
@@ -169,7 +170,8 @@ const Chat = () => {
       {reconnecting && (
         <InfinityToast
           id="reconnect"
-          message="Reconnecting"
+          enabler={reconnecting}
+          message="Reconnecting..."
           onSetToast={setReconnectToastId}
         />
       )}
