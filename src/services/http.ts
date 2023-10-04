@@ -20,14 +20,14 @@ axios.interceptors.response.use(null, (error) => {
 
   // if error has no response
  // means we lost connectivity
-  if (! error.hasOwnProperty("response") )
-    toast.custom((t) =>
-      NotifyToast({
-        message: "Connectivity lost to the server",
-        Icon: AiOutlineWifi,
-        toastId: t.id,
-      })
-    );
+  // if (! error.hasOwnProperty("response") ) 
+    // toast.custom((t) =>
+    //   NotifyToast({
+    //     message: "Connectivity lost to the server",
+    //     Icon: AiOutlineWifi,
+    //     toastId: t.id,
+    //   })
+    // );
 
   return Promise.reject(error);
 });

@@ -25,7 +25,7 @@ export interface LoggedInUser {
 }
 
 // commands for the websocket
-type Commands = "login" | "join" | "leave" | "create";
+type Commands = "login" | "join" | "leave" | "create" | "error" | "success";
 
 // describes message format used
 export interface MessageFormat {

@@ -24,7 +24,7 @@ const reportNetworkStatus = async (event) => {
   setInterval(async () => {
     try {
 
-      await fetch(pingUrl, {mode: 'no-cors'});
+      await fetch(pingUrl, {mode: 'no-cors', });
 
       message.params.onLine = true;
 
@@ -33,14 +33,14 @@ const reportNetworkStatus = async (event) => {
     } catch (error) {
 
       message.params.onLine = false;
-
+      
       client.postMessage(JSON.stringify(message));
     }
   }, 2000);
 };
 
 const handleFetchEvent = (event) => {
-  event.waitUntil(reportNetworkStatus(event));
+  // event.waitUntil(reportNetworkStatus(event));
 };
 
-self.addEventListener("fetch", handleFetchEvent);
+// self.addEventListener("fetch", handleFetchEvent);

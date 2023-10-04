@@ -6,13 +6,15 @@
 import React from "react";
 import { toast } from "react-hot-toast";
 import { MdError, MdClose } from "react-icons/md";
+import { JsxElement } from "typescript";
 
 type ToastProps = {
-  Icon?: React.ComponentType;
+  Icon?: React.ComponentType ;
   ErrorIcon?: boolean;
   message?: string;
   classes?: string;
   toastId?: string;
+  closeBtn?: boolean
 };
 
 const NotifyToast = ({
@@ -21,6 +23,7 @@ const NotifyToast = ({
   ErrorIcon,
   classes,
   toastId,
+  closeBtn = true
 }: ToastProps) => {
   const handleClose = (tId: string) => {
     toast.remove(tId);
@@ -37,6 +40,8 @@ const NotifyToast = ({
           <span> {message} </span>
         </div>
       </div>
+      {
+closeBtn &&
       <div className="basis-4">
         <MdClose
           size={18}
@@ -44,6 +49,7 @@ const NotifyToast = ({
           className="cursor-pointer "
         />
       </div>
+      }
     </div>
   );
 };

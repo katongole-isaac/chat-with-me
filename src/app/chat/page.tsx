@@ -7,6 +7,7 @@
 import React, { startTransition, useRef, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
+import "react-tooltip/dist/react-tooltip.css";
 
 import withAuth from "@/lib/auth/withAuth";
 import config from "@/config/defaults.json";
@@ -24,40 +25,39 @@ import DefaultToaster from "@/components/toasts/toasterSetting";
 import NotifyToast from "@/components/toasts/notify";
 import LostConnectivity from "@/components/lostConnectivity";
 import registerServiceWorker from "@/registerServiceWorker";
-
+import useConnect from "@/helpers/useConnect";
+import InfinityToast from "@/components/toasts/reconnectToast";
 
 registerServiceWorker();
 
 export const UserContext = React.createContext<LoggedInUser | null>(null);
 
 const Chat = () => {
-
   const [wss, setWss] = useState<WebSocket | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [token, setToken] = useState<string | null>(null);
   const [showProfile, setShowProfile] = useState<boolean>(false);
   const [timerId, setTimerId] = useState<NodeJS.Timeout | number | null>(null);
+  const [reconnecting, setReconnecting] = useState<boolean>(false);
+  const [reconnectToastId, setReconnectToastId] = useState<string>("");
 
   const chatRef = useRef<HTMLDivElement>(null);
 
   const user = getCurrentUser();
 
-  const router = useRouter();
-
-  const connect = () => {
-
-      if (wss === null || wss?.readyState === WebSocket.CLOSED) {
-        if (token)
-          setWss(
-            new WebSocket(`${config.websocketUrl}/?token=${token}`, ["json"])
-          );
-      }
-   
-  };
+  // setting the token
+  useUserToken(token, setToken);
+  const { connect } = useConnect({ token, onWss: setWss, wss });
 
   // open event
   const handleWebsocketOnOpen = (ev: Event) => {
-    if (timerId) clearInterval(timerId as NodeJS.Timeout);
+    // clear any timeout id created on reconnecting
+    if (timerId) clearInterval(timerId);
+
+    if (reconnecting) {
+      setReconnecting(false);
+      toast.dismiss(reconnectToastId);
+    }
 
     const checkOnlineStatus: MessageFormat = {
       type: "login",
@@ -68,10 +68,22 @@ const Chat = () => {
 
   // message event
   const handleWebsocketOnMessage = (ev: MessageEvent) => {
-    wss!.onmessage = function (event) {
-      console.log(event.data);
-      setMessages((prev) => [...prev, event.data]);
-    };
+    const data = JSON.parse(ev.data) as MessageFormat;
+
+    switch (data.type) {
+      case "error":
+        toast.custom(<NotifyToast message={data.params?.message} ErrorIcon />);
+        break;
+
+      case "login":
+        console.log("Login", data.params);
+        break;
+
+      default:
+        console.log("Invalid message type");
+    }
+
+    setMessages((prev) => [...prev, ev.data]);
   };
 
   const handleWebsocketOnError = (ev: Event) => {};
@@ -85,8 +97,15 @@ const Chat = () => {
   };
 
   const handleWebsocketOnClose = (ev: CloseEvent) => {
-    console.log("socket closed:");
-    connect(); // reconnect;
+    let timeout;
+
+    if (!reconnecting) setReconnecting(true);
+
+    timeout = setInterval(() => {
+      if (wss && wss.readyState === WebSocket.CLOSED) connect(); // reconnect;
+    }, 1000);
+
+    if (!timerId) setTimerId(timeout);
   };
 
   const handleProfileClick = () => {
@@ -94,43 +113,6 @@ const Chat = () => {
       setShowProfile((prev) => !prev);
     });
   };
-
-  useUserToken(token, setToken);
-
-  useEffect(() => {
-    // first authenticate on the server
-    (async () => {
-      if (token) {
-        const res = await authenicateUser(token);
-
-        // userId uniquely identifies user on the server
-        const userId = genUserId() as string;
-
-        // if valid token, go ahead
-        // and create websocket connection
-        if (res?.message === "ok") connect();
-
-        // when the user token is invalid (wrong)
-        // u need to logout the user.
-        if (res?.redirectUrl) {
-          toast.custom(
-            <NotifyToast
-              message="Failed to authenticate request, Please try again"
-              ErrorIcon
-            />
-          );
-
-          let timerId = setTimeout(async () => {
-            await logout(firebaseAuth);
-
-            router.replace("/login");
-
-            clearTimeout(timerId);
-          }, 5000);
-        }
-      }
-    })();
-  }, [token]);
 
   useEffect(() => {
     if (wss) {
@@ -147,8 +129,6 @@ const Chat = () => {
         wss.removeEventListener("close", handleWebsocketOnClose);
       };
     }
-
-    
   }, [wss]);
 
   return (
@@ -186,6 +166,13 @@ const Chat = () => {
           </div>
         </div>
       </div>
+      {reconnecting && (
+        <InfinityToast
+          id="reconnect"
+          message="Reconnecting"
+          onSetToast={setReconnectToastId}
+        />
+      )}
       <DefaultToaster />
     </UserContext.Provider>
   );

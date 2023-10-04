@@ -32,31 +32,37 @@ const useCurrentUser = () => {
 };
 
 // getting the logged in user's token
-const useUserToken = (
-  token: string | null,
-  setToken: React.Dispatch<string>
-) => {
-  let timerId: NodeJS.Timeout;
+const useUserToken = (token : string|null, onToken : Function) => {
 
-  useEffect(() => {
+  useEffect(()=> {
 
-    if (!token)
-      firebaseAuth.onAuthStateChanged(async (_user) => {
-        try {
-          setToken((await _user?.getIdToken(true)) as string);
-        } catch (err) {
-          
-          // here something went wrong when fetching firebase user token
-          toast.custom(
-            NotifyToast({
-              message: "Failed to fetch user token",
-              ErrorIcon: true,
-            })
-          );
-        }
-      });
+    if(!token) 
+
+    firebaseAuth.onAuthStateChanged(async (_user) => {
+      try {
+  
+       const token =  (await _user?.getIdToken(true)) as string;
+  
+        onToken(token);
+  
+      } catch (err) {
+  
+        onToken("");
+  
+        // here something went wrong when fetching firebase user token
+        toast.custom(
+          NotifyToast({
+            message: "Failed to fetch user token",
+            ErrorIcon: true,
+          })
+        );
+  
+      }
+    });
 
   }, [token]);
+
+
 };
 
 
