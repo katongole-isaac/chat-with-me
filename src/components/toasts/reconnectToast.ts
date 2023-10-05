@@ -21,10 +21,10 @@ export default function InfinityToast({
 }: Params) {
 
     useEffect(() => {
-    if (enabler) {
+
       const toastId = toast.loading(message, { id });
       onSetToast(toastId);
-    }
+    
   }, [enabler]);
 
   return null;

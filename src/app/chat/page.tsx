@@ -100,6 +100,9 @@ const Chat = () => {
     console.log('socket closed');
     let timeout;
 
+    // reseting reconnecting state
+    setReconnecting(true);
+
     if (!reconnecting) setReconnecting(true);
 
     timeout = setInterval(() => {
