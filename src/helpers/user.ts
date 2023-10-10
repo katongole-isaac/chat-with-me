@@ -31,43 +31,52 @@ const useCurrentUser = () => {
   return { user };
 };
 
-// getting the logged in user's token
-const useUserToken = (token : string|null, onToken : Function) => {
 
-  const genToken = () => {
-    firebaseAuth.onAuthStateChanged(async (_user) => {
-      try {
-        const token = (await _user?.getIdToken(true)) as string;
+const useUpdateToken = ({ onToken }: {onToken:Function}) => {
 
-        onToken(token);
-      } catch (err) {
-        onToken("");
+const genToken = () => {
 
-        // here something went wrong when fetching firebase user token
-        toast.custom(
-          NotifyToast({
-            message: "Failed to fetch user token",
-            ErrorIcon: true,
-          })
-        );
-      }
-    });
-  };
-
+  firebaseAuth.onAuthStateChanged(async (_user) => {
+    try {
+      const _token = (await _user?.getIdToken(true)) as string;
  
-  useEffect(() => {
-    // get the token if its null
-    if (!token) genToken();
+      onToken(_token);
+ 
+      const user = getCurrentUser();
+      user.stsTokenManager.accessToken = _token;
+ 
+      setAuthUser(user); // saving new token
+ 
+    } catch (err) {
+ 
+      // here something went wrong when fetching firebase user token
+      toast.custom(
+        NotifyToast({
+          message: "Token update failed",
+          ErrorIcon: true,
+        })
+      );
+    }
+  });
 
+}
+
+
+  useEffect(()=>{
+    // run on the first render
+    genToken();
+
+  }, [])
+
+  useEffect(()=> {
     // get a new token every after 40 mins
     setInterval(() => {
       genToken();
     }, 1000 * 60 * 40);
+  }, );
 
-  }, [token]);
+}
 
-
-};
 
 //used on login and signup
 const useRedirectToChat = ( ) => {
@@ -139,7 +148,7 @@ function getCurrentUser() {
 export {
   useRedirectToChat,
   useCurrentUser,
-  useUserToken,
+  useUpdateToken,
   getStoredOnlineStatus,
   getCurrentUser,
   setAuthUser,

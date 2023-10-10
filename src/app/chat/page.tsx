@@ -12,7 +12,7 @@ import "react-tooltip/dist/react-tooltip.css";
 import withAuth from "@/lib/auth/withAuth";
 import config from "@/config/defaults.json";
 import { genUserId } from "@/helpers/genUserId";
-import { getCurrentUser, logout, useUserToken } from "@/helpers/user";
+import { getCurrentUser, logout, useUpdateToken } from "@/helpers/user";
 import { firebaseAuth } from "@/lib/firebaseApp";
 import authenicateUser from "@/lib/auth/authenicateUser";
 import type { ChatMessage, LoggedInUser, MessageFormat } from "@/misc/types";
@@ -33,9 +33,9 @@ registerServiceWorker();
 export const UserContext = React.createContext<LoggedInUser | null>(null);
 
 const Chat = () => {
+
   const [wss, setWss] = useState<WebSocket | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [token, setToken] = useState<string | null>(null);
   const [showProfile, setShowProfile] = useState<boolean>(false);
   const [timerId, setTimerId] = useState<NodeJS.Timeout | number | null>(null);
   const [reconnecting, setReconnecting] = useState<boolean>(false);
@@ -44,10 +44,16 @@ const Chat = () => {
   const chatRef = useRef<HTMLDivElement>(null);
 
   const user = getCurrentUser();
+  const { accessToken } = user.stsTokenManager;
+
+  const [token, setToken] = useState<string>(accessToken);
+  useUpdateToken({ onToken: setToken });
 
   // setting the token
-  useUserToken(token, setToken);
-  const { connect } = useConnect({ token, onWss: setWss, wss });
+  const { connect } = useConnect({
+    onWss: setWss,
+    wss,
+  });
 
   // open event
   const handleWebsocketOnOpen = (ev: Event) => {
