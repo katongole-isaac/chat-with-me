@@ -15,7 +15,12 @@ import { genUserId } from "@/helpers/genUserId";
 import { getCurrentUser, logout, useUpdateToken } from "@/helpers/user";
 import { firebaseAuth } from "@/lib/firebaseApp";
 import authenicateUser from "@/lib/auth/authenicateUser";
-import type { ChatMessage, LoggedInUser, MessageFormat } from "@/misc/types";
+import {
+  CommandTypes,
+  type ChatMessage,
+  type LoggedInUser,
+  type MessageFormat,
+} from "@/misc/types";
 
 import Profile from "@/components/user/profile";
 import ChatMenu from "@/components/chat/chatMenu";
@@ -27,19 +32,20 @@ import LostConnectivity from "@/components/lostConnectivity";
 import registerServiceWorker from "@/registerServiceWorker";
 import useConnect from "@/helpers/useConnect";
 import InfinityToast from "@/components/toasts/reconnectToast";
+import CreateRoom from "@/components/rooms/createRoom";
 
 registerServiceWorker();
 
 export const UserContext = React.createContext<LoggedInUser | null>(null);
 
 const Chat = () => {
-
   const [wss, setWss] = useState<WebSocket | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [showProfile, setShowProfile] = useState<boolean>(false);
   const [timerId, setTimerId] = useState<NodeJS.Timeout | number | null>(null);
   const [reconnecting, setReconnecting] = useState<boolean>(false);
   const [reconnectToastId, setReconnectToastId] = useState<string>("");
+  const [ showModal, setShowModal  ] = useState(false);
 
   const chatRef = useRef<HTMLDivElement>(null);
 
@@ -66,7 +72,7 @@ const Chat = () => {
     }
 
     const checkOnlineStatus: MessageFormat = {
-      type: "login",
+      type: CommandTypes.LOGIN,
     };
 
     wss!.send(JSON.stringify(checkOnlineStatus));
@@ -77,22 +83,24 @@ const Chat = () => {
     const data = JSON.parse(ev.data) as MessageFormat;
 
     switch (data.type) {
-      case "error":
+      case CommandTypes.ERROR_ROOM:
         toast.custom(<NotifyToast message={data.params?.message} ErrorIcon />);
         break;
 
-      case "login":
-        console.log("Login", data.params);
-        break;
+      case CommandTypes.SUCCESS_ROOM:
+        toast.success(`${data.params?.message}`, {position:"bottom-left",duration: 8000} )
+      break;
 
       default:
-        console.log("Invalid message type");
+        console.log("Invalid message type", data);
     }
 
     setMessages((prev) => [...prev, ev.data]);
   };
 
-  const handleWebsocketOnError = (ev: Event) => {};
+  const handleWebsocketOnError = (ev: Event) => {
+    console.log('websocket error');
+  };
 
   const handleSubmitMsg = (msg: string) => {
     console.log(msg);
@@ -103,7 +111,7 @@ const Chat = () => {
   };
 
   const handleWebsocketOnClose = (ev: CloseEvent) => {
-    console.log('socket closed');
+    console.log("socket closed");
     let timeout;
 
     // reseting reconnecting state
@@ -112,10 +120,10 @@ const Chat = () => {
     if (!reconnecting) setReconnecting(true);
 
     timeout = setInterval(() => {
-       connect(); // reconnect;
+      connect(); // reconnect;
     }, 1000);
 
-     setTimerId(timeout);
+    setTimerId(timeout);
   };
 
   const handleProfileClick = () => {
@@ -125,7 +133,10 @@ const Chat = () => {
   };
 
   useEffect(() => {
+
     if (wss) {
+      console.log('rendering...');
+
       wss.addEventListener("open", handleWebsocketOnOpen);
       wss.addEventListener("message", handleWebsocketOnMessage);
       wss.addEventListener("error", handleWebsocketOnError);
@@ -143,6 +154,7 @@ const Chat = () => {
 
   return (
     <UserContext.Provider value={{ user, wss }}>
+     {showModal &&  <CreateRoom onModal={setShowModal} showModal={showModal} />}
       <div className="w-screen h-screen bg-zinc-200">
         <div className="py-8 w-full h-full ">
           <div className="max-w-[1200px] bg-zinc-100 h-full shadow-lg  m-auto border ">
@@ -150,7 +162,7 @@ const Chat = () => {
               {/* fist grid */}
               <div className="w-full h-full overflow-y-auto max-h-full  min-w-0 min-h-0 relative custom-scrollbar">
                 {!showProfile && (
-                  <ChatMenu onProfileClick={handleProfileClick} />
+                  <ChatMenu onShowModal={setShowModal} onProfileClick={handleProfileClick} />
                 )}
 
                 {showProfile && (

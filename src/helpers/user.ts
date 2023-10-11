@@ -65,15 +65,16 @@ const genToken = () => {
   useEffect(()=>{
     // run on the first render
     genToken();
+    
+    // get a new token every after 30 mins
+    setInterval(() => {
+      console.log('getting new token.... timer')
+      genToken();
+    }, 1000 * 60 * 30);
 
   }, [])
 
-  useEffect(()=> {
-    // get a new token every after 40 mins
-    setInterval(() => {
-      genToken();
-    }, 1000 * 60 * 40);
-  }, );
+ 
 
 }
 

@@ -13,20 +13,19 @@ import Tooltip from "../common/tootltip";
 
 import type { LoggedInUser } from "@/misc/types";
 import { UserContext } from "@/app/chat/page";
+import useClickOutside from "@/helpers/useOutClick";
+import CreateRoom from "../rooms/createRoom";
 
 type ChatMenuProps = {
   onProfileClick: Function;
+  onShowModal:React.Dispatch<boolean>
 };
 
-const ChatMenu = ({ onProfileClick }: ChatMenuProps) => {
+const ChatMenu = ({ onProfileClick, onShowModal }: ChatMenuProps) => {
   const { user, wss } = useContext(UserContext) as LoggedInUser;
 
   const { photoURL, displayName } = user?.providerData[0];
 
-  const createRoom = () => {
-    if(!wss) return;
-    
-  };
 
   return (
     <div className="w-full bg-zinc-300 p-2">
@@ -42,14 +41,14 @@ const ChatMenu = ({ onProfileClick }: ChatMenuProps) => {
             </div>
             <OnlineStatus />
           </div>
-
         </div>
         <div className="flex items-center justify-center gap-8 ">
           <div className="">
             <MdGroupAdd
               size={20}
-              onClick={() => createRoom()}
+              onClick={() => onShowModal(true)}
               className="cursor-pointer"
+              disabled={wss && wss.readyState === WebSocket.CLOSED}
               data-tooltip-id="group_icon"
             />
             <Tooltip id="group_icon">

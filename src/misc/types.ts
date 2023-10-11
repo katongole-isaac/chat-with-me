@@ -25,10 +25,21 @@ export interface LoggedInUser {
 }
 
 // commands for the websocket
-type Commands = "login" | "join" | "leave" | "create" | "error" | "success";
+// defining command types.
+// ==================
+// SAME AS THE BACKEND
+//====================
+export enum CommandTypes {
+  LOGIN = "login",
+  JOIN_ROOM = "join",
+  LEAVE_ROOM = "leave",
+  CREATE_ROOM = "create",
+  ERROR_ROOM = "error",
+  SUCCESS_ROOM = "success"
+}
 
 // describes message format used
 export interface MessageFormat {
-  type: Commands;
+  type: CommandTypes;
   params?: Record<string, any>;
 }
