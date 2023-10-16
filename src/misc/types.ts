@@ -35,7 +35,8 @@ export enum CommandTypes {
   LEAVE_ROOM = "leave",
   CREATE_ROOM = "create",
   ERROR_ROOM = "error",
-  SUCCESS_ROOM = "success"
+  GET_ROOMS_INFO = "getRoomsInfo",
+  SUCCESS_ROOM = "success",
 }
 
 // describes message format used
