@@ -3,29 +3,19 @@
  *
  */
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { FaRegFaceSmile } from "react-icons/fa6";
+import { useShowHideModal } from "@/helpers/useShowHideModal";
 
 interface EmojiPickerProps {
   onEmojiSelect: React.Dispatch<(arg: string) => string | string>;
 }
 
 export default function EmojiPicker({ onEmojiSelect }: EmojiPickerProps) {
-  const [showPicker, setShowPicker] = useState(false);
-
-  useEffect(() => {
-    document.addEventListener("keydown", handleKeyPress);
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyPress);
-    };
-  });
-
-  const handleKeyPress = (e: KeyboardEvent):void => {
-    if (showPicker && e.code === "Escape") setShowPicker(false);
-  };
+  const { showModal: showPicker, setShowModal: setShowPicker } =
+    useShowHideModal();
 
   return (
     <div className="">
@@ -51,3 +41,4 @@ export default function EmojiPicker({ onEmojiSelect }: EmojiPickerProps) {
     </div>
   );
 }
+

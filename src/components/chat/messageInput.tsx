@@ -7,6 +7,7 @@ import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import { IoSendSharp } from "react-icons/io5";
 import EmojiPicker from "./emojiPicker";
+import ChatActions from "./actions";
 
 interface MsgProps {
   onSubmit: Function;
@@ -90,9 +91,10 @@ const MessageInput = ({ onSubmit, chatDivRef }: MsgProps) => {
       <div className="w-full flex items-center justify-center gap-4">
         <div className="flex w-full items-center gap-2 px-3 bg-neutral-100 ">
           {/*  message input */}
-          <div className="w-full  flex-1 h-full max-h-32 overflow-y-auto custom-scrollbar  ">
+          <ChatActions />
+          <div className="w-full flex-1 h-full max-h-32 overflow-y-auto custom-scrollbar ">
             <textarea
-              className=" px-3 py-1 bg-transparent text-slate-700 rounded-md w-full focus:outline-none resize-none custom-scrollbar"
+              className=" px-3 bg-transparent text-slate-700 rounded-md w-full focus:outline-none resize-none custom-scrollbar"
               placeholder="Write a message"
               value={message}
               ref={msgInputRef}
