@@ -33,6 +33,7 @@ import Tabs from "@/components/common/tabs";
 import ChatLists from "@/components/chat/chatLists";
 import Search from "@/components/common/search";
 import ChatTopBar from "@/components/chat/chatTopBar";
+import EmojiPicker from "@/components/chat/emojiPicker";
 
 registerServiceWorker();
 
@@ -212,7 +213,7 @@ const Chat = () => {
                   
 
                   {/* message Input */}
-                  <div className="basis-20 absolute bottom-0 w-full max-h-32 overflow-clip ">
+                  <div className="basis-20 absolute bottom-0 w-full max-h-32 overflow-x-clip ">
                     <MessageInput onSubmit={handleSubmitMsg} ref={chatRef} />
                   </div>
 
