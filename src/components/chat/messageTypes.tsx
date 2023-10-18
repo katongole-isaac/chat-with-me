@@ -9,6 +9,7 @@ import { LiaDownloadSolid } from "react-icons/lia";
 import { AiOutlineLink } from "react-icons/ai";
 
 import GameImage from "@/assets/images/games.png";
+import { OptionsIcon } from "./messageOptions";
 
 export const Timeline = ({ text }: { text: String }) => {
   return (
@@ -38,7 +39,23 @@ const TextLine = ({ message }: any) => {
   );
 };
 
-export const Text = ({ message, incoming, classes }: any) => {
+// text message thats shown
+export const TextMsg = (props: any) => {
+  const classes = props?.classes || "max-w-[100%]";
+
+  return (
+    <div
+      className={`group max-w-[65%] ${
+        props?.incoming ? "self-start" : "self-end"
+      } relative`}
+    >
+      <Text classes={classes} {...props} />
+      <OptionsIcon incoming={props?.incoming} />
+    </div>
+  );
+};
+
+const Text = ({ message, incoming, classes }: any) => {
   return (
     <div
       className={` ${
@@ -46,7 +63,7 @@ export const Text = ({ message, incoming, classes }: any) => {
           ? "self-start bg-white text-slate-900 "
           : "self-end bg-blue-500 text-white "
       } py-2 px-4 w-max  break-words rounded-md ${
-        classes ? classes : "max-w-[65%] "
+        classes ? classes : "max-w-[65%]"
       } `}
     >
       <TextLine message={message} />
@@ -59,7 +76,7 @@ export const Media = ({ message, incoming }: any) => {
     <div
       className={`flex flex-col gap-2  ${
         incoming ? "self-start bg-white " : "self-end bg-blue-500"
-      }  max-w-[350px] max-h-auto rounded-md `}
+      }  max-w-[350px] max-h-auto rounded-md relative group`}
     >
       {/* image wrapper */}
       <div className={`p-1 overflow-hidden rounded-md  cursor-pointer `}>
@@ -73,6 +90,7 @@ export const Media = ({ message, incoming }: any) => {
         {/* <IoImageOutline className="w-full h-full text-gray-400" /> */}
       </div>
       <Text message={message} incoming={incoming} classes="max-w-[100%]" />
+      <OptionsIcon incoming={incoming} />
     </div>
   );
 };
@@ -80,9 +98,9 @@ export const Media = ({ message, incoming }: any) => {
 export const Reply = ({ reply, message, incoming }: any) => {
   return (
     <div
-      className={`  ${
+      className={` ${
         incoming ? "self-start bg-white " : "self-end bg-blue-500"
-      } p-1 rounded-md max-w-[65%]`}
+      }  p-1 rounded-md max-w-[65%] group relative `}
     >
       {/*  quotting the reply message */}
       <div className="bg-[#fafafa] text-gray-500 border-l-4 p-1 rounded-md ">
@@ -92,6 +110,7 @@ export const Reply = ({ reply, message, incoming }: any) => {
       <div className="text-white p-1">
         <TextLine message={message} />
       </div>
+      <OptionsIcon incoming={incoming} />
     </div>
   );
 };
@@ -103,7 +122,7 @@ export const LinkMsg = ({ incoming, message }: any) => {
         incoming
           ? "self-start bg-white text-slate-900 "
           : "self-end bg-blue-500 text-white "
-      } py-2 px-2 w-max max-w-[65%] space-y-1 break-words rounded-md `}
+      } py-2 px-2 w-max max-w-[65%] space-y-1 break-words rounded-md relative group `}
     >
       <Link
         href={`http://www.youtube.com`}
@@ -118,6 +137,7 @@ export const LinkMsg = ({ incoming, message }: any) => {
         </div>
       </Link>
       <TextLine message={message} />
+      <OptionsIcon incoming={incoming} />
     </div>
   );
 };
@@ -129,7 +149,7 @@ export const MediaDocument = ({ incoming, message }: any) => {
         incoming
           ? "self-start bg-white text-slate-900 "
           : "self-end bg-blue-500 text-white "
-      } py-2 px-2 w-max max-w-[65%] space-y-1 break-words rounded-md `}
+      } py-2 px-2 w-max max-w-[65%] space-y-1 break-words rounded-md relative group `}
     >
       <div className={`p-1 overflow-hidden rounded-md  cursor-pointer `}>
         <Image
@@ -142,7 +162,9 @@ export const MediaDocument = ({ incoming, message }: any) => {
       </div>
 
       <div className="flex gap-3 w-full justify-between items-center bg-slate-100 p-2 rounded-md">
-        <span className="text-gray-500" >Master JavaaScript and TypeScrit PDF</span>
+        <span className="text-gray-500">
+          Master JavaaScript and TypeScrit PDF
+        </span>
         <div
           role="button"
           className=" flex justify-center items-center w-8 h-8 border border-slate-400 rounded-full "
@@ -151,6 +173,7 @@ export const MediaDocument = ({ incoming, message }: any) => {
         </div>
       </div>
       <Text message={message} incoming={incoming} classes="max-w-[100%]" />
+      <OptionsIcon incoming={incoming} />
     </div>
   );
 };

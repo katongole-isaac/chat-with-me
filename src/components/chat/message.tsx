@@ -4,7 +4,7 @@
  *
  */
 
-import { Media, Text, Timeline, Reply, LinkMsg, MediaDocument } from "./messageTypes";
+import { Media, Timeline, Reply, LinkMsg, MediaDocument, TextMsg } from "./messageTypes";
 
 const chat_history = [
   {
@@ -76,7 +76,7 @@ export default function Message() {
 
               default:
                 // text
-                return <Text key={idx} {...item} />;
+                return <TextMsg key={idx} {...item} />;
             }
             break;
 
