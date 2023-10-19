@@ -207,7 +207,7 @@ const Chat = () => {
                   {/*  chat message section
                    * Conversation
                    */}
-                  <div className="w-full flex-1 overflow-y-auto custom-scrollbar ">
+                  <div className="w-full max-w-full flex-1 overflow-y-auto custom-scrollbar ">
                     <Conversation ref={chatRef} messages={messages} />
                   </div>
                   

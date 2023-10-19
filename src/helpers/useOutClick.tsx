@@ -7,7 +7,7 @@ import React, { useEffect, RefObject } from "react";
 
 /**
  * Close modal when clicked outside
- * @param {*} object
+ *
  */
 
 type Params<T> = {
