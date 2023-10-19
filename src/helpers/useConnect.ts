@@ -9,39 +9,44 @@ import { useRouter } from "next/navigation";
 import config from "@/config/defaults.json";
 import authenicateUser from "@/lib/auth/authenicateUser";
 import NotifyToast from "@/components/toasts/notify";
-import { logout } from "./user";
+import { getCurrentUser, logout } from "./user";
 import { firebaseAuth } from "@/lib/firebaseApp";
 
 type ConnectParams = {
-  token: string | null;
-  wss: WebSocket | null;
   onWss: Function;
+  wss: WebSocket | null;
 };
 
-const useConnect = ({ token, wss, onWss }: ConnectParams) => {
+const useConnect = ({ wss, onWss, }: ConnectParams) => {
   const router = useRouter();
+
+ const user  = getCurrentUser();
+
+ const {accessToken: _token} = user.stsTokenManager;
 
   // connect func - is used in the onclose websocket handler
   // to reconnect to the server
   const connect = async () => {
     // if we have the token and the websocket is closed or null
     // try to connect
+
     if (
-      !((wss === null || (wss && wss.readyState === WebSocket.CLOSED)) && token)
+      !((wss === null || (wss && wss.readyState === WebSocket.CLOSED)) && _token)
     )
       return;
 
     // first authenticate
-    const res = await authenicateUser(token);
+    const res = await authenicateUser(_token);
 
     if (res?.message === "ok")
       return onWss(
-        new WebSocket(`${config.websocketUrl}/?token=${token}`, ["json"])
+        new WebSocket(`${config.websocketUrl}/?token=${_token}`, ["json"])
       );
 
     // when the user token is invalid (wrong)
     // u need to logout the user.
-    if (res?.redirectUrl) {
+
+    if (res?.redirectUrl && !_token ) {
       toast.custom(
         NotifyToast({
           message: "Authentication failed, Please try again",
@@ -59,9 +64,12 @@ const useConnect = ({ token, wss, onWss }: ConnectParams) => {
     }
   };
 
+  
   useEffect(() => {
-    if (!wss) connect();
-  }, [token, wss]);
+
+    if (!wss && _token) connect();
+
+  }, [_token, wss]);
 
   return { connect };
 };

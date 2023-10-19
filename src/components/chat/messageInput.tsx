@@ -6,21 +6,19 @@
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import { IoSendSharp } from "react-icons/io5";
+import EmojiPicker from "./emojiPicker";
+import ChatActions from "./actions";
 
-type MsgProps = {
+interface MsgProps {
   onSubmit: Function;
   chatDivRef?: any;
-};
+}
 
 const MessageInput = ({ onSubmit, chatDivRef }: MsgProps) => {
   const [message, setMessage] = useState("");
   const msgInputRef = useRef<HTMLTextAreaElement>(null);
 
   const [readyToSend, setReadyToSend] = useState(false);
-
-  useEffect(() => {
-    chatDivRef.current.scrollTop = chatDivRef.current.scrollHeight;
-  }, [message]);
 
   const handleOnChange = ({
     target,
@@ -30,9 +28,11 @@ const MessageInput = ({ onSubmit, chatDivRef }: MsgProps) => {
     else setReadyToSend(false);
 
     setMessage(target.value);
+
+    console.log(message);
   };
 
-  const handleOnEnter = (e: KeyboardEvent) => {
+  const handleKeyPress = (e: KeyboardEvent) => {
     // on press Enter key
     if (
       e.code === "Enter" &&
@@ -44,6 +44,24 @@ const MessageInput = ({ onSubmit, chatDivRef }: MsgProps) => {
       msgInputRef.current!.value = "";
       setMessage("");
       setReadyToSend(false);
+
+      return;
+    }
+
+    // if shiftkey + enterKey is pressed and
+    // the active element is the message input,
+    // increase the height of the message input
+    if (
+      e.shiftKey &&
+      e.code === "Enter" &&
+      document.activeElement === msgInputRef.current
+    )
+      msgInputRef.current!.rows += 1;
+
+    // there are multi line without text, clear them and reset to rows =2
+    if (e.code === "Enter" && !message && msgInputRef.current!.rows > 2) {
+      e.preventDefault();
+      msgInputRef.current!.rows = 2;
     }
   };
 
@@ -57,23 +75,35 @@ const MessageInput = ({ onSubmit, chatDivRef }: MsgProps) => {
   };
 
   useEffect(() => {
-    document.addEventListener("keypress", handleOnEnter);
+    document.addEventListener("keypress", handleKeyPress);
 
     return () => {
-      document.removeEventListener("keypress", handleOnEnter);
+      document.removeEventListener("keypress", handleKeyPress);
     };
   });
 
+  useEffect(() => {
+    chatDivRef.current.scrollTop = chatDivRef.current.scrollHeight;
+  }, [message]);
+
   return (
-    <div className=" w-full  py-4 px-2 bg-zinc-100 space-x-2 ">
+    <div className=" w-full py-2 px-2  space-x-2  bg-gray-200 ">
       <div className="w-full flex items-center justify-center gap-4">
-        <textarea
-          className="text-[13px] p-3 border rounded-md w-full focus:outline-neutral-200 resize-none"
-          placeholder="Type a message"
-          value={message}
-          ref={msgInputRef}
-          onChange={(e) => handleOnChange(e)}
-        />
+        <div className="flex w-full items-center gap-2 px-3 bg-neutral-100 ">
+          {/*  message input */}
+          <ChatActions />
+          <div className="w-full flex-1 h-full max-h-32 overflow-y-auto custom-scrollbar ">
+            <textarea
+              className=" px-3 bg-transparent text-slate-700 rounded-md w-full focus:outline-none resize-none custom-scrollbar"
+              placeholder="Write a message"
+              value={message}
+              ref={msgInputRef}
+              onChange={(e) => handleOnChange(e)}
+            />
+          </div>
+
+          <EmojiPicker onEmojiSelect={setMessage} />
+        </div>
 
         <button
           disabled={!readyToSend}
@@ -82,8 +112,8 @@ const MessageInput = ({ onSubmit, chatDivRef }: MsgProps) => {
         >
           <IoSendSharp
             className={`${
-              !readyToSend ? "text-zinc-200" : "text-blue-600"
-            } text-[20px] `}
+              !readyToSend ? "text-zinc-300" : "text-blue-600"
+            } text-[20px] transition-colors duration-100 `}
           />
         </button>
       </div>

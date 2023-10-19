@@ -8,7 +8,7 @@ import { useContext } from "react";
 import  {MdDriveFileRenameOutline}  from 'react-icons/md'
 
 import { LoginedUser, UserContext } from "@/app/chat/page";
-import UserAvatar from "./avatar";
+import Avatar from "./avatar";
 
 export default function UserDetails() {
   const { user } = useContext(UserContext) as LoginedUser;
@@ -22,12 +22,12 @@ export default function UserDetails() {
   return (
     <div className="w-full ">
       <div className="w-full flex p-3 pb-8 items-center justify-center bg-zinc-300 ">
-        <div className="max-w-[100px] max-h-[100px] rounded-full overflow-hidden ">
-          <UserAvatar
+        <div className="max-w-[100px] max-h-[100px] border border-rose-700 rounded-full flex justify-center items-center p-2 overflow-hidden">
+          <Avatar
             displayName={displayName}
             photoURL={photoURL}
-            avatarSize={100}
-            avatarClassName="w-20  h-20"
+            avatarSize={70}
+           
           />
         </div>
       </div>
@@ -36,7 +36,7 @@ export default function UserDetails() {
         <MdDriveFileRenameOutline size={20} />
         <p className=" font-semibold tracking-wide">
           {" "}
-          {displayName ?? "Anonymous"}{" "}
+          {displayName ?? "Anonymous"}
         </p>
       </div>
     </div>

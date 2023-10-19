@@ -5,21 +5,22 @@
 "use client";
 
 import React, { startTransition, useRef, useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import "react-tooltip/dist/react-tooltip.css";
 
 import withAuth from "@/lib/auth/withAuth";
-import config from "@/config/defaults.json";
 import { genUserId } from "@/helpers/genUserId";
-import { getCurrentUser, logout, useUserToken } from "@/helpers/user";
-import { firebaseAuth } from "@/lib/firebaseApp";
-import authenicateUser from "@/lib/auth/authenicateUser";
-import type { ChatMessage, LoggedInUser, MessageFormat } from "@/misc/types";
+import { getCurrentUser, logout, useUpdateToken } from "@/helpers/user";
+import {
+  CommandTypes,
+  type ChatMessage,
+  type LoggedInUser,
+  type MessageFormat,
+} from "@/misc/types";
 
 import Profile from "@/components/user/profile";
 import ChatMenu from "@/components/chat/chatMenu";
-import ChatDisplay from "@/components/chat/chatDisplay";
+import Conversation from "@/components/chat/conversation";
 import MessageInput from "@/components/chat/messageInput";
 import DefaultToaster from "@/components/toasts/toasterSetting";
 import NotifyToast from "@/components/toasts/notify";
@@ -27,6 +28,12 @@ import LostConnectivity from "@/components/lostConnectivity";
 import registerServiceWorker from "@/registerServiceWorker";
 import useConnect from "@/helpers/useConnect";
 import InfinityToast from "@/components/toasts/reconnectToast";
+import CreateRoom from "@/components/rooms/createRoom";
+import Tabs from "@/components/common/tabs";
+import ChatLists from "@/components/chat/chatLists";
+import Search from "@/components/common/search";
+import ChatTopBar from "@/components/chat/chatTopBar";
+import EmojiPicker from "@/components/chat/emojiPicker";
 
 registerServiceWorker();
 
@@ -35,19 +42,26 @@ export const UserContext = React.createContext<LoggedInUser | null>(null);
 const Chat = () => {
   const [wss, setWss] = useState<WebSocket | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [token, setToken] = useState<string | null>(null);
   const [showProfile, setShowProfile] = useState<boolean>(false);
   const [timerId, setTimerId] = useState<NodeJS.Timeout | number | null>(null);
   const [reconnecting, setReconnecting] = useState<boolean>(false);
   const [reconnectToastId, setReconnectToastId] = useState<string>("");
+  const [showModal, setShowModal] = useState(false);
+  const [rooms, setRooms] = useState([]);
 
   const chatRef = useRef<HTMLDivElement>(null);
 
   const user = getCurrentUser();
+  const { accessToken } = user.stsTokenManager;
+
+  const [token, setToken] = useState<string>(accessToken);
+  useUpdateToken({ onToken: setToken });
 
   // setting the token
-  useUserToken(token, setToken);
-  const { connect } = useConnect({ token, onWss: setWss, wss });
+  const { connect } = useConnect({
+    onWss: setWss,
+    wss,
+  });
 
   // open event
   const handleWebsocketOnOpen = (ev: Event) => {
@@ -59,11 +73,17 @@ const Chat = () => {
       toast.dismiss(reconnectToastId);
     }
 
-    const checkOnlineStatus: MessageFormat = {
-      type: "login",
-    };
+    const queries: MessageFormat[] = [
+      {
+        type: CommandTypes.GET_ROOMS_INFO,
+        params: { uid: user.uid },
+      },
+      {
+        type: CommandTypes.LOGIN,
+      },
+    ];
 
-    wss!.send(JSON.stringify(checkOnlineStatus));
+    queries.forEach((query) => wss!.send(JSON.stringify(query)));
   };
 
   // message event
@@ -71,22 +91,30 @@ const Chat = () => {
     const data = JSON.parse(ev.data) as MessageFormat;
 
     switch (data.type) {
-      case "error":
+      case CommandTypes.ERROR_ROOM:
         toast.custom(<NotifyToast message={data.params?.message} ErrorIcon />);
         break;
 
-      case "login":
-        console.log("Login", data.params);
+      case CommandTypes.SUCCESS_ROOM:
+        toast.success(`${data.params?.message}`, {
+          position: "bottom-left",
+          duration: 5000,
+        });
+        break;
+      case CommandTypes.GET_ROOMS_INFO:
+        setRooms(data.params?.rooms);
         break;
 
       default:
-        console.log("Invalid message type");
+        console.log("Invalid message type", data);
     }
 
     setMessages((prev) => [...prev, ev.data]);
   };
 
-  const handleWebsocketOnError = (ev: Event) => {};
+  const handleWebsocketOnError = (ev: Event) => {
+    console.log("websocket error");
+  };
 
   const handleSubmitMsg = (msg: string) => {
     console.log(msg);
@@ -97,7 +125,7 @@ const Chat = () => {
   };
 
   const handleWebsocketOnClose = (ev: CloseEvent) => {
-    console.log('socket closed');
+    console.log("socket closed");
     let timeout;
 
     // reseting reconnecting state
@@ -106,10 +134,10 @@ const Chat = () => {
     if (!reconnecting) setReconnecting(true);
 
     timeout = setInterval(() => {
-       connect(); // reconnect;
+      connect(); // reconnect;
     }, 1000);
 
-     setTimerId(timeout);
+    setTimerId(timeout);
   };
 
   const handleProfileClick = () => {
@@ -120,6 +148,8 @@ const Chat = () => {
 
   useEffect(() => {
     if (wss) {
+      console.log("rendering...");
+
       wss.addEventListener("open", handleWebsocketOnOpen);
       wss.addEventListener("message", handleWebsocketOnMessage);
       wss.addEventListener("error", handleWebsocketOnError);
@@ -137,33 +167,58 @@ const Chat = () => {
 
   return (
     <UserContext.Provider value={{ user, wss }}>
+      {showModal && <CreateRoom onModal={setShowModal} showModal={showModal} />}
       <div className="w-screen h-screen bg-zinc-200">
-        <div className="py-8 w-full h-full ">
+        <div className="py-8 w-full h-full flex justify-center items-center ">
           <div className="max-w-[1200px] bg-zinc-100 h-full shadow-lg  m-auto border ">
             <div className="grid grid-cols-[1.5fr_3fr] h-full">
               {/* fist grid */}
-              <div className="w-full h-full overflow-y-auto max-h-full  min-w-0 min-h-0 relative custom-scrollbar">
-                {!showProfile && (
-                  <ChatMenu onProfileClick={handleProfileClick} />
+              <div className="w-full h-full max-h-full  min-w-0 min-h-0 relative">
+                {showProfile ? (
+                  <Profile onClose={setShowProfile} showProfile={showProfile} />
+                ) : (
+                  <div className="w-full h-full flex flex-col ">
+                    <div className="">
+                      <ChatMenu
+                        onShowModal={setShowModal}
+                        onProfileClick={handleProfileClick}
+                      />
+                      <Search />
+                      <Tabs />
+                    </div>
+
+                    <div className="w-full flex-1 h-full overflow-y-auto  custom-scrollbar ">
+                      <ChatLists />
+                    </div>
+                  </div>
                 )}
 
-                {showProfile && (
-                  <Profile onClose={setShowProfile} showProfile={showProfile} />
-                )}
                 <LostConnectivity />
               </div>
 
               {/* second grid */}
-              <div className="border-l min-w-0 min-h-0 relative">
-                <div className="h-full flex flex-col">
-                  <div className="flex-1">
-                    <div className="max-h-[810px] h-full min-h-[810px] relative custom-scrollbar overflow-y-auto ">
-                      <ChatDisplay ref={chatRef} messages={messages} />
-                    </div>
-                  </div>
+              <div className="border-l min-w-0 min-h-0 max-h-full relative ">
+                <div className="h-full max-h-full flex flex-col">
+                  {/* chat top bar */}
                   <div className="">
+                    <ChatTopBar />
+                  </div>
+
+                  {/*  chat message section
+                   * Conversation
+                   */}
+                  <div className="w-full flex-1 overflow-y-auto custom-scrollbar ">
+                    <Conversation ref={chatRef} messages={messages} />
+                  </div>
+                  
+
+                  {/* message Input */}
+                  <div className="basis-20 absolute bottom-0 w-full max-h-32 overflow-x-clip ">
                     <MessageInput onSubmit={handleSubmitMsg} ref={chatRef} />
                   </div>
+
+                  {/* This element occupy the space for the message input because the message input is postion absolute  */}
+                  <div className="basis-20"></div>
                 </div>
               </div>
             </div>

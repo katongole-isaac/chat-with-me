@@ -95,7 +95,7 @@ export default function Login() {
                 type="submit"
                 disabled={isLoading}
                 className={`border p-1 bg-blue-600  text-white rounded-md ${
-                  isLoading ? "disabled:opacity-40 disabled:curso-de" : ""
+                  isLoading ? "diFormsabled:opacity-40 disabled:curso-de" : ""
                 }`}
               >
                 {!isLoading ? "login" : "loading..."}

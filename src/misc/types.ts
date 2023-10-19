@@ -5,7 +5,7 @@
 /**
  * message properties
  */
-export type ChatMessage = {
+export interface ChatMessage{
   from: string;
   to: string;
   message: string;
@@ -25,10 +25,34 @@ export interface LoggedInUser {
 }
 
 // commands for the websocket
-type Commands = "login" | "join" | "leave" | "create" | "error" | "success";
+// defining command types.
+// ==================
+// SAME AS THE BACKEND
+//====================
+export enum CommandTypes {
+  LOGIN = "login",
+  JOIN_ROOM = "join",
+  LEAVE_ROOM = "leave",
+  CREATE_ROOM = "create",
+  ERROR_ROOM = "error",
+  GET_ROOMS_INFO = "getRoomsInfo",
+  SUCCESS_ROOM = "success",
+}
 
 // describes message format used
 export interface MessageFormat {
-  type: Commands;
+  type: CommandTypes;
   params?: Record<string, any>;
+}
+
+// used in messageTypes components
+export interface ShowMessageOpts 
+   {
+    isOpen:boolean;
+    id:string|number
+  };
+
+export interface MessageOptionContextProps {
+  showMessageOption:ShowMessageOpts;
+  setShowMessageOption: React.Dispatch<(arg: ShowMessageOpts ) => ShowMessageOpts | ShowMessageOpts>;
 }
