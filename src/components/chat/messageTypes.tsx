@@ -2,14 +2,22 @@
  * Include different message components
  *
  */
-import React from "react";
+import React, { useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { LiaDownloadSolid } from "react-icons/lia";
 import { AiOutlineLink } from "react-icons/ai";
 
 import GameImage from "@/assets/images/games.png";
-import { OptionsIcon } from "./messageOptions";
+import MessageOptions, { OptionsIcon } from "./messageOptions";
+import { MessageOptionContext } from "./message";
+import { MessageOptionContextProps, ShowMessageOpts } from "@/misc/types";
+
+interface MsgOptionsProps {
+  id: number;
+  showMessageOption: ShowMessageOpts;
+  classes?: string;
+}
 
 export const Timeline = ({ text }: { text: String }) => {
   return (
@@ -18,6 +26,16 @@ export const Timeline = ({ text }: { text: String }) => {
       <span className="flex-shrink mx-4 text-gray-400">{text}</span>
       <div className="flex-grow border-t border-gray-400"></div>
     </div>
+  );
+};
+
+const Options = ({ id, showMessageOption, classes }: MsgOptionsProps) => {
+  return (
+    <React.Fragment>
+      {showMessageOption.isOpen && id === (showMessageOption.id as number) && (
+        <MessageOptions classes={classes} />
+      )}
+    </React.Fragment>
   );
 };
 
@@ -43,6 +61,10 @@ const TextLine = ({ message }: any) => {
 export const TextMsg = (props: any) => {
   const classes = props?.classes || "max-w-[100%]";
 
+  const { showMessageOption } = useContext(
+    MessageOptionContext
+  ) as MessageOptionContextProps;
+
   return (
     <div
       className={`group max-w-[65%] ${
@@ -50,7 +72,12 @@ export const TextMsg = (props: any) => {
       } relative`}
     >
       <Text classes={classes} {...props} />
-      <OptionsIcon incoming={props?.incoming} />
+      <OptionsIcon incoming={props?.incoming} id={props?.id} />
+      <Options
+        id={props?.id as number}
+        classes="-right-28 top-4"
+        showMessageOption={showMessageOption}
+      />
     </div>
   );
 };
@@ -71,7 +98,10 @@ const Text = ({ message, incoming, classes }: any) => {
   );
 };
 
-export const Media = ({ message, incoming }: any) => {
+export const Media = ({ message, incoming, id }: any) => {
+  const { showMessageOption } = useContext(
+    MessageOptionContext
+  ) as MessageOptionContextProps;
   return (
     <div
       className={`flex flex-col gap-2  ${
@@ -90,12 +120,21 @@ export const Media = ({ message, incoming }: any) => {
         {/* <IoImageOutline className="w-full h-full text-gray-400" /> */}
       </div>
       <Text message={message} incoming={incoming} classes="max-w-[100%]" />
-      <OptionsIcon incoming={incoming} />
+      <OptionsIcon incoming={incoming} id={id as number} />
+
+      <Options
+        id={id}
+        classes="-right-28 top-4"
+        showMessageOption={showMessageOption}
+      />
     </div>
   );
 };
 
-export const Reply = ({ reply, message, incoming }: any) => {
+export const Reply = ({ reply, message, incoming, id }: any) => {
+  const { showMessageOption } = useContext(
+    MessageOptionContext
+  ) as MessageOptionContextProps;
   return (
     <div
       className={` ${
@@ -110,70 +149,95 @@ export const Reply = ({ reply, message, incoming }: any) => {
       <div className="text-white p-1">
         <TextLine message={message} />
       </div>
-      <OptionsIcon incoming={incoming} />
+      <OptionsIcon incoming={incoming} id={id as number} />
+      <Options
+        id={id}
+        classes="-right-28 top-4"
+        showMessageOption={showMessageOption}
+      />
     </div>
   );
 };
 
-export const LinkMsg = ({ incoming, message }: any) => {
+export const LinkMsg = ({ incoming, message, id }: any) => {
+  const { showMessageOption } = useContext(
+    MessageOptionContext
+  ) as MessageOptionContextProps;
   return (
     <div
       className={` ${
         incoming
           ? "self-start bg-white text-slate-900 "
           : "self-end bg-blue-500 text-white "
-      } py-2 px-2 w-max max-w-[65%] space-y-1 break-words rounded-md relative group `}
+      } max-w-[65%] relative group `}
     >
-      <Link
-        href={`http://www.youtube.com`}
-        target="_blank"
-        className={`${
-          incoming ? "bg-blue-100 text-blue-400" : "bg-[#fafafa] text-sky-600"
-        } flex gap-2 items-center px-2 rounded-md py-1 cursor-pointer hover:underline`}
-      >
-        <AiOutlineLink size={25} className={`${incoming ? "" : ""}`} />
-        <div className="flex flex-col gap-1">
-          <span> http://www.youtube.com </span>
-        </div>
-      </Link>
-      <TextLine message={message} />
-      <OptionsIcon incoming={incoming} />
-    </div>
-  );
-};
-
-export const MediaDocument = ({ incoming, message }: any) => {
-  return (
-    <div
-      className={` ${
-        incoming
-          ? "self-start bg-white text-slate-900 "
-          : "self-end bg-blue-500 text-white "
-      } py-2 px-2 w-max max-w-[65%] space-y-1 break-words rounded-md relative group `}
-    >
-      <div className={`p-1 overflow-hidden rounded-md  cursor-pointer `}>
-        <Image
-          src={GameImage}
-          alt=""
-          width={`${350}`}
-          height={100}
-          className="h-auto w-auto "
-        />
-      </div>
-
-      <div className="flex gap-3 w-full justify-between items-center bg-slate-100 p-2 rounded-md">
-        <span className="text-gray-500">
-          Master JavaaScript and TypeScrit PDF
-        </span>
-        <div
-          role="button"
-          className=" flex justify-center items-center w-8 h-8 border border-slate-400 rounded-full "
+      <div className="py-2 px-2 w-max  space-y-1 break-words rounded-md">
+        <Link
+          href={`http://www.youtube.com`}
+          target="_blank"
+          className={`${
+            incoming ? "bg-blue-100 text-blue-400" : "bg-[#fafafa] text-sky-600"
+          } flex gap-2 items-center px-2 rounded-md py-1 cursor-pointer hover:underline`}
         >
-          <LiaDownloadSolid size={20} className=" text-gray-400" />
-        </div>
+          <AiOutlineLink size={25} className={`${incoming ? "" : ""}`} />
+          <div className="flex flex-col gap-1">
+            <span> http://www.youtube.com </span>
+          </div>
+        </Link>
+        <TextLine message={message} />
       </div>
-      <Text message={message} incoming={incoming} classes="max-w-[100%]" />
-      <OptionsIcon incoming={incoming} />
+      <OptionsIcon incoming={incoming} id={id as number} />
+      <Options
+        id={id}
+        classes="-right-28 top-4"
+        showMessageOption={showMessageOption}
+      />
+    </div>
+  );
+};
+
+export const MediaDocument = ({ incoming, message, id }: any) => {
+  const { showMessageOption } = useContext(
+    MessageOptionContext
+  ) as MessageOptionContextProps;
+  return (
+    <div
+      className={` ${
+        incoming
+          ? "self-start bg-white text-slate-900 "
+          : "self-end bg-blue-500 text-white "
+      } max-w-[65%] break-words rounded-md relative group `}
+    >
+      <div className=" space-y-1 py-2 px-2 w-max ">
+        <div className={`p-1 overflow-hidden rounded-md  cursor-pointer `}>
+          <Image
+            src={GameImage}
+            alt=""
+            width={`${350}`}
+            height={100}
+            className="h-auto w-auto "
+          />
+        </div>
+
+        <div className="flex gap-3 w-full justify-between items-center bg-slate-100 p-2 rounded-md">
+          <span className="text-gray-500">
+            Master JavaaScript and TypeScrit PDF
+          </span>
+          <div
+            role="button"
+            className=" flex justify-center items-center w-8 h-8 border border-slate-400 rounded-full "
+          >
+            <LiaDownloadSolid size={20} className=" text-gray-400" />
+          </div>
+        </div>
+        <Text message={message} incoming={incoming} classes="max-w-[100%]" />
+      </div>
+      <OptionsIcon incoming={incoming} id={id as number} />
+      <Options
+        id={id}
+        classes="-right-28 top-4"
+        showMessageOption={showMessageOption}
+      />
     </div>
   );
 };

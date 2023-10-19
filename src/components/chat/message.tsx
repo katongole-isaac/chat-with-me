@@ -4,7 +4,20 @@
  *
  */
 
-import { Media, Timeline, Reply, LinkMsg, MediaDocument, TextMsg } from "./messageTypes";
+import React, { useState } from "react";
+import {
+  Media,
+  Timeline,
+  Reply,
+  LinkMsg,
+  MediaDocument,
+  TextMsg,
+} from "./messageTypes";
+
+import { MessageOptionContextProps, ShowMessageOpts } from "@/misc/types";
+
+export const MessageOptionContext =
+  React.createContext<MessageOptionContextProps | null>(null);
 
 const chat_history = [
   {
@@ -53,37 +66,50 @@ const chat_history = [
 ];
 
 export default function Message() {
+  const [showMessageOption, setShowMessageOption] = useState<ShowMessageOpts>({
+    isOpen: false,
+    id: "",
+  });
+
   return (
-    <div className="flex flex-col gap-4 w-full justify-end">
-      {chat_history.map((item, idx) => {
-        switch (item.type) {
-          case "divider":
-            // timeline
-            return <Timeline key={idx} text={item.text as string} {...item} />;
-          case "msg":
-            switch (item.subtype) {
-              case "img":
-                return <Media key={idx} {...item} />;
+    <MessageOptionContext.Provider
+      value={{
+        showMessageOption,
+        setShowMessageOption,
+      }}
+    >
+      <div className="flex flex-col gap-4 w-full justify-end">
+        {chat_history.map((item, idx) => {
+          switch (item.type) {
+            case "divider":
+              // timeline
+              return (
+                <Timeline key={idx} text={item.text as string} {...item} />
+              );
+            case "msg":
+              switch (item.subtype) {
+                case "img":
+                  return <Media key={idx} {...item} id={idx} />;
 
-              case "link":
-                return <LinkMsg key={idx} {...item} />;
+                case "link":
+                  return <LinkMsg key={idx} {...item} id={idx} />;
 
-              case "doc":
-                return <MediaDocument key={idx} {...item} />;
-                
-              case "reply":
-                return <Reply key={idx} {...item} />;
+                case "doc":
+                  return <MediaDocument key={idx} {...item} id={idx} />;
 
-              default:
-                // text
-                return <TextMsg key={idx} {...item} />;
-            }
-            break;
+                case "reply":
+                  return <Reply key={idx} {...item} id={idx} />;
 
-          default:
-            break;
-        }
-      })}
-    </div>
+                default:
+                  // text
+                  return <TextMsg key={idx} {...item} id={idx} />;
+              }
+
+            default:
+              break;
+          }
+        })}
+      </div>
+    </MessageOptionContext.Provider>
   );
 }
