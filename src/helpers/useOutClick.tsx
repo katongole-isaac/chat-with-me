@@ -3,7 +3,7 @@
  *
  */
 
-import React, { useEffect, RefObject } from "react";
+import React, { useEffect, RefObject, SetStateAction } from "react";
 
 /**
  * Close modal when clicked outside
@@ -12,7 +12,7 @@ import React, { useEffect, RefObject } from "react";
 
 type Params<T> = {
   showModal: boolean;
-  onSetShowModal: React.Dispatch<boolean>;
+  onSetShowModal: React.Dispatch<SetStateAction<boolean> >;
   originRef: RefObject<T> | null;
   popupRef: RefObject<T> | null;
 };

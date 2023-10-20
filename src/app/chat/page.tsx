@@ -29,11 +29,10 @@ import registerServiceWorker from "@/registerServiceWorker";
 import useConnect from "@/helpers/useConnect";
 import InfinityToast from "@/components/toasts/reconnectToast";
 import CreateRoom from "@/components/rooms/createRoom";
-import Tabs from "@/components/common/tabs";
 import ChatLists from "@/components/chat/chatLists";
 import Search from "@/components/common/search";
 import ChatTopBar from "@/components/chat/chatTopBar";
-import EmojiPicker from "@/components/chat/emojiPicker";
+import ContactInfo from "@/components/contactInfo/contact";
 
 registerServiceWorker();
 
@@ -47,7 +46,9 @@ const Chat = () => {
   const [reconnecting, setReconnecting] = useState<boolean>(false);
   const [reconnectToastId, setReconnectToastId] = useState<string>("");
   const [showModal, setShowModal] = useState(false);
+  const [showContactDialog, setShowContactDialog] = useState(false);
   const [rooms, setRooms] = useState([]);
+  const [activeTab, setActiveTab] = useState("media");
 
   const chatRef = useRef<HTMLDivElement>(null);
 
@@ -184,7 +185,6 @@ const Chat = () => {
                         onProfileClick={handleProfileClick}
                       />
                       <Search />
-                      <Tabs />
                     </div>
 
                     <div className="w-full flex-1 h-full overflow-y-auto  custom-scrollbar ">
@@ -199,9 +199,17 @@ const Chat = () => {
               {/* second grid */}
               <div className="border-l min-w-0 min-h-0 max-h-full relative ">
                 <div className="h-full max-h-full flex flex-col">
+                  {showContactDialog && (
+                    <ContactInfo
+                      showContact={showContactDialog}
+                      onShowContact={setShowContactDialog}
+                      activeTab={activeTab}
+                      setActiveTab={setActiveTab}
+                    />
+                  )}
                   {/* chat top bar */}
                   <div className="">
-                    <ChatTopBar />
+                    <ChatTopBar onClick={setShowContactDialog} />
                   </div>
 
                   {/*  chat message section
@@ -210,7 +218,6 @@ const Chat = () => {
                   <div className="w-full max-w-full flex-1 overflow-y-auto custom-scrollbar ">
                     <Conversation ref={chatRef} messages={messages} />
                   </div>
-                  
 
                   {/* message Input */}
                   <div className="basis-20 absolute bottom-0 w-full max-h-32 overflow-x-clip ">

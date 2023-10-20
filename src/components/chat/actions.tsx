@@ -46,7 +46,7 @@ const ChatActions = () => {
   return (
     <div>
       {showAction ? (
-        <div className="bg-gray-200 text-gray-500 p-1 w-7 h-7 rounded-md flex items-center justify-center ">
+        <div className=" text-gray-500  w-6 h-6 rounded-md flex items-center justify-center ">
           <IoClose
             role="button"
             size={25}
@@ -99,7 +99,7 @@ const FloatingButton = ({
       >
         {icon({ size })}
       </div>
-      <div className="self-center hidden group-hover:block -right-24 top-2 bg-slate-800 text-gray-200 px-2 py-1 rounded-md text-[12px] w-max borderr border-red-500 ">
+      <div className="self-center hidden group-hover:block -right-24 top-2 bg-slate-800 text-gray-200 px-2 py-1 rounded-md text-[12px] w-max ">
         <span> {label} </span>
       </div>
     </div>

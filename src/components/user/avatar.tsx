@@ -8,7 +8,7 @@ import { RiAccountCircleFill } from "react-icons/ri";
 import Image from "next/image";
 import OnlineStatus from "../chat/onlineStatus";
 
-type Props = {
+interface Props {
   photoURL: string | null;
   displayName: string | null;
   avatarSize?: number;
@@ -30,21 +30,19 @@ const Avatar = ({
         onClick={onProfileClick ? () => onProfileClick() : () => {}}
         className="w-max max-w-[50px] max-h-[50px] flex justify-center items-center rounded-full overflow-hidden"
       >
-        <React.Fragment>
-          {photoURL !== null ? (
-            <Image
-              width={100}
-              height={100}
-              src={photoURL!}
-              alt={displayName ?? "Avatar"}
-            />
-          ) : (
-            <RiAccountCircleFill
-              size={avatarSize}
-              className={`text-slate-500 cursor-pointer ${avatarClassName}`}
-            />
-          )}
-        </React.Fragment>
+        {photoURL !== null && !!photoURL ? (
+          <Image
+            width={100}
+            height={100}
+            src={photoURL!}
+            alt={displayName ?? "Avatar"}
+          />
+        ) : (
+          <RiAccountCircleFill
+            size={avatarSize}
+            className={`text-slate-500 cursor-pointer ${avatarClassName}`}
+          />
+        )}
       </div>
 
       {/* Re-positioning the online based based on whether photo is not null or not */}
