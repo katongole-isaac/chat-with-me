@@ -6,7 +6,7 @@ import { MdOutlineCall } from "react-icons/md";
 import { MdBlockFlipped } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { VscDeviceCameraVideo } from "react-icons/vsc";
-import React, { SetStateAction, useRef } from "react";
+import React, { SetStateAction, useRef, useState } from "react";
 
 import TopHeader from "./topHeader";
 import IconButton from "./iconButton";
@@ -16,6 +16,7 @@ import Tabs from "../common/tabs";
 import MediaLink from "./media/mediaLink";
 import MediaImage from "./media/mediaImage";
 import MediaDoc from "./media/mediaDoc";
+import Modal from "../common/modal";
 
 interface ContactInfoProps {
   showContact: boolean;
@@ -47,12 +48,34 @@ const ContactInfo = ({
 }: ContactInfoProps) => {
   const contactRef = useRef<HTMLDivElement | null>(null);
 
-  useClickOutside<HTMLDivElement>({
-    showModal: showContact,
-    onSetShowModal: onShowContact,
-    originRef: null,
-    popupRef: contactRef,
+  const [isModalOpen, setIsModalOpen] = useState({
+    label: "",
+    open: false,
   });
+
+  const onCancel = () => setIsModalOpen((prev) => ({ ...prev, open: false }));
+
+  const modalOptions = {
+    block: {
+      title: "Block this contact",
+      description: "Are you sure you want to block this contact",
+      onCancel,
+      onContinue: () => {},
+    },
+    delete: {
+      title: "Delete this Chat",
+      description: "Are you sure you want to delete this chat",
+      onCancel,
+      onContinue: () => {},
+    },
+  };
+
+  const handleButtonClick = (label: string) =>
+    setIsModalOpen({ label, open: true });
+
+  const getModalKeyValue = (modal: any): any => {
+    for (let key in modal) if (key === isModalOpen.label) return modal[key];
+  };
 
   const buttons = [
     {
@@ -113,8 +136,12 @@ const ContactInfo = ({
   };
 
   return (
-    <div className="w-full h-full absolute backdrop-blur-[1.5px] shadow z-50 flex justify-end overflow-hidden">
-      <div ref={contactRef} className="w-[45%] h-full shadow-lg bg-zinc-100">
+    <div className="w-full h-full absolute backdrop-filter backdrop-brightness-50 shadow z-50 flex justify-end overflow-hidden">
+      {isModalOpen.open && <Modal {...getModalKeyValue(modalOptions)} />}
+      <div
+        ref={contactRef}
+        className="w-[45%] z-30 h-full shadow-lg bg-zinc-100"
+      >
         {/* top header section */}
         <TopHeader onClick={onShowContact} />
 
@@ -152,7 +179,11 @@ const ContactInfo = ({
         {/* action section */}
         <div className="w-full flex  justify-center gap-4 py-6">
           {buttons.map((item) => (
-            <IconButton key={item.label} {...item} />
+            <IconButton
+              key={item.label}
+              {...item}
+              onClick={handleButtonClick}
+            />
           ))}
         </div>
       </div>

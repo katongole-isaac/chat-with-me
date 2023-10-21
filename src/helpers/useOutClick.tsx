@@ -12,7 +12,7 @@ import React, { useEffect, RefObject, SetStateAction } from "react";
 
 type Params<T> = {
   showModal: boolean;
-  onSetShowModal: React.Dispatch<SetStateAction<boolean> >;
+  onSetShowModal: React.Dispatch<SetStateAction<boolean>>;
   originRef: RefObject<T> | null;
   popupRef: RefObject<T> | null;
 };
