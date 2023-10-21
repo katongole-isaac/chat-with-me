@@ -223,12 +223,7 @@ export const MediaDocument = ({ incoming, message, id }: any) => {
           <span className="text-gray-500">
             Master JavaaScript and TypeScrit PDF
           </span>
-          <div
-            role="button"
-            className=" flex justify-center items-center w-8 h-8 border border-slate-400 rounded-full "
-          >
-            <LiaDownloadSolid size={20} className=" text-gray-400" />
-          </div>
+          ccccc
         </div>
         <Text message={message} incoming={incoming} classes="max-w-[100%]" />
       </div>

@@ -3,37 +3,9 @@
  *
  */
 
-import { useState } from "react";
+import { TabsProps, ITab, TabProps } from "@/misc/types/tabs";
 
-type TabProps = {
-  label: string;
-  id: string | number;
-  activeTab: string | number;
-  onActiveTab: React.Dispatch<number | string>;
-};
-
-export default function Tabs() {
-  const [activeTab, setActiveTab] = useState<string | number>(0);
-
-  const tabs = [
-    {
-      id: 0,
-      label: "All",
-    },
-    {
-      id: 1,
-      label: "People",
-    },
-    {
-      id: 2,
-      label: "Chats",
-    },
-    {
-      id: 3,
-      label: "Rooms",
-    },
-  ];
-
+export default function Tabs({ tabs, activeTab, setActiveTab }: TabsProps) {
   return (
     <div className="w-full px-2 py-3 flex gap-3 border-b ">
       {tabs.map((tab) => (
@@ -48,15 +20,17 @@ export default function Tabs() {
   );
 }
 
-const Tab = ({ label, activeTab, id, onActiveTab }: TabProps) => {
+const Tab = ({ label, activeTab, onActiveTab }: TabProps) => {
+
+
   const activeTabClasses =
-    activeTab === id
+    activeTab === label.toLowerCase().trim()
       ? "bg-neutral-300 text-slate-900 font-medium"
       : "text-slate-600";
 
   return (
     <div
-      onClick={() => onActiveTab(id)}
+      onClick={() => onActiveTab(label.toLowerCase().trim())}
       role="button"
       className={`p-1 px-2 text-[12px] rounded-sm ${activeTabClasses} `}
     >

@@ -3,12 +3,16 @@
  * 
  */
 
-import { useContext } from "react";
+import { SetStateAction, useContext } from "react";
 import Avatar from "../user/avatar";
 import { UserContext } from "@/app/chat/page";
 import { LoggedInUser } from "@/misc/types";
 
-export default function ChatTopBar() {
+interface ChatTopBarProps {
+  onClick: React.Dispatch<SetStateAction<boolean>>;
+}
+
+export default function ChatTopBar({ onClick}: ChatTopBarProps) {
 
     const {user } = useContext(UserContext) as LoggedInUser;
 
@@ -17,7 +21,7 @@ export default function ChatTopBar() {
     return (
       <div className="w-full p-2 bg-transparent border-b">
         <div className="flex items-center gap-3">
-          <Avatar displayName={displayName} photoURL={photoURL} />
+          <Avatar onProfileClick={()=>onClick(true)} displayName={displayName} photoURL={photoURL} />
 
           <div className="flex flex-col ">
             <span className="text-slate-800"> Your name</span>
