@@ -45,14 +45,4 @@ export interface MessageFormat {
   params?: Record<string, any>;
 }
 
-// used in messageTypes components
-export interface ShowMessageOpts 
-   {
-    isOpen:boolean;
-    id:string|number
-  };
 
-export interface MessageOptionContextProps {
-  showMessageOption:ShowMessageOpts;
-  setShowMessageOption: React.Dispatch<(arg: ShowMessageOpts ) => ShowMessageOpts | ShowMessageOpts>;
-}

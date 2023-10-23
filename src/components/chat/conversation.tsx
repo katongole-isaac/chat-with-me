@@ -5,12 +5,12 @@
 import React from "react";
 import Message from "./message";
 
-type ChatProps = {
+interface ConversationProps {
   messages?: string[];
   chatRef?: any;
 };
 
-function Conversation({ chatRef }: ChatProps) {
+function Conversation({ chatRef }: ConversationProps) {
   return (
     <div ref={chatRef} className="w-full px-4 py-2 pb-8 text-[14px]">
       <Message />

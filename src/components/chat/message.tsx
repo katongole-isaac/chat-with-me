@@ -14,10 +14,10 @@ import {
   TextMsg,
 } from "./messageTypes";
 
-import { MessageOptionContextProps, ShowMessageOpts } from "@/misc/types";
+import { IPopupOptionsContext, IPopupOptions } from "@/misc/types/popupOptions";
 
 export const MessageOptionContext =
-  React.createContext<MessageOptionContextProps | null>(null);
+  React.createContext<IPopupOptionsContext | null>(null);
 
 const chat_history = [
   {
@@ -66,7 +66,7 @@ const chat_history = [
 ];
 
 export default function Message() {
-  const [showMessageOption, setShowMessageOption] = useState<ShowMessageOpts>({
+  const [showMessageOption, setShowMessageOption] = useState<IPopupOptions>({
     isOpen: false,
     id: "",
   });
@@ -74,8 +74,8 @@ export default function Message() {
   return (
     <MessageOptionContext.Provider
       value={{
-        showMessageOption,
-        setShowMessageOption,
+        showPopUpOptions: showMessageOption,
+        onShowPopUpOptions: setShowMessageOption,
       }}
     >
       <div className="flex flex-col gap-4 w-full justify-end">

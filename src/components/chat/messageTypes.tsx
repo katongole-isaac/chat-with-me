@@ -9,15 +9,10 @@ import { LiaDownloadSolid } from "react-icons/lia";
 import { AiOutlineLink } from "react-icons/ai";
 
 import GameImage from "@/assets/images/games.png";
-import MessageOptions, { OptionsIcon } from "./messageOptions";
 import { MessageOptionContext } from "./message";
-import { MessageOptionContextProps, ShowMessageOpts } from "@/misc/types";
-
-interface MsgOptionsProps {
-  id: number;
-  showMessageOption: ShowMessageOpts;
-  classes?: string;
-}
+import { IPopupOptionsContext } from "@/misc/types/popupOptions";
+import MessageOptions from "./messages/messageOptions";
+import { OptionsIcon } from "./messages/optionsIcon";
 
 export const Timeline = ({ text }: { text: String }) => {
   return (
@@ -26,16 +21,6 @@ export const Timeline = ({ text }: { text: String }) => {
       <span className="flex-shrink mx-4 text-gray-400">{text}</span>
       <div className="flex-grow border-t border-gray-400"></div>
     </div>
-  );
-};
-
-const Options = ({ id, showMessageOption, classes }: MsgOptionsProps) => {
-  return (
-    <React.Fragment>
-      {showMessageOption.isOpen && id === (showMessageOption.id as number) && (
-        <MessageOptions classes={classes} />
-      )}
-    </React.Fragment>
   );
 };
 
@@ -61,9 +46,9 @@ const TextLine = ({ message }: any) => {
 export const TextMsg = (props: any) => {
   const classes = props?.classes || "max-w-[100%]";
 
-  const { showMessageOption } = useContext(
+  const { showPopUpOptions, onShowPopUpOptions } = useContext(
     MessageOptionContext
-  ) as MessageOptionContextProps;
+  ) as IPopupOptionsContext;
 
   return (
     <div
@@ -72,12 +57,12 @@ export const TextMsg = (props: any) => {
       } relative`}
     >
       <Text classes={classes} {...props} />
-      <OptionsIcon incoming={props?.incoming} id={props?.id} />
-      <Options
-        id={props?.id as number}
-        classes="-right-28 top-4"
-        showMessageOption={showMessageOption}
+      <OptionsIcon
+        onShowOptions={onShowPopUpOptions}
+        incoming={props?.incoming}
+        id={props?.id}
       />
+      <MessageOptions id={props?.id as number} classes="-right-28 top-4" />
     </div>
   );
 };
@@ -99,9 +84,9 @@ const Text = ({ message, incoming, classes }: any) => {
 };
 
 export const Media = ({ message, incoming, id }: any) => {
-  const { showMessageOption } = useContext(
+  const { showPopUpOptions, onShowPopUpOptions } = useContext(
     MessageOptionContext
-  ) as MessageOptionContextProps;
+  ) as IPopupOptionsContext;
   return (
     <div
       className={`flex flex-col gap-2  ${
@@ -120,21 +105,21 @@ export const Media = ({ message, incoming, id }: any) => {
         {/* <IoImageOutline className="w-full h-full text-gray-400" /> */}
       </div>
       <Text message={message} incoming={incoming} classes="max-w-[100%]" />
-      <OptionsIcon incoming={incoming} id={id as number} />
-
-      <Options
-        id={id}
-        classes="-right-28 top-4"
-        showMessageOption={showMessageOption}
+      <OptionsIcon
+        onShowOptions={onShowPopUpOptions}
+        incoming={incoming}
+        id={id as number}
       />
+
+      <MessageOptions id={id} classes="-right-28 top-4" />
     </div>
   );
 };
 
 export const Reply = ({ reply, message, incoming, id }: any) => {
-  const { showMessageOption } = useContext(
+  const { showPopUpOptions, onShowPopUpOptions } = useContext(
     MessageOptionContext
-  ) as MessageOptionContextProps;
+  ) as IPopupOptionsContext;
   return (
     <div
       className={` ${
@@ -149,20 +134,20 @@ export const Reply = ({ reply, message, incoming, id }: any) => {
       <div className="text-white p-1">
         <TextLine message={message} />
       </div>
-      <OptionsIcon incoming={incoming} id={id as number} />
-      <Options
-        id={id}
-        classes="-right-28 top-4"
-        showMessageOption={showMessageOption}
+      <OptionsIcon
+        onShowOptions={onShowPopUpOptions}
+        incoming={incoming}
+        id={id as number}
       />
+      <MessageOptions id={id} classes="-right-28 top-4" />
     </div>
   );
 };
 
 export const LinkMsg = ({ incoming, message, id }: any) => {
-  const { showMessageOption } = useContext(
+  const { showPopUpOptions, onShowPopUpOptions } = useContext(
     MessageOptionContext
-  ) as MessageOptionContextProps;
+  ) as IPopupOptionsContext;
   return (
     <div
       className={` ${
@@ -186,20 +171,20 @@ export const LinkMsg = ({ incoming, message, id }: any) => {
         </Link>
         <TextLine message={message} />
       </div>
-      <OptionsIcon incoming={incoming} id={id as number} />
-      <Options
-        id={id}
-        classes="-right-28 top-4"
-        showMessageOption={showMessageOption}
+      <OptionsIcon
+        onShowOptions={onShowPopUpOptions}
+        incoming={incoming}
+        id={id as number}
       />
+      <MessageOptions id={id} classes="-right-28 top-4" />
     </div>
   );
 };
 
 export const MediaDocument = ({ incoming, message, id }: any) => {
-  const { showMessageOption } = useContext(
+  const { showPopUpOptions, onShowPopUpOptions } = useContext(
     MessageOptionContext
-  ) as MessageOptionContextProps;
+  ) as IPopupOptionsContext;
   return (
     <div
       className={` ${
@@ -232,12 +217,12 @@ export const MediaDocument = ({ incoming, message, id }: any) => {
         </div>
         <Text message={message} incoming={incoming} classes="max-w-[100%]" />
       </div>
-      <OptionsIcon incoming={incoming} id={id as number} />
-      <Options
-        id={id}
-        classes="-right-28 top-4"
-        showMessageOption={showMessageOption}
+      <OptionsIcon
+        onShowOptions={onShowPopUpOptions}
+        incoming={incoming}
+        id={id as number}
       />
+      <MessageOptions id={id} classes="-right-28 top-4" />
     </div>
   );
 };

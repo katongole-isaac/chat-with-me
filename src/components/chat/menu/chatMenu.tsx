@@ -3,18 +3,21 @@
  *
  */
 
-import { useContext } from "react";
+import React, { SetStateAction, useContext, useState } from "react";
 import { MdGroupAdd } from "react-icons/md";
+import { BsThreeDotsVertical } from "react-icons/bs";
 
-import SignOut from "../signOut";
-import Avatar from "../user/avatar";
-import OnlineStatus from "./onlineStatus";
-import Tooltip from "../common/tootltip";
+import SignOut from "../../signOut";
+import Avatar from "../../user/avatar";
+import OnlineStatus from "../onlineStatus";
+import Tooltip from "../../common/tootltip";
 
 import type { LoggedInUser } from "@/misc/types";
 import { UserContext } from "@/app/chat/page";
 import useClickOutside from "@/helpers/useOutClick";
-import CreateRoom from "../rooms/createRoom";
+import CreateRoom from "../../rooms/createRoom";
+import MenuOptions from "./menuOptions";
+import { IPopupOptions } from "@/misc/types/popupOptions";
 
 type ChatMenuProps = {
   onProfileClick: Function;
@@ -23,7 +26,10 @@ type ChatMenuProps = {
 
 const ChatMenu = ({ onProfileClick, onShowModal }: ChatMenuProps) => {
   const { user, wss } = useContext(UserContext) as LoggedInUser;
-
+  const [showMenu, setShowMenu] = useState<IPopupOptions>({
+    id: "",
+    isOpen: false,
+  });
   const { photoURL, displayName } = user?.providerData[0];
 
   return (
@@ -37,7 +43,7 @@ const ChatMenu = ({ onProfileClick, onShowModal }: ChatMenuProps) => {
             avatarClassName="w-20 h-20"
           />
         </div>
-        <div className="flex items-center justify-center gap-8 ">
+        <div className="flex items-center justify-center gap-4 ">
           <div className="">
             <MdGroupAdd
               size={20}
@@ -51,6 +57,24 @@ const ChatMenu = ({ onProfileClick, onShowModal }: ChatMenuProps) => {
             </Tooltip>
           </div>
           <SignOut />
+
+          <div className="relative">
+            <div
+              className={`rounded-full w-8 h-8 transition duration-300 ${
+                showMenu.isOpen ? " bg-zinc-200 " : ""
+              } flex items-center justify-center`}
+            >
+              <BsThreeDotsVertical
+                size={20}
+                role="button"
+                className="text-slate-800"
+                onClick={() =>
+                  setShowMenu((prev) => ({ ...prev, isOpen: !prev.isOpen }))
+                }
+              />
+            </div>
+            {showMenu.isOpen && <MenuOptions onShowMenu={setShowMenu} />}
+          </div>
         </div>
       </div>
     </div>
@@ -58,6 +82,3 @@ const ChatMenu = ({ onProfileClick, onShowModal }: ChatMenuProps) => {
 };
 
 export default ChatMenu;
-
-
-

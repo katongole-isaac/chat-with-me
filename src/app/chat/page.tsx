@@ -19,7 +19,7 @@ import {
 } from "@/misc/types";
 
 import Profile from "@/components/user/profile";
-import ChatMenu from "@/components/chat/chatMenu";
+import ChatMenu from "@/components/chat/menu/chatMenu";
 import Conversation from "@/components/chat/conversation";
 import MessageInput from "@/components/chat/messageInput";
 import DefaultToaster from "@/components/toasts/toasterSetting";
