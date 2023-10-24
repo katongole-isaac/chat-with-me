@@ -18,6 +18,8 @@ import {
   type MessageFormat,
 } from "@/misc/types";
 
+import { IModal } from "@/misc/types/modals";
+
 import Profile from "@/components/user/profile";
 import ChatMenu from "@/components/chat/menu/chatMenu";
 import Conversation from "@/components/chat/conversation";
@@ -33,20 +35,21 @@ import ChatLists from "@/components/chat/chatLists";
 import Search from "@/components/common/search";
 import ChatTopBar from "@/components/chat/chatTopBar";
 import ContactInfo from "@/components/contactInfo/contact";
-import GeneralLayout from "@/components/common/generalLayout";
-import Settings from "@/components/settings";
+import Settings, {
+  ThemeSwitch,
+  Security,
+  KeyboardShortcuts,
+  Help,
+  RequestInfo,
+  Privacy,
+  SettingNotifications,
+} from "@/components/settings";
 import {
   IShowComponent,
   ShowComponentLabel,
 } from "@/misc/types/renderComponent";
-import KeyboardShortcuts from "@/components/settings/keyboardShortcuts";
-import { IModal } from "@/misc/types/modals";
-import ThemeSwitch from "@/components/settings/theme";
-import SettingNotifications from "@/components/settings/notifications";
-import Privacy from "@/components/settings/privacy";
-import Security from "@/components/settings/security";
-import Help from "@/components/settings/help";
-import RequestInfo from "@/components/settings/requestInfo";
+import RenderModals from "@/components/modals";
+
 
 registerServiceWorker();
 
@@ -134,16 +137,7 @@ const Chat = () => {
     }
   };
 
-  const renderModals = () => {
-    switch (settingsModals.label) {
-      case "keyboard_shortcuts":
-        return <KeyboardShortcuts onClickOk={handleCloseSettingModal} />;
-      case "theme":
-        return <ThemeSwitch onCancel={handleCloseSettingModal} />;
-      default:
-        return <></>;
-    }
-  };
+ 
 
   const Chats = () => {
     return (
@@ -278,7 +272,8 @@ const Chat = () => {
   return (
     <UserContext.Provider value={{ user, wss }}>
       {/* {showModal && <CreateRoom onModal={setShowModal} showModal={showModal} />} */}
-      {renderModals()}
+      <RenderModals  modal={settingsModals} onClose={handleCloseSettingModal} />
+
       <div className="w-screen h-screen bg-zinc-200">
         <div className="py-8 w-full h-full flex justify-center items-center ">
           <div className="max-w-[1200px] bg-zinc-100 h-full shadow-lg  m-auto border ">
