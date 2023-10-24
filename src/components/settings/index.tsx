@@ -17,11 +17,11 @@ import Avatar from "../user/avatar";
 import GeneralLayout from "../common/generalLayout";
 import GeneralListItem from "../common/generalListItem";
 import { GeneralListItemProps } from "@/misc/types/generalLayout";
-import { ISettingModal, ISettingModalLabel } from "@/misc/types/settings";
+import { IModal, IModalLabel } from "@/misc/types/modals";
 
 interface ISettings {
   onBackClick: any;
-  onShowModals: React.Dispatch<SetStateAction<ISettingModal>>;
+  onShowModals: React.Dispatch<SetStateAction<IModal>>;
   onClickSettingItem: Function;
 }
 
@@ -30,7 +30,7 @@ const Settings = ({
   onClickSettingItem,
   onShowModals,
 }: ISettings) => {
-  const handleShowModal = (label: ISettingModalLabel) => {
+  const handleShowModal = (label: IModalLabel) => {
     onShowModals((prev) => ({ label, open: true }));
   };
 
