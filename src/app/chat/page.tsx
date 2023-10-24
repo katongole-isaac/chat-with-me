@@ -48,6 +48,7 @@ import {
   IShowComponent,
   ShowComponentLabel,
 } from "@/misc/types/renderComponent";
+import RenderModals from "@/components/modals";
 
 
 registerServiceWorker();
@@ -136,16 +137,7 @@ const Chat = () => {
     }
   };
 
-  const renderModals = () => {
-    switch (settingsModals.label) {
-      case "keyboard_shortcuts":
-        return <KeyboardShortcuts onClickOk={handleCloseSettingModal} />;
-      case "theme":
-        return <ThemeSwitch onCancel={handleCloseSettingModal} />;
-      default:
-        return <></>;
-    }
-  };
+ 
 
   const Chats = () => {
     return (
@@ -280,7 +272,8 @@ const Chat = () => {
   return (
     <UserContext.Provider value={{ user, wss }}>
       {/* {showModal && <CreateRoom onModal={setShowModal} showModal={showModal} />} */}
-      {renderModals()}
+      <RenderModals  modal={settingsModals} onClose={handleCloseSettingModal} />
+
       <div className="w-screen h-screen bg-zinc-200">
         <div className="py-8 w-full h-full flex justify-center items-center ">
           <div className="max-w-[1200px] bg-zinc-100 h-full shadow-lg  m-auto border ">
