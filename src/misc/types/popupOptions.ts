@@ -2,6 +2,8 @@ import { SetStateAction } from "react";
 
 export interface IOption {
   title: string;
+  id?:string;
+  onClick?: Function;
 }
 
 export interface OptionsIconProps {

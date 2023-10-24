@@ -33,6 +33,20 @@ import ChatLists from "@/components/chat/chatLists";
 import Search from "@/components/common/search";
 import ChatTopBar from "@/components/chat/chatTopBar";
 import ContactInfo from "@/components/contactInfo/contact";
+import GeneralLayout from "@/components/common/generalLayout";
+import Settings from "@/components/settings";
+import {
+  IShowComponent,
+  ShowComponentLabel,
+} from "@/misc/types/renderComponent";
+import KeyboardShortcuts from "@/components/settings/keyboardShortcuts";
+import { ISettingModal } from "@/misc/types/settings";
+import ThemeSwitch from "@/components/settings/theme";
+import SettingNotifications from "@/components/settings/notifications";
+import Privacy from "@/components/settings/privacy";
+import Security from "@/components/settings/security";
+import Help from "@/components/settings/help";
+import RequestInfo from "@/components/settings/requestInfo";
 
 registerServiceWorker();
 
@@ -41,19 +55,116 @@ export const UserContext = React.createContext<LoggedInUser | null>(null);
 const Chat = () => {
   const [wss, setWss] = useState<WebSocket | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [showProfile, setShowProfile] = useState<boolean>(false);
   const [timerId, setTimerId] = useState<NodeJS.Timeout | number | null>(null);
   const [reconnecting, setReconnecting] = useState<boolean>(false);
   const [reconnectToastId, setReconnectToastId] = useState<string>("");
-  const [showModal, setShowModal] = useState(false);
+  const [showProfile, setShowProfile] = useState<boolean>(false);
   const [showContactDialog, setShowContactDialog] = useState(false);
   const [rooms, setRooms] = useState([]);
   const [activeTab, setActiveTab] = useState("media");
+  const [settingsModals, setSettingsModals] = useState<ISettingModal>({
+    label: "",
+    open: false,
+  });
+  const [_showModal, _setShowModal] = useState<IShowComponent>({
+    label: "",
+    open: false,
+    history: [""],
+  });
 
   const chatRef = useRef<HTMLDivElement>(null);
 
   const user = getCurrentUser();
   const { accessToken } = user.stsTokenManager;
+
+  // used to go back
+  const handleBackClick = () => {
+    _setShowModal((prev) => {
+      const history = [...prev.history];
+      history.pop();
+
+      return { ...prev, history, label: history[history.length - 1] };
+    });
+  };
+
+  const handleOptionClick = (label: ShowComponentLabel) => {
+    if (!label) return;
+
+    _setShowModal((prev) => ({
+      history: [...prev.history, label],
+      label,
+      open: true,
+    }));
+  };
+
+  const handleCloseSettingModal = () =>
+    setSettingsModals((prev) => ({ label: "", open: false }));
+
+  const renderComponent = () => {
+    switch (_showModal.label.toLowerCase().trim()) {
+      case "settings":
+        return (
+          <Settings
+            onBackClick={handleBackClick}
+            onClickSettingItem={handleOptionClick}
+            onShowModals={setSettingsModals}
+          />
+        );
+      
+        case  "security": 
+          return <Security onBackClick={handleBackClick} />;
+     
+      case "profile":
+        return <Profile onClose={setShowProfile} showProfile={showProfile} />;
+
+      case "notifications": 
+          return (
+            <SettingNotifications  onBackClick={handleBackClick}  />
+          );
+
+      case  "privacy":
+        return <Privacy onBackClick={handleBackClick} />
+
+      case "help": 
+        return <Help onBackClick={handleBackClick} />;
+
+      case "request_info": 
+            return <RequestInfo  onBackClick={handleBackClick}  />
+
+      default:
+        return <Chats />;
+    }
+  };
+
+  const renderSettingsModals = () => {
+    switch (settingsModals.label) {
+      case "keyboard_shortcuts":
+        return <KeyboardShortcuts onClickOk={handleCloseSettingModal} />;
+      case  "theme":
+          return <ThemeSwitch onCancel={handleCloseSettingModal} />
+      default:
+        return <></>;
+    }
+  };
+
+  const Chats = () => {
+    return (
+      <div className="w-full h-full flex flex-col ">
+        <div className="">
+          <ChatMenu
+            onShowModal={handleOptionClick}
+            showModal={_showModal}
+            onProfileClick={handleProfileClick}
+          />
+          <Search />
+        </div>
+
+        <div className="w-full flex-1 h-full overflow-y-auto  custom-scrollbar ">
+          <ChatLists />
+        </div>
+      </div>
+    );
+  };
 
   const [token, setToken] = useState<string>(accessToken);
   useUpdateToken({ onToken: setToken });
@@ -168,32 +279,15 @@ const Chat = () => {
 
   return (
     <UserContext.Provider value={{ user, wss }}>
-      {showModal && <CreateRoom onModal={setShowModal} showModal={showModal} />}
+      {/* {showModal && <CreateRoom onModal={setShowModal} showModal={showModal} />} */}
+      {renderSettingsModals()}
       <div className="w-screen h-screen bg-zinc-200">
         <div className="py-8 w-full h-full flex justify-center items-center ">
           <div className="max-w-[1200px] bg-zinc-100 h-full shadow-lg  m-auto border ">
             <div className="grid grid-cols-[1.5fr_3fr] h-full">
               {/* fist grid */}
               <div className="w-full h-full max-h-full  min-w-0 min-h-0 relative">
-                {showProfile ? (
-                  <Profile onClose={setShowProfile} showProfile={showProfile} />
-                ) : (
-                  <div className="w-full h-full flex flex-col ">
-                    <div className="">
-                      <ChatMenu
-                        onShowModal={setShowModal}
-                        onProfileClick={handleProfileClick}
-                      />
-                      <Search />
-                    </div>
-
-                    <div className="w-full flex-1 h-full overflow-y-auto  custom-scrollbar ">
-                      <ChatLists />
-                    </div>
-                  </div>
-                )}
-
-                <LostConnectivity />
+                {renderComponent()}
               </div>
 
               {/* second grid */}

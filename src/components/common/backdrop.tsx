@@ -17,9 +17,9 @@ export default function Backdrop({ children }: BackdropProps) {
   return (
     <div
       ref={divRef}
-      className="w-screen h-screen backdrop-filter backdrop-brightness-50 fixed z-50 flex justify-center items-center p-4 "
+      className="w-screen h-screen backdrop-filter backdrop-brightness-50 fixed z-[100] flex justify-center items-center p-4 "
     >
-      <div className="w-100 h-100 relative -top-10"> {children} </div>
+      {children}
     </div>
   );
 }
