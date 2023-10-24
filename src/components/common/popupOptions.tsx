@@ -41,6 +41,7 @@ const PopupOptions = ({ classes, options, onShowPopup }: PopupOptionsProps) => {
       {options.map((option) => (
         <div
           key={option.title}
+          onClick={() => (option.onClick ? option.onClick(option.id) : null)}
           role="button"
           className=" px-4 py-1 hover:bg-gray-200 text-left"
         >

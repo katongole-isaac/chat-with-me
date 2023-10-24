@@ -18,13 +18,19 @@ import useClickOutside from "@/helpers/useOutClick";
 import CreateRoom from "../../rooms/createRoom";
 import MenuOptions from "./menuOptions";
 import { IPopupOptions } from "@/misc/types/popupOptions";
+import { IShowComponent } from "@/misc/types/renderComponent";
 
 type ChatMenuProps = {
   onProfileClick: Function;
-  onShowModal: React.Dispatch<boolean>;
+  onShowModal:Function;
+  showModal: IShowComponent;
 };
 
-const ChatMenu = ({ onProfileClick, onShowModal }: ChatMenuProps) => {
+const ChatMenu = ({
+  onProfileClick,
+  onShowModal,
+  showModal,
+}: ChatMenuProps) => {
   const { user, wss } = useContext(UserContext) as LoggedInUser;
   const [showMenu, setShowMenu] = useState<IPopupOptions>({
     id: "",
@@ -47,7 +53,7 @@ const ChatMenu = ({ onProfileClick, onShowModal }: ChatMenuProps) => {
           <div className="">
             <MdGroupAdd
               size={20}
-              onClick={() => onShowModal(true)}
+              // onClick={() => onShowModal(true)}
               className="cursor-pointer"
               disabled={wss && wss.readyState === WebSocket.CLOSED}
               data-tooltip-id="group_icon"
@@ -73,7 +79,13 @@ const ChatMenu = ({ onProfileClick, onShowModal }: ChatMenuProps) => {
                 }
               />
             </div>
-            {showMenu.isOpen && <MenuOptions onShowMenu={setShowMenu} />}
+            {showMenu.isOpen && (
+              <MenuOptions
+                onOptionClick={onShowModal}
+                showModal={showModal}
+                onShowMenu={setShowMenu}
+              />
+            )}
           </div>
         </div>
       </div>
