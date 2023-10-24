@@ -22,6 +22,10 @@ const MenuOptions = ({ onShowMenu, onOptionClick }: IMenuOptions) => {
       onClick: onOptionClick,
     },
     {
+      title: "New Group",
+      onClick: onOptionClick,
+    },
+    {
       title: "Settings",
       id: "settings",
       onClick: onOptionClick,

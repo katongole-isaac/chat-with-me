@@ -40,7 +40,7 @@ import {
   ShowComponentLabel,
 } from "@/misc/types/renderComponent";
 import KeyboardShortcuts from "@/components/settings/keyboardShortcuts";
-import { ISettingModal } from "@/misc/types/settings";
+import { IModal } from "@/misc/types/modals";
 import ThemeSwitch from "@/components/settings/theme";
 import SettingNotifications from "@/components/settings/notifications";
 import Privacy from "@/components/settings/privacy";
@@ -62,7 +62,7 @@ const Chat = () => {
   const [showContactDialog, setShowContactDialog] = useState(false);
   const [rooms, setRooms] = useState([]);
   const [activeTab, setActiveTab] = useState("media");
-  const [settingsModals, setSettingsModals] = useState<ISettingModal>({
+  const [settingsModals, setSettingsModals] = useState<IModal>({
     label: "",
     open: false,
   });
@@ -110,38 +110,36 @@ const Chat = () => {
             onShowModals={setSettingsModals}
           />
         );
-      
-        case  "security": 
-          return <Security onBackClick={handleBackClick} />;
-     
+
+      case "security":
+        return <Security onBackClick={handleBackClick} />;
+
       case "profile":
         return <Profile onClose={setShowProfile} showProfile={showProfile} />;
 
-      case "notifications": 
-          return (
-            <SettingNotifications  onBackClick={handleBackClick}  />
-          );
+      case "notifications":
+        return <SettingNotifications onBackClick={handleBackClick} />;
 
-      case  "privacy":
-        return <Privacy onBackClick={handleBackClick} />
+      case "privacy":
+        return <Privacy onBackClick={handleBackClick} />;
 
-      case "help": 
+      case "help":
         return <Help onBackClick={handleBackClick} />;
 
-      case "request_info": 
-            return <RequestInfo  onBackClick={handleBackClick}  />
+      case "request_info":
+        return <RequestInfo onBackClick={handleBackClick} />;
 
       default:
         return <Chats />;
     }
   };
 
-  const renderSettingsModals = () => {
+  const renderModals = () => {
     switch (settingsModals.label) {
       case "keyboard_shortcuts":
         return <KeyboardShortcuts onClickOk={handleCloseSettingModal} />;
-      case  "theme":
-          return <ThemeSwitch onCancel={handleCloseSettingModal} />
+      case "theme":
+        return <ThemeSwitch onCancel={handleCloseSettingModal} />;
       default:
         return <></>;
     }
@@ -280,7 +278,7 @@ const Chat = () => {
   return (
     <UserContext.Provider value={{ user, wss }}>
       {/* {showModal && <CreateRoom onModal={setShowModal} showModal={showModal} />} */}
-      {renderSettingsModals()}
+      {renderModals()}
       <div className="w-screen h-screen bg-zinc-200">
         <div className="py-8 w-full h-full flex justify-center items-center ">
           <div className="max-w-[1200px] bg-zinc-100 h-full shadow-lg  m-auto border ">
