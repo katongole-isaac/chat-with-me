@@ -7,12 +7,10 @@ import React from "react";
 
 import PopupOptions from "@/components/common/popupOptions";
 import { IOption, IPopupOptions } from "@/misc/types/popupOptions";
-import { IShowComponent } from "@/misc/types/renderComponent";
 
 interface IMenuOptions {
   onShowMenu: React.Dispatch<React.SetStateAction<IPopupOptions>>;
   onOptionClick: Function;
-  showModal: IShowComponent;
 }
 const MenuOptions = ({ onShowMenu, onOptionClick }: IMenuOptions) => {
   

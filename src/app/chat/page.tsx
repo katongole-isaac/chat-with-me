@@ -49,7 +49,8 @@ import {
   ShowComponentLabel,
 } from "@/misc/types/renderComponent";
 import RenderModals from "@/components/modals";
-
+import Chats from "@/components/chat";
+import FirstGridComponent from "@/components/firstGridComponent";
 
 registerServiceWorker();
 
@@ -65,11 +66,11 @@ const Chat = () => {
   const [showContactDialog, setShowContactDialog] = useState(false);
   const [rooms, setRooms] = useState([]);
   const [activeTab, setActiveTab] = useState("media");
-  const [settingsModals, setSettingsModals] = useState<IModal>({
+  const [modal, setModal] = useState<IModal>({
     label: "",
     open: false,
   });
-  const [_showModal, _setShowModal] = useState<IShowComponent>({
+  const [firstGridComponent, setFirstGridComponent] = useState<IShowComponent>({
     label: "",
     open: false,
     history: [""],
@@ -82,7 +83,7 @@ const Chat = () => {
 
   // used to go back
   const handleBackClick = () => {
-    _setShowModal((prev) => {
+    setFirstGridComponent((prev) => {
       const history = [...prev.history];
       history.pop();
 
@@ -93,70 +94,15 @@ const Chat = () => {
   const handleOptionClick = (label: ShowComponentLabel) => {
     if (!label) return;
 
-    _setShowModal((prev) => ({
+    setFirstGridComponent((prev) => ({
       history: [...prev.history, label],
       label,
       open: true,
     }));
   };
 
-  const handleCloseSettingModal = () =>
-    setSettingsModals((prev) => ({ label: "", open: false }));
-
-  const renderComponent = () => {
-    switch (_showModal.label.toLowerCase().trim()) {
-      case "settings":
-        return (
-          <Settings
-            onBackClick={handleBackClick}
-            onClickSettingItem={handleOptionClick}
-            onShowModals={setSettingsModals}
-          />
-        );
-
-      case "security":
-        return <Security onBackClick={handleBackClick} />;
-
-      case "profile":
-        return <Profile onClose={setShowProfile} showProfile={showProfile} />;
-
-      case "notifications":
-        return <SettingNotifications onBackClick={handleBackClick} />;
-
-      case "privacy":
-        return <Privacy onBackClick={handleBackClick} />;
-
-      case "help":
-        return <Help onBackClick={handleBackClick} />;
-
-      case "request_info":
-        return <RequestInfo onBackClick={handleBackClick} />;
-
-      default:
-        return <Chats />;
-    }
-  };
-
- 
-
-  const Chats = () => {
-    return (
-      <div className="w-full h-full flex flex-col ">
-        <div className="">
-          <ChatMenu
-            onShowModal={handleOptionClick}
-            showModal={_showModal}
-            onProfileClick={handleProfileClick}
-          />
-          <Search />
-        </div>
-
-        <div className="w-full flex-1 h-full overflow-y-auto  custom-scrollbar ">
-          <ChatLists />
-        </div>
-      </div>
-    );
-  };
+  const handleCloseModal = () =>
+    setModal((prev) => ({ label: "", open: false }));
 
   const [token, setToken] = useState<string>(accessToken);
   useUpdateToken({ onToken: setToken });
@@ -271,8 +217,8 @@ const Chat = () => {
 
   return (
     <UserContext.Provider value={{ user, wss }}>
-      {/* {showModal && <CreateRoom onModal={setShowModal} showModal={showModal} />} */}
-      <RenderModals  modal={settingsModals} onClose={handleCloseSettingModal} />
+     {/* modals */}
+      <RenderModals modal={modal} onClose={handleCloseModal} />
 
       <div className="w-screen h-screen bg-zinc-200">
         <div className="py-8 w-full h-full flex justify-center items-center ">
@@ -280,7 +226,13 @@ const Chat = () => {
             <div className="grid grid-cols-[1.5fr_3fr] h-full">
               {/* fist grid */}
               <div className="w-full h-full max-h-full  min-w-0 min-h-0 relative">
-                {renderComponent()}
+                <FirstGridComponent
+                onShowModals={setModal}
+                  onBackClick={handleBackClick}
+                  onOptionClick={handleOptionClick}
+                  onProfileClick={handleProfileClick}
+                  firstGridComponent={firstGridComponent}
+                />
               </div>
 
               {/* second grid */}
