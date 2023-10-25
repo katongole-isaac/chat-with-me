@@ -3,10 +3,6 @@
  *
  */
 
-<<<<<<< HEAD
-=======
-import React, { SetStateAction } from "react";
->>>>>>> 012e10213823c026ecee0f5859b015bdae8ab046
 import { IoMdHelp } from "react-icons/io";
 import { LuKeyboard } from "react-icons/lu";
 import { LuFileText } from "react-icons/lu";
@@ -20,19 +16,9 @@ import Avatar from "../user/avatar";
 import GeneralLayout from "../common/generalLayout";
 import GeneralListItem from "../common/generalListItem";
 import { GeneralListItemProps } from "@/misc/types/generalLayout";
-<<<<<<< HEAD
 import { IModalLabel } from "@/misc/types/modals";
 import { ISettings } from "@/misc/types/settings";
 
-=======
-import { IModal, IModalLabel } from "@/misc/types/modals";
-
-interface ISettings {
-  onBackClick: any;
-  onShowModals: React.Dispatch<SetStateAction<IModal>>;
-  onClickSettingItem: Function;
-}
->>>>>>> 012e10213823c026ecee0f5859b015bdae8ab046
 
 const Settings = ({
   onBackClick,
