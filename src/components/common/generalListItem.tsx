@@ -17,6 +17,19 @@ const GeneralListItem = ({
   const LIcon = leftIcon ?? undefined;
   const RIcon = rightIcon ?? undefined;
   const iconSize = 25;
+
+
+  const renderDescription = () => {
+    if (!description) return null;
+
+    if (typeof description !== "string") {
+      const Description = description;
+      return <Description />;
+    }
+
+    return <p className="text-gray-500 text-[12px]">{description}</p>;
+  };
+
   return (
     <div
       role="button"
@@ -35,9 +48,7 @@ const GeneralListItem = ({
       {/* content */}
       <div className="flex-1 flex flex-col gap-[2px] borders">
         {label && <p className="font-medium text-gray-600 ">{label} </p>}
-        {description && (
-          <p className="text-gray-500 text-[12px]">{description}</p>
-        )}
+        {renderDescription()}
       </div>
 
       {/* right icon */}

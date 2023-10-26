@@ -4,7 +4,7 @@ export interface GeneralListItemProps {
   onClickRightIcon?: Function;
   onClick?: Function
   hover?: boolean;
-  description?: string;
+  description?: React.JSX.ElementType | string;
   label?: string;
   id?:string;
 }

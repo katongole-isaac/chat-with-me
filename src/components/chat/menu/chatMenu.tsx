@@ -3,6 +3,7 @@
  *
  */
 
+import { MdOutlineCall } from "react-icons/md";
 import React, { useContext, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 
@@ -14,7 +15,7 @@ import type { LoggedInUser } from "@/misc/types";
 import { ChatMenuProps } from "@/misc/types/chat";
 import { IPopupOptions } from "@/misc/types/popupOptions";
 
-const ChatMenu = ({ onProfileClick, onOptionClick }: ChatMenuProps) => {
+const ChatMenu = ({ onProfileClick, onOptionClick, onCallClick }: ChatMenuProps) => {
   const { user, wss } = useContext(UserContext) as LoggedInUser;
   const [showMenu, setShowMenu] = useState<IPopupOptions>({
     id: "",
@@ -33,12 +34,13 @@ const ChatMenu = ({ onProfileClick, onOptionClick }: ChatMenuProps) => {
             imageClassName="max-w-[50px]"
           />
         </div>
-        <div className="flex items-center justify-center gap-4 ">
+        <div className="flex items-center text-slate-800 justify-center gap-3 ">
           <SignOut />
 
+          <MdOutlineCall size={20} role="button" onClick={ (e:React.MouseEvent<HTMLElement>) => onCallClick ? onCallClick(e): null} />
           <div className="relative">
             <div
-              className={`rounded-full w-8 h-8 transition duration-300 ${
+              className={`rounded-full w-7 h-7 transition duration-300 ${
                 showMenu.isOpen ? " bg-zinc-200 " : ""
               } flex items-center justify-center`}
             >

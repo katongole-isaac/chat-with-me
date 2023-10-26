@@ -17,40 +17,20 @@ import {
   type LoggedInUser,
   type MessageFormat,
 } from "@/misc/types";
-
 import { IModal } from "@/misc/types/modals";
-
-import Profile from "@/components/user/profile";
-import ChatMenu from "@/components/chat/menu/chatMenu";
-import Conversation from "@/components/chat/conversation";
-import MessageInput from "@/components/chat/messageInput";
-import DefaultToaster from "@/components/toasts/toasterSetting";
-import NotifyToast from "@/components/toasts/notify";
-import LostConnectivity from "@/components/lostConnectivity";
-import registerServiceWorker from "@/registerServiceWorker";
 import useConnect from "@/helpers/useConnect";
-import InfinityToast from "@/components/toasts/reconnectToast";
-import CreateRoom from "@/components/rooms/createRoom";
-import ChatLists from "@/components/chat/chatLists";
-import Search from "@/components/common/search";
-import ChatTopBar from "@/components/chat/chatTopBar";
-import ContactInfo from "@/components/contactInfo/contact";
-import Settings, {
-  ThemeSwitch,
-  Security,
-  KeyboardShortcuts,
-  Help,
-  RequestInfo,
-  Privacy,
-  SettingNotifications,
-} from "@/components/settings";
-import {
-  IShowComponent,
-  ShowComponentLabel,
-} from "@/misc/types/renderComponent";
 import RenderModals from "@/components/modals";
-import Chats from "@/components/chat";
+import NotifyToast from "@/components/toasts/notify";
+import ChatTopBar from "@/components/chat/chatTopBar";
+import MessageInput from "@/components/chat/messageInput";
+import Conversation from "@/components/chat/conversation";
+import ContactInfo from "@/components/contactInfo/contact";
+import registerServiceWorker from "@/registerServiceWorker";
+import LostConnectivity from "@/components/lostConnectivity";
+import DefaultToaster from "@/components/toasts/toasterSetting";
+import InfinityToast from "@/components/toasts/reconnectToast";
 import FirstGridComponent from "@/components/firstGridComponent";
+import { IShowComponent, ShowComponentLabel} from "@/misc/types/renderComponent";
 
 registerServiceWorker();
 
