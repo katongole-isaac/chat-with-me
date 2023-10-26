@@ -222,7 +222,7 @@ const Chat = () => {
 
       <div className="w-screen h-screen bg-zinc-200">
         <div className="py-8 w-full h-full flex justify-center items-center ">
-          <div className="max-w-[1200px] bg-zinc-100 h-full shadow-lg  m-auto border ">
+          <div className="max-w-[1200px] bg-[#fafafa] h-full shadow-lg  m-auto border ">
             <div className="grid grid-cols-[1.5fr_3fr] h-full">
               {/* fist grid */}
               <div className="w-full h-full max-h-full  min-w-0 min-h-0 relative">

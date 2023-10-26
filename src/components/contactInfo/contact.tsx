@@ -196,8 +196,8 @@ export default ContactInfo;
 const InfoSection = () => {
   return (
     <div className="flex flex-col items-center gap-2 py-3">
-      <Avatar displayName="" photoURL="" avatarSize={70} />
-      <span> User Name </span>
+      <Avatar displayName="" photoURL="" avatarSize={90} imageClassName="max-w-[60px]" />
+      <span className="text-gray-800" > User Name </span>
       <div className="flex gap-10 text-gray-500">
         <MdOutlineCall size={25} role="button" />
         <VscDeviceCameraVideo size={25} role="button" />

@@ -3,18 +3,18 @@
  *
  */
 import React from "react";
-
 import { RiAccountCircleFill } from "react-icons/ri";
+
 import Image from "next/image";
-import OnlineStatus from "../chat/onlineStatus";
 
 interface Props {
   photoURL: string | null;
   displayName: string | null;
   avatarSize?: number;
   avatarClassName?: string;
+  imageClassName?: string;
   onProfileClick?: Function;
-};
+}
 
 const Avatar = ({
   onProfileClick,
@@ -22,36 +22,29 @@ const Avatar = ({
   displayName,
   avatarSize = 50,
   avatarClassName,
+  imageClassName,
 }: Props) => {
   return (
-    <div className="relative w-max">
-      <div
-        role="button"
-        onClick={onProfileClick ? () => onProfileClick() : () => {}}
-        className="w-max max-w-[50px] max-h-[50px] flex justify-center items-center rounded-full overflow-hidden"
-      >
-        {photoURL !== null && !!photoURL ? (
+    <div
+      role="button"
+      onClick={() => (!!onProfileClick ? onProfileClick() : null)}
+      className="w-max h-max  flex justify-center items-center rounded-full overflow-hidden p-0"
+    >
+      {photoURL !== null && !!photoURL ? (
+        <div className={`  ${imageClassName ? imageClassName :"max-w-[50px]" }`}>
           <Image
             width={100}
             height={100}
             src={photoURL!}
+            className={`"text-[12px]"`}
             alt={displayName ?? "Avatar"}
           />
-        ) : (
-          <RiAccountCircleFill
-            size={avatarSize}
-            className={`text-slate-500 cursor-pointer ${avatarClassName}`}
-          />
-        )}
-      </div>
-
-      {/* Re-positioning the online based based on whether photo is not null or not */}
-      {!photoURL ? (
-        <div className="relative bottom-1 right-[2px]">
-          <OnlineStatus />
         </div>
       ) : (
-        <OnlineStatus />
+        <RiAccountCircleFill
+          size={avatarSize}
+          className={`text-slate-400 bg-gradient-to-t from-cyan cursor-pointer ${avatarClassName}`}
+        />
       )}
     </div>
   );

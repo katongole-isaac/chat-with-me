@@ -7,7 +7,7 @@ import { BiSearchAlt2 } from "react-icons/bi";
 
 export default function Search() {
 
-    const inputRef = useRef();
+    const inputRef = useRef<HTMLInputElement>(null);
 
   return (
     <div className="w-full py-2 flex justify-center ">

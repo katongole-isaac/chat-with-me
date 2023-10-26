@@ -12,6 +12,7 @@ import Settings, {
   Security,
   SettingNotifications,
 } from "./settings";
+import Group from "./groups";
 import Chats from "./chat";
 import Profile from "./user/profile";
 import { IModal } from "@/misc/types/modals";
@@ -44,9 +45,8 @@ const FirstGridComponent = ({
     case "security":
       return <Security onBackClick={onBackClick} />;
 
-    case "profile":
-      return <></>;
-    //  return <Profile onClose={setShowProfile} showProfile={showProfile} />;
+    case "group":
+      return <Group onBackClick={onBackClick} />
 
     case "notifications":
       return <SettingNotifications onBackClick={onBackClick} />;

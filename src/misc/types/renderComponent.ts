@@ -9,4 +9,4 @@ export interface IShowComponent {
   history: ShowComponentLabel[];
 }
 
-export type ShowComponentLabel = "" | "profile" | "settings" | "notifications" | "privacy" | "security" | "help" | "request_info" ;
+export type ShowComponentLabel = "" | "profile" | "settings" | "notifications" | "privacy" | "security" | "help" | "request_info" | "group" ;

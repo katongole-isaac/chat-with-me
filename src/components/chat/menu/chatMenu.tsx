@@ -23,14 +23,14 @@ const ChatMenu = ({ onProfileClick, onOptionClick }: ChatMenuProps) => {
   const { photoURL, displayName } = user?.providerData[0];
 
   return (
-    <div className="w-full bg-zinc-300 p-2">
+    <div className="w-full bg-[#fafafa] p-2">
       <div className="flex gap-3 px-3 py-1 justify-end items-center">
         <div className="w-full flex-1 ">
           <Avatar
             photoURL={photoURL}
             displayName={displayName}
             onProfileClick={onProfileClick}
-            avatarClassName="w-20 h-20"
+            imageClassName="max-w-[50px]"
           />
         </div>
         <div className="flex items-center justify-center gap-4 ">
