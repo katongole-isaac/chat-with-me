@@ -46,13 +46,16 @@ const FirstGridComponent = ({
       return <Security onBackClick={onBackClick} />;
 
     case "group":
-      return <Group onBackClick={onBackClick} />
+      return <Group onBackClick={onBackClick} />;
 
     case "notifications":
       return <SettingNotifications onBackClick={onBackClick} />;
 
     case "privacy":
       return <Privacy onBackClick={onBackClick} />;
+
+    case "profile":
+      return <Profile onBackClick={onBackClick} />;
 
     case "help":
       return <Help onBackClick={onBackClick} />;

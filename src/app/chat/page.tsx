@@ -81,6 +81,14 @@ const Chat = () => {
     }));
   };
 
+    const handleProfileClick = () => {
+     setFirstGridComponent((prev) => ({
+       history: [...prev.history, "profile"],
+       label: "profile",
+       open: true,
+     }));
+    };
+
   const handleCloseModal = () =>
     setModal((prev) => ({ label: "", open: false }));
 
@@ -170,11 +178,7 @@ const Chat = () => {
     setTimerId(timeout);
   };
 
-  const handleProfileClick = () => {
-    startTransition(() => {
-      setShowProfile((prev) => !prev);
-    });
-  };
+
 
   useEffect(() => {
     if (wss) {

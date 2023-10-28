@@ -6,8 +6,9 @@ import { useField, Field } from "formik";
 import React from "react";
 import { BsInfoLg } from "react-icons/bs";
 
-const Input = (props: any) => {
+const Input = (props:any) => {
   const [field, meta] = useField(props);
+  
 
   const classes = `border p-1 px-2 rounded-md text-slate-600 focus:outline-offset-2 ${props?.classes} ${
     meta.error && meta.touched

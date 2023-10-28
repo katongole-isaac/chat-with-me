@@ -22,11 +22,7 @@ const CallHistory = () => {
 
   return (
     <div className="px-3 py-4 flex flex-col gap-3 divide-y">
-      {Array(20)
-        .fill(null)
-        .map((id) => (
-          <CallListItem icons={icons} description={Description} />
-        ))}
+      <CallListItem icons={icons} description={Description} />
     </div>
   );
 };

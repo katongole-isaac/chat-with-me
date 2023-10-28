@@ -15,11 +15,7 @@ const Calls = () => {
   return (
     <div className="px-3 py-4">
       <div className="flex flex-col gap-2 h-full divide-y ">
-        {Array(20)
-          .fill(null)
-          .map(() => (
-            <CallListItem icons={icons} description="Hey, I'm using chat_with_me" />
-          ))}
+        <CallListItem icons={icons} description="Hey, I'm using chat_with_me" />
       </div>
     </div>
   );
