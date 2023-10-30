@@ -38,7 +38,7 @@ export default function Chat({ activeChat, index, onActiveChat }: ChatProps) {
         </div>
 
         {/* chat title */}
-        <div className="flex-1 flex-col space-y-[3px] overflow-x-clip">
+        <div className="flex-1 flex-col space-y-[3px] overflow-hidden ">
           <h1
             className="text-slate-800 dark:text-gray-300 max-w-full whitespace-nowrap text-ellipsis overflow-hidden"
             data-tooltip-id="room_title"
@@ -46,8 +46,7 @@ export default function Chat({ activeChat, index, onActiveChat }: ChatProps) {
             {label}
           </h1>
           <p className="text-[13px] text-gray-500 dark:text-gray-400">
-            {" "}
-            Room Description{" "}
+            Room Description
           </p>
         </div>
 
