@@ -12,7 +12,7 @@ export default function ChatLists() {
   const chats = Array(10).fill(null);
 
   return (
-    <div className="w-full divide-y divide-slate-300 space-y-2 ">
+    <div className="w-full divide-y divide-slate-300 dark:divide-[#343434] space-y-2 ">
       {chats.map((chat, idx) => (
         <ChatList
           key={idx}

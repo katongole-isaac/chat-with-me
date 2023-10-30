@@ -39,7 +39,6 @@ const Group = ({ onBackClick }: GroupProps) => {
   return (
     <GeneralLayout title="Groups" onBackClick={onBackClick}>
       <div className="flex flex-col h-full ">
-
         {/* added participants and search container */}
         <div className="w-ful  min-h-[9%] max-h-[24%] custom-scrollbar overflow-y-auto flex flex-col">
           {/* chips */}
@@ -55,7 +54,7 @@ const Group = ({ onBackClick }: GroupProps) => {
               autoComplete="off"
               name="search"
               value={searchTerm}
-              className="text-gray-600 px-1 border-b focus:border-gray-600 bg-transparent w-full focus:outline-none  transition duration-300"
+              className="text-gray-600 dark:text-gray-300 px-1 border-b dark:border-[#343434] focus:border-gray-600 bg-transparent w-full focus:outline-none  transition duration-300"
               placeholder="Type friend name ..."
               onChange={(e) => handleOnChange(e)}
             />

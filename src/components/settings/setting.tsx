@@ -86,8 +86,8 @@ const Settings = ({
 
         {/* bio content section */}
         <div className="flex flex-col gap-1">
-          <p className=""> Isaac Katongole </p>
-          <p className="text-[12px] text-gray-500">
+          <p className="dark:text-gray-300"> Isaac Katongole </p>
+          <p className="text-[12px] text-gray-500 dark:text-gray-400">
             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Non,
             numquam?
           </p>
@@ -95,7 +95,7 @@ const Settings = ({
       </div>
 
       {/* menu options */}
-      <div className="divide-y">
+      <div className="divide-y dark:divide-[#343434]">
         {menu.map((item) => (
           <GeneralListItem
             key={item.label}

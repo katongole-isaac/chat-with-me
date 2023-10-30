@@ -58,7 +58,7 @@ const Chats = ({ onOptionClick, onProfileClick }: ChatsProps) => {
               <AiOutlineHistory
                 size={20}
                 role="button"
-                className="text-slate-800"
+                className="text-slate-800 dark:text-gray-300"
                 onClick={() =>
                   setActiveComponent((prev) =>
                     prev !== "call_history" ? "call_history" : "calls"

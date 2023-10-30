@@ -15,7 +15,7 @@ const GeneralLayout = ({
 }: GeneralLayoutProps) => {
   return (
     <div className="w-full h-full">
-      <div className="min-h-[10%] max-h-[11%] text-gray-800 px-4 transparent flex gap-3 items-center border-b ">
+      <div className="min-h-[10%] max-h-[11%] text-gray-800 dark:text-gray-300 px-4 transparent flex gap-3 items-center border-b dark:border-b-[#343434] ">
         <BiArrowBack
           size={25}
           onClick={() => (onBackClick ? onBackClick() : null)}

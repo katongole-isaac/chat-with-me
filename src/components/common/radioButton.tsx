@@ -12,7 +12,7 @@ const RadioButton = ({
   onChange,
 }:RadioButtonProps) => {
   return (
-    <div className="flex gap-4 text-gray-800 text-[14px] ">
+    <div className="flex gap-4 text-gray-800 dark:text-gray-300 text-[14px] ">
       <input
         type="radio"
         name="theme"
@@ -20,6 +20,7 @@ const RadioButton = ({
         value={value}
         checked={value === theme}
         onChange={(e) => onChange(e)}
+        className=""
       />
       <label htmlFor={label} className="cursor-ponter">
         {" "}

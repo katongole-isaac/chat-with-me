@@ -3,11 +3,12 @@
  *
  */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import Backdrop from "../common/backdrop";
 import { Theme } from "@/misc/types/theme";
 import RadioButton from "../common/radioButton";
+import { useTheme } from "next-themes";
 
 interface ThemeSwitchProps {
   onCancel: React.MouseEventHandler<HTMLButtonElement>;
@@ -15,7 +16,8 @@ interface ThemeSwitchProps {
 
 
 const ThemeSwitch = ({ onCancel }: ThemeSwitchProps) => {
-  const [theme, setTheme] = useState<Theme>("light");
+
+  const {theme, setTheme }= useTheme();
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTheme(e.target.value as Theme);
@@ -46,29 +48,35 @@ const ThemeSwitch = ({ onCancel }: ThemeSwitchProps) => {
 
   return (
     <Backdrop>
-      <div className="bg-[#fafafa] py-5 px-8 min-w-[320px] max-w-[320px] m-auto rounded-md">
+      <div className="bg-[#fafafa] dark:bg-[#232323] py-5 px-8 min-w-[320px] max-w-[320px] m-auto rounded-md">
         {/* title */}
         <div>
-          <h1 className="font-semibold text-lg text-gray-700"> Choose theme</h1>
+          <h1 className="font-semibold text-lg text-gray-700 dark:text-gray-300"> Choose theme</h1>
         </div>
 
         <div className="flex flex-col gap-4 py-4">
           {themeOptions.map((_theme) => (
-            <RadioButton key={_theme.value} {..._theme} activeValue={theme} onChange={handleOnChange} />
+            <RadioButton
+              key={_theme.value}
+              {..._theme}
+              activeValue={theme as string}
+              onChange={handleOnChange}
+            />
           ))}
         </div>
 
         {/* actions */}
         <div className="flex gap-4 py-2 justify-end font-medium text-[13px] [&>button]:font-medium ">
           <button
-            className="text-sky-700 transition duration-300 hover:font-semibold "
+            className="text-sky-700 dark:text-gray-300 transition duration-300 hover:font-semibold "
             onClick={onCancel}
           >
             Cancel
           </button>
-          <button 
-          onClick={ handleApplyChanges}
-          className="text-sky-700 transition duration-300 hover:font-semibold  ">
+          <button
+            onClick={handleApplyChanges}
+            className="text-sky-700 dark:text-gray-300 transition duration-300 hover:font-semibold  "
+          >
             Apply
           </button>
         </div>

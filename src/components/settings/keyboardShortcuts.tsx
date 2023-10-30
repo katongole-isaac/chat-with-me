@@ -17,10 +17,10 @@ const KeyboardShortcuts = ({ onClickOk }: KeyboardShortcutsProps) => {
   
   return (
     <Backdrop>
-      <div className="bg-[#fafafa] w-full max-w-[900px] m-auto max-h-max px-8 py-8 rounded-md">
+      <div className="bg-[#fafafa] dark:bg-[#232323] w-full max-w-[900px] m-auto max-h-max px-8 py-8 rounded-md">
         {/* title */}
         <div className="pb-6">
-          <h1 className="font-medium text-xl text-gray-900">
+          <h1 className="font-medium text-xl text-gray-900 dark:text-gray-300">
             Keyboard Shortcuts
           </h1>
         </div>
@@ -36,7 +36,7 @@ const KeyboardShortcuts = ({ onClickOk }: KeyboardShortcutsProps) => {
         <div className="flex w-full justify-end py-4 mt-3 ">
           <button
             onClick={onClickOk!}
-            className="bg-sky-700 rounded-md px-6 py-1 text-slate-100 font-medium text-[14px] hover:bg-sky-800 "
+            className="bg-sky-700 dark:bg-neutral-700 rounded-md px-6 py-1 text-slate-100 font-medium text-[14px] hover:bg-sky-800 "
           >
             OK
           </button>
@@ -52,14 +52,14 @@ const ShortCut = ({ label, keys }: IShortCut) => {
   return (
     <div className="flex gap-6 justify-between text-[14px]">
       <div className="">
-        <p className="font-semibold text-zinc-600"> {label} </p>
+        <p className="font-semibold text-zinc-600 dark:text-gray-300 dark-gray-300"> {label} </p>
       </div>
 
       <div className="flex gap-3">
         {keys.map((key) => (
           <div
             key={key}
-            className="border bg-gray-200 text-gray-700 font-medium font-mono px-2 "
+            className="border bg-gray-200 dark:bg-neutral-700 dark:text-gray-100 dark:border-neutral-700 text-gray-700 font-medium font-mono px-2 "
           >
             <span>{key} </span>
           </div>

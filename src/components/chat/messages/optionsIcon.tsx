@@ -24,8 +24,8 @@ export const OptionsIcon = ({incoming, id , onShowOptions }: OptionsIconProps) =
 
   return (
     <div
-      className={`self-start hidden group-hover:flex absolute w-5 h-5  justify-center items-center right-0 top-0 ${
-        incoming ? "text-gray-700 bg-gray-50" : "text-gray-700 bg-gray-50"
+      className={`self-start hidden group-hover:flex absolute w-5 h-5  justify-center items-center right-0 top-0 dark:bg-neutral-600 dark:text-gray-100 ${
+        incoming ? "text-gray-700 bg-gray-50 " : "text-gray-700 bg-gray-50"
       } `}
       role="button"
       onClick={() => handleIconClick(id)}

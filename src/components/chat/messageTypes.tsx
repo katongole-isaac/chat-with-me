@@ -17,9 +17,9 @@ import { OptionsIcon } from "./messages/optionsIcon";
 export const Timeline = ({ text }: { text: String }) => {
   return (
     <div className="relative flex items-center">
-      <div className="flex-grow border-t border-gray-400"></div>
-      <span className="flex-shrink mx-4 text-gray-400">{text}</span>
-      <div className="flex-grow border-t border-gray-400"></div>
+      <div className="flex-grow border-t border-gray-400 dark:border-neutral-700 "></div>
+      <span className="flex-shrink mx-4 text-gray-400 ">{text}</span>
+      <div className="flex-grow border-t border-gray-400  dark:border-neutral-700"></div>
     </div>
   );
 };
@@ -72,8 +72,8 @@ const Text = ({ message, incoming, classes }: any) => {
     <div
       className={` ${
         incoming
-          ? "self-start bg-white text-slate-900 "
-          : "self-end bg-blue-500 text-white "
+          ? "self-start bg-white dark:bg-neutral-700 dark:text-gray-50 text-slate-900 "
+          : "self-end bg-blue-500 text-white dark:bg-neutral-700 dark:text-gray-50 "
       } py-2 px-4 w-max  break-words rounded-md ${
         classes ? classes : "max-w-[65%]"
       } `}
@@ -90,7 +90,9 @@ export const Media = ({ message, incoming, id }: any) => {
   return (
     <div
       className={`flex flex-col gap-2  ${
-        incoming ? "self-start bg-white " : "self-end bg-blue-500"
+        incoming
+          ? "self-start bg-white dark:bg-neutral-700 "
+          : "self-end bg-blue-500"
       }  max-w-[350px] max-h-auto rounded-md relative group`}
     >
       {/* image wrapper */}
@@ -123,11 +125,13 @@ export const Reply = ({ reply, message, incoming, id }: any) => {
   return (
     <div
       className={` ${
-        incoming ? "self-start bg-white " : "self-end bg-blue-500"
+        incoming
+          ? "self-start bg-white dark:bg-neutral-700"
+          : "self-end bg-blue-500 dark:bg-neutral-700"
       }  p-1 rounded-md max-w-[65%] group relative `}
     >
       {/*  quotting the reply message */}
-      <div className="bg-[#fafafa] text-gray-500 border-l-4 p-1 rounded-md ">
+      <div className="bg-[#fafafa] dark:bg-neutral-600 dark:text-gray-100 text-gray-500 border-l-4 p-1 rounded-md ">
         <TextLine message={reply} />
       </div>
       {/* original message */}
@@ -152,8 +156,8 @@ export const LinkMsg = ({ incoming, message, id }: any) => {
     <div
       className={` ${
         incoming
-          ? "self-start bg-white text-slate-900 "
-          : "self-end bg-blue-500 text-white "
+          ? "self-start bg-white dark:bg-neutral-700 dark:text-gray-50 text-slate-900 "
+          : "self-end bg-blue-500 dark:bg-neutral-700 dark:text-gray-50 text-white "
       } max-w-[65%] relative group `}
     >
       <div className="py-2 px-2 w-max  space-y-1 break-words rounded-md">
@@ -161,7 +165,9 @@ export const LinkMsg = ({ incoming, message, id }: any) => {
           href={`http://www.youtube.com`}
           target="_blank"
           className={`${
-            incoming ? "bg-blue-100 text-blue-400" : "bg-[#fafafa] text-sky-600"
+            incoming
+              ? "bg-blue-100 text-blue-400"
+              : "bg-[#fafafa] text-sky-600 dark:bg-neutral-600 dark:text-gray-100"
           } flex gap-2 items-center px-2 rounded-md py-1 cursor-pointer hover:underline`}
         >
           <AiOutlineLink size={25} className={`${incoming ? "" : ""}`} />
@@ -189,8 +195,8 @@ export const MediaDocument = ({ incoming, message, id }: any) => {
     <div
       className={` ${
         incoming
-          ? "self-start bg-white text-slate-900 "
-          : "self-end bg-blue-500 text-white "
+          ? "self-start bg-white text-slate-900 dark:bg-neutral-700 dark:text-gray-50 "
+          : "self-end bg-blue-500 text-white dark:bg-neutral-700 dark:text-gray-50 "
       } max-w-[65%] break-words rounded-md relative group `}
     >
       <div className=" space-y-1 py-2 px-2 w-max ">

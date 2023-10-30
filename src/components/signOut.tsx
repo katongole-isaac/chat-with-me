@@ -29,7 +29,7 @@ export default function SignOut() {
         onClick={handleSignOutClick}
         size={20}
         data-tooltip-id="logout"
-        className="cursor-pointer text-slate-600"
+        className="cursor-pointer text-slate-600 dark:text-[#fafafac7]"
       />
       <Tooltip id="logout">
         <span>logout</span>

@@ -28,7 +28,7 @@ const CallListItem = ({description, icons }: CallListItemProps) => {
   const Icon = ({ icon }: { icon: React.JSX.ElementType }) => {
     const MyIcon = icon;
 
-    return <MyIcon size={20} className="text-slate-900" role="button" onClick={ ()=> console.log('li')} />;
+    return <MyIcon size={20} className="text-slate-900 dark:text-gray-300" role="button" onClick={ ()=> console.log('li')} />;
   };
   
   const RightIcon = () => (

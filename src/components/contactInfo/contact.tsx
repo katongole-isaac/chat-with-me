@@ -140,7 +140,7 @@ const ContactInfo = ({
       {isModalOpen.open && <Modal {...getModalKeyValue(modalOptions)} />}
       <div
         ref={contactRef}
-        className="w-[45%] z-30 h-full shadow-lg bg-zinc-100"
+        className="w-[45%] z-30 h-full shadow-lg bg-zinc-100 dark:bg-[#232323]"
       >
         {/* top header section */}
         <TopHeader onClick={onShowContact} />
@@ -149,7 +149,7 @@ const ContactInfo = ({
         <InfoSection />
 
         <div className="px-4 py-3">
-          <hr />
+          <hr className="dark:border-neutral-700" />
         </div>
 
         {/* media buttons */}
@@ -162,7 +162,7 @@ const ContactInfo = ({
         </div>
 
         {/* media content based on the active tab */}
-        <div className="w-full  min-h-[10%] borderr border-red-400 py-2 max-h-[50%] overflow-y-auto custom-scrollbar">
+        <div className="w-full  min-h-[10%]  py-2 max-h-[50%] overflow-y-auto custom-scrollbar">
           {/* No content div */}
 
           {/* <div className="w-full py-6 flex justify-center items-center">
@@ -173,7 +173,7 @@ const ContactInfo = ({
         </div>
 
         <div className="px-4 py-3">
-          <hr />
+          <hr className="dark:border-neutral-700" />
         </div>
 
         {/* action section */}
@@ -196,9 +196,14 @@ export default ContactInfo;
 const InfoSection = () => {
   return (
     <div className="flex flex-col items-center gap-2 py-3">
-      <Avatar displayName="" photoURL="" avatarSize={90} imageClassName="max-w-[60px]" />
-      <span className="text-gray-800" > User Name </span>
-      <div className="flex gap-10 text-gray-500">
+      <Avatar
+        displayName=""
+        photoURL=""
+        avatarSize={90}
+        imageClassName="max-w-[60px]"
+      />
+      <span className="text-gray-800 dark:text-gray-300"> User Name </span>
+      <div className="flex gap-10 text-gray-500 dark:text-gray-300 ">
         <MdOutlineCall size={25} role="button" />
         <VscDeviceCameraVideo size={25} role="button" />
       </div>

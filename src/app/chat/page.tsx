@@ -201,17 +201,17 @@ const Chat = () => {
 
   return (
     <UserContext.Provider value={{ user, wss }}>
-     {/* modals */}
+      {/* modals */}
       <RenderModals modal={modal} onClose={handleCloseModal} />
 
-      <div className="w-screen h-screen bg-zinc-200">
+      <div className="w-screen h-screen bg-zinc-200  dark:bg-[#111111] ">
         <div className="py-8 w-full h-full flex justify-center items-center ">
-          <div className="max-w-[1200px] bg-[#fafafa] h-full shadow-lg  m-auto border ">
+          <div className="max-w-[1200px] bg-[#fafafa] dark:bg-[#232323] h-full shadow-lg  m-auto border dark:border-[#232323] ">
             <div className="grid grid-cols-[1.5fr_3fr] h-full">
               {/* fist grid */}
               <div className="w-full h-full max-h-full  min-w-0 min-h-0 relative">
                 <FirstGridComponent
-                onShowModals={setModal}
+                  onShowModals={setModal}
                   onBackClick={handleBackClick}
                   onOptionClick={handleOptionClick}
                   onProfileClick={handleProfileClick}
@@ -220,7 +220,7 @@ const Chat = () => {
               </div>
 
               {/* second grid */}
-              <div className="border-l min-w-0 min-h-0 max-h-full relative ">
+              <div className="border-l dark:border-[#343434] min-w-0 min-h-0 max-h-full relative ">
                 <div className="h-full max-h-full flex flex-col">
                   {showContactDialog && (
                     <ContactInfo

@@ -14,7 +14,7 @@ const Calls = () => {
     
   return (
     <div className="px-3 py-4">
-      <div className="flex flex-col gap-2 h-full divide-y ">
+      <div className="flex flex-col gap-2 h-full divide-y dark:divide-[#343434] ">
         <CallListItem icons={icons} description="Hey, I'm using chat_with_me" />
       </div>
     </div>

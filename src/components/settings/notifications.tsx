@@ -37,10 +37,10 @@ const SettingNotifications = ({ onBackClick }: ISettingNotificationsProps) => {
 
   return (
     <GeneralLayout title="Notifications" onBackClick={onBackClick}>
-      <div className="flex flex-col divide-y">
-        {
-          options.map (option => <GeneralListItem  key={option.label} {...option} />)
-        }
+      <div className="flex flex-col divide-y dark:divide-[#343434]">
+        {options.map((option) => (
+          <GeneralListItem key={option.label} {...option} />
+        ))}
       </div>
     </GeneralLayout>
   );

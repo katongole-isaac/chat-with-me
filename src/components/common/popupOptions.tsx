@@ -33,7 +33,7 @@ const PopupOptions = ({ classes, options, onShowPopup }: PopupOptionsProps) => {
 
   return (
     <div
-      className={`min-w-[120px] h-max  flex gap-2 flex-col  shadow-md rounded-md absolute  bg-[#fafafa] text-gray-700 z-50 ${
+      className={`min-w-[120px] h-max  flex gap-2 flex-col  shadow-md rounded-md absolute  bg-[#fafafa] dark:bg-neutral-700 dark:text-gray-100 text-gray-700 z-50 ${
         classes ? classes : ""
       }`}
       ref={optionsDivRef}
@@ -43,7 +43,7 @@ const PopupOptions = ({ classes, options, onShowPopup }: PopupOptionsProps) => {
           key={option.title}
           onClick={() => (option.onClick ? option.onClick(option.id) : null)}
           role="button"
-          className=" px-4 py-1 hover:bg-gray-200 text-left"
+          className=" px-4 py-1 hover:bg-gray-200 dark:hover:bg-[#52525241] text-left"
         >
           <span>{option.title}</span>
         </div>

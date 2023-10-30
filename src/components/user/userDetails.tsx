@@ -33,6 +33,8 @@ export default function UserDetails() {
     console.log(values);
   };  
 
+  const darkModeInputClasses =
+    "dark:bg-[#343434]  dark:text-gray-300  dark:border-[#343434]  dark:focus:outline-none ";
   return (
     <div className="w-full ">
       <div className="w-full flex p-3 pb-4 items-center justify-center">
@@ -49,20 +51,23 @@ export default function UserDetails() {
 
         <Formik
           initialValues={{
-            userName : "Isaac Katongole",
+            userName: "Isaac Katongole",
             about: "Hey, I'm currently using chat_with_me",
           }}
           validationSchema={validationSchema}
-          onSubmit={ values => handleSubmit(values)}
+          onSubmit={(values) => handleSubmit(values)}
         >
           <Form className="w-full flex-1 space-y-3">
             <div className="">
-              <Input name="userName" classes="w-full text-[14px]" />
+              <Input
+                name="userName"
+                classes={`w-full text-[14px] ${darkModeInputClasses}`}
+              />
 
               {/* Info note */}
               <div className="flex gap-2  mt-2 items-center text-[13px]">
                 {/* <FaInfo className="text-gray-800 font-semibold" /> */}
-                <span className="text-gray-600">
+                <span className="text-gray-600 dark:text-gray-400">
                   This name is visible to you friends{" "}
                 </span>
               </div>
@@ -71,17 +76,17 @@ export default function UserDetails() {
             {/* About */}
             <div className="space-y-2">
               <div className="">
-                <p className="text-slate-700 ">About</p>
+                <p className="text-slate-700 dark:text-gray-300">About</p>
               </div>
 
               <Input
                 as="textarea"
                 name="about"
-                classes="w-full text-[14px] resize-none custom-scrollbar"
+                classes={`w-full text-[14px] resize-none custom-scrollbar ${darkModeInputClasses} `}
                 rows={5}
                 maxLength={aboutWordLimit}
               />
-              <div className="text-gray-500 text-[12px] flex justify-end">
+              <div className="text-gray-500 dark:text-[#fafafa86] text-[12px] flex justify-end">
                 <span>max 120 characters </span>
               </div>
             </div>
@@ -89,7 +94,7 @@ export default function UserDetails() {
             {/* submit btn */}
             <button
               type="submit"
-              className="px-4 py-1 font-medium flex justify-center items-center bg-blue-500 rounded-md shadow-md text-white"
+              className="px-4 py-1 font-medium flex justify-center items-center bg-blue-500 dark:bg-[#343434] rounded-md shadow-md text-white"
             >
               save
             </button>

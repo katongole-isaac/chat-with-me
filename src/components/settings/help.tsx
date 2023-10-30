@@ -39,8 +39,7 @@ const Help = ({ onBackClick }: IHelpProps) => {
         </div>
       </div>
 
-
-      <div className="flex flex-col divide-y">
+      <div className="flex flex-col divide-y dark:divide-[#343434]">
         {options.map((option) => (
           <GeneralListItem hover={false} key={option.label} {...option} />
         ))}

@@ -87,14 +87,14 @@ const MessageInput = ({ onSubmit, chatDivRef }: MsgProps) => {
   }, [message]);
 
   return (
-    <div className=" w-full py-2 px-2  space-x-2  bg-gray-200 ">
+    <div className=" w-full py-2 px-2  space-x-2  bg-gray-200 dark:bg-neutral-700 ">
       <div className="w-full flex items-center justify-center gap-4">
-        <div className="flex w-full items-center gap-2 px-3 bg-neutral-100 ">
+        <div className="flex w-full items-center gap-2 px-3 bg-neutral-100 dark:bg-[#343434] ">
           {/*  message input */}
           <ChatActions />
           <div className="w-full flex-1 h-full max-h-32 overflow-y-auto custom-scrollbar ">
             <textarea
-              className=" px-3 bg-transparent text-slate-700 rounded-md w-full focus:outline-none resize-none custom-scrollbar"
+              className=" px-3 bg-transparent text-slate-700 dark:text-gray-100 rounded-md w-full focus:outline-none resize-none custom-scrollbar"
               placeholder="Write a message"
               value={message}
               ref={msgInputRef}
@@ -112,7 +112,9 @@ const MessageInput = ({ onSubmit, chatDivRef }: MsgProps) => {
         >
           <IoSendSharp
             className={`${
-              !readyToSend ? "text-zinc-300" : "text-blue-600"
+              !readyToSend
+                ? "text-zinc-300 dark:text-neutral-500"
+                : "text-blue-600 dark:text-neutral-300"
             } text-[20px] transition-colors duration-100 `}
           />
         </button>

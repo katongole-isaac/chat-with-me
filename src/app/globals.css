@@ -11,5 +11,17 @@
   .custom-scrollbar::-webkit-scrollbar-thumb {
     background: #ccc;
     border-radius: 6px;
+    @apply dark:bg-neutral-500;
   }
 }
+
+/* 
+
+dark 
+  Text - dark:text-[#fafafac7] | dark:text-gray-300
+  greyOutText - dark:text-[#fafafa6b] | dark:text-gray-400
+  Bg - dark:bg-[#232323]
+  Input Bg, borders, dividers - dark:bg-[#343434]
+  Hover Bg - dark:bg-[#525252ad], dark:hover:bg-[#52525241]
+  button bg - dark:border-neutral-700
+*/

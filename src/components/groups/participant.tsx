@@ -24,14 +24,14 @@ const Participant = ({onClick, id}:ParticipantProps) => {
     <div
       role="button"
       onClick={() => (onClick ? onClick(id) : null)}
-      className=" py-1 flex items-center w-full gap-3 hover:bg-[#f2f4ff]"
+      className=" py-1 flex items-center w-full gap-3 hover:bg-[#f2f4ff] dark:hover:bg-[#52525241]"
     >
       <Avatar
         displayName={displayName}
         photoURL={photoURL}
         imageClassName="max-w-[50px]"
       />
-      <span className="text-gray-700 text-[14px]"> Isaac katongole </span>
+      <span className="text-gray-700 dark:text-gray-300 text-[14px]"> Isaac katongole </span>
     </div>
   );
 };

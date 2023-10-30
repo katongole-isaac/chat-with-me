@@ -24,7 +24,7 @@ const ChatMenu = ({ onProfileClick, onOptionClick, onCallClick }: ChatMenuProps)
   const { photoURL, displayName } = user?.providerData[0];
 
   return (
-    <div className="w-full bg-[#fafafa] p-2">
+    <div className="w-full bg-[#fafafa] dark:bg-[#232323] p-2">
       <div className="flex gap-3 px-3 py-1 justify-end items-center">
         <div className="w-full flex-1 ">
           <Avatar
@@ -34,20 +34,26 @@ const ChatMenu = ({ onProfileClick, onOptionClick, onCallClick }: ChatMenuProps)
             imageClassName="max-w-[50px]"
           />
         </div>
-        <div className="flex items-center text-slate-800 justify-center gap-3 ">
+        <div className="flex items-center text-slate-800 dark:text-[#fafafac7] justify-center gap-3 ">
           <SignOut />
 
-          <MdOutlineCall size={20} role="button" onClick={ (e:React.MouseEvent<HTMLElement>) => onCallClick ? onCallClick(e): null} />
+          <MdOutlineCall
+            size={20}
+            role="button"
+            onClick={(e: React.MouseEvent<HTMLElement>) =>
+              onCallClick ? onCallClick(e) : null
+            }
+          />
           <div className="relative">
             <div
               className={`rounded-full w-7 h-7 transition duration-300 ${
-                showMenu.isOpen ? " bg-zinc-200 " : ""
+                showMenu.isOpen ? " bg-zinc-200 dark:bg-[#525252ad] " : ""
               } flex items-center justify-center`}
             >
               <BsThreeDotsVertical
                 size={20}
                 role="button"
-                className="text-slate-800"
+                className="text-slate-800 dark:text-[#fafafac7]"
                 onClick={() =>
                   setShowMenu((prev) => ({ ...prev, isOpen: !prev.isOpen }))
                 }

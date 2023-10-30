@@ -40,7 +40,7 @@ const RequestInfo = ({ onBackClick }: IRequestInfoProps) => {
 
       {/* content */}
       <div className="w-full py-6 px-4">
-        <p className="text-[12px] text-gray-600">
+        <p className="text-[12px] text-gray-600 dark:text-gray-400">
           End-to-end encryption keeps your personal messages & call between you
           and person you choose to communicate with. Not even talk can read or
           listen to them. This includes your

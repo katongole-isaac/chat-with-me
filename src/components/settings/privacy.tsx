@@ -43,7 +43,7 @@ const Privacy = ({ onBackClick }: IPrivacyProps) => {
 
   return (
     <GeneralLayout title="Privacy" onBackClick={onBackClick}>
-      <div className="flex flex-col divide-y">
+      <div className="flex flex-col divide-y dark:divide-[#343434]">
         {privacyOptions.map((option) => (
           <GeneralListItem key={option.label} {...option} />
         ))}

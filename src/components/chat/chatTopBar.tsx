@@ -19,13 +19,19 @@ export default function ChatTopBar({ onClick}: ChatTopBarProps) {
      const { photoURL, displayName } = user?.providerData[0];
 
     return (
-      <div className="w-full p-2 bg-transparent border-b">
+      <div className="w-full p-2 bg-transparent border-b dark:border-[#343434]">
         <div className="flex items-center gap-3">
-          <Avatar onProfileClick={()=>onClick(true)} displayName={displayName} photoURL={photoURL} />
+          <Avatar
+            onProfileClick={() => onClick(true)}
+            displayName={displayName}
+            photoURL={photoURL}
+          />
 
           <div className="flex flex-col ">
-            <span className="text-slate-800"> Your name</span>
-            <span className="text-gray-500 text-[13px]">Last seen </span>
+            <span className="text-slate-800 dark:text-gray-300">Your name</span>
+            <span className="text-gray-500 dark:text-gray-400 text-[13px]">
+              Last seen
+            </span>
           </div>
         </div>
       </div>
