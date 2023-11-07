@@ -13,20 +13,19 @@ function withAuth(Component: React.ComponentType) {
 
     // this is used to prevent Flash of unwanted Content
     const [authenticating, setAuthenticating] = useState(true);
+    const [user, setUser] = useState(getCurrentUser());
 
     const router = useRouter();
 
-    const user = getCurrentUser();
+    const _ = () => {
+
+      if (!user) return router.replace("/login");
+
+      setAuthenticating(false);
+    };
 
     useEffect(() => {
-      (() => {
-        if (!user) {
-          setAuthenticating(false);
-          return router.replace("/login");
-        }
-
-        setAuthenticating(false);
-      })();
+      _();
     }, [user, authenticating]);
 
     if (authenticating)
@@ -37,7 +36,9 @@ function withAuth(Component: React.ComponentType) {
         </div>
       );
 
-      return <Component {...props} />;
+      if (user && !authenticating) return <Component {...props} />;
+
+      return null;
   };
 }
 export default withAuth;

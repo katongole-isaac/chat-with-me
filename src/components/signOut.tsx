@@ -6,22 +6,15 @@
 import { useRouter } from "next/navigation";
 import { BiLogOutCircle } from "react-icons/bi";
 
-import { logout, removeAuthUser } from "@/helpers/user";
-import { firebaseAuth } from "@/lib/firebaseApp";
 import Tooltip from "./common/tootltip";
+import authService from "@/services/authService";
 
 
 export default function SignOut() {
 
   const router = useRouter();
 
-  const handleSignOutClick = async () => {
-
-     await logout(firebaseAuth);
-    
-    router.replace("/login");
-
-  };
+  const handleSignOutClick =  () =>  authService.logout(router, "/login");
 
   return (
     <div>

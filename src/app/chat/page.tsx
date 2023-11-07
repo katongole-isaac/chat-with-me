@@ -30,7 +30,10 @@ import LostConnectivity from "@/components/lostConnectivity";
 import DefaultToaster from "@/components/toasts/toasterSetting";
 import InfinityToast from "@/components/toasts/reconnectToast";
 import FirstGridComponent from "@/components/firstGridComponent";
-import { IShowComponent, ShowComponentLabel} from "@/misc/types/renderComponent";
+import {
+  IShowComponent,
+  ShowComponentLabel,
+} from "@/misc/types/renderComponent";
 
 registerServiceWorker();
 
@@ -56,10 +59,11 @@ const Chat = () => {
     history: [""],
   });
 
-  const chatRef = useRef<HTMLDivElement>(null);
-
   const user = getCurrentUser();
-  const { accessToken } = user.stsTokenManager;
+  const { accessToken } = user?.stsTokenManager;
+  const [token, setToken] = useState<string>(accessToken);
+
+  const chatRef = useRef<HTMLDivElement>(null);
 
   // used to go back
   const handleBackClick = () => {
@@ -81,18 +85,17 @@ const Chat = () => {
     }));
   };
 
-    const handleProfileClick = () => {
-     setFirstGridComponent((prev) => ({
-       history: [...prev.history, "profile"],
-       label: "profile",
-       open: true,
-     }));
-    };
+  const handleProfileClick = () => {
+    setFirstGridComponent((prev) => ({
+      history: [...prev.history, "profile"],
+      label: "profile",
+      open: true,
+    }));
+  };
 
   const handleCloseModal = () =>
     setModal((prev) => ({ label: "", open: false }));
 
-  const [token, setToken] = useState<string>(accessToken);
   useUpdateToken({ onToken: setToken });
 
   // setting the token
@@ -177,8 +180,6 @@ const Chat = () => {
 
     setTimerId(timeout);
   };
-
-
 
   useEffect(() => {
     if (wss) {

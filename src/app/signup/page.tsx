@@ -9,19 +9,21 @@ import * as yup from "yup";
 import Link from "next/link";
 import { Formik, Form } from "formik";
 import { useRouter } from "next/navigation";
+import { toast, Toaster } from "react-hot-toast";
 import React, { useEffect, useState } from "react";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 
 import firebaseApp from "@/lib/firebaseApp";
 import { getCurrentUser, setAuthUser, useRedirectToChat } from "@/helpers/user";
-import config from '@/config/defaults.json';
+import config from "@/config/defaults.json";
 
 import Input from "@/components/common/input";
+import Divider from "@/components/common/divider";
 import SignInWithFacebook from "@/components/signInWithFacebook";
 import SignInWithGoogle from "@/components/signInWithGoogle";
+import authService from "@/services/authService";
 
 const auth = getAuth(firebaseApp);
-
 
 export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
@@ -31,13 +33,13 @@ export default function Login() {
 
   // if the user is logged in
   // don't show signup page
-    useRedirectToChat();
+  useRedirectToChat();
 
   const initialValues = {
     email: "",
     password: "",
   };
-  
+
   const validationSchema = yup.object({
     email: yup
       .string()
@@ -50,31 +52,10 @@ export default function Login() {
   });
 
   const handleSubmit = async (values: { email: string; password: string }) => {
-    try {
-      setIsLoading(true);
-      setLoginError("");
 
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        values.email,
-        values.password
-      );
+    const {email, password } = values;
 
-      // store user credentials
-      setAuthUser(userCredential.user);
-
-      router.replace(config.onSuccessRouteUrl);
-    } catch (error: any) {
-      console.log(error?.message);
-
-      const errorMessage = error?.message
-        .match(/\b(?!Firebase:)\w+\b/g)
-        .join(" ");
-
-      setLoginError(errorMessage);
-    } finally {
-      setIsLoading(false);
-    }
+    authService.signup({setLoading: setIsLoading, router, url: config.onSuccessRouteUrl, email , password})
   };
 
   const onSuccess = () => {
@@ -83,10 +64,10 @@ export default function Login() {
 
   return (
     <React.Fragment>
-      <div className="w-screen h-screen flex items-center justify-center bg-neutral-50">
-        <div className="border p-4 ">
+      <div className="w-screen h-screen  flex items-center justify-center bg-neutral-50">
+        <div className="border relative -top-28  p-4 pb-8 ">
           <div className="my-3">
-            <h1 className="text-center text-2xl">Sign Up</h1>
+            <h1 className="text-center text-2xl dark:text-gray-800">Sign Up</h1>
           </div>
 
           <Formik
@@ -95,14 +76,18 @@ export default function Login() {
             validationSchema={validationSchema}
           >
             <Form className="flex flex-col gap-4" autoComplete="off">
-              {loginError && (
-                <span className="inline-block text-[13px] text-rose-600 font-semibold px-2 py-1 bg-rose-200">
-                  {loginError.match(/\b(?!Firebase:)\w+\b/g)?.join(" ")}
-                </span>
-              )}
 
-              <Input name="email" placeholder="Email" />
-              <Input name="password" type="password" placeholder="Password" />
+              <Input
+                name="email"
+                placeholder="Email"
+                classes="dark:text-gray-800 dark:bg-transparent"
+              />
+              <Input
+                name="password"
+                type="password"
+                placeholder="Password"
+                classes="dark:text-gray-800 dark:bg-transparent"
+              />
               <button
                 type="submit"
                 className="border p-1 bg-blue-600 text-white rounded-md "
@@ -111,6 +96,10 @@ export default function Login() {
               </button>
             </Form>
           </Formik>
+
+          <div className="pt-4">
+            <Divider text="OR" />
+          </div>
 
           <div className="my-4">
             <SignInWithGoogle onError={setLoginError} onSuccess={onSuccess} />
@@ -121,7 +110,7 @@ export default function Login() {
           </div>
 
           <div className="mt-3 text-[13px]">
-            <p>
+            <p className="dark:text-gray-900 text-center">
               Already have an account?
               <span>
                 <Link
@@ -135,6 +124,7 @@ export default function Login() {
           </div>
         </div>
       </div>
+      <Toaster position="top-center" />
     </React.Fragment>
   );
 }

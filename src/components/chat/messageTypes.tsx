@@ -29,7 +29,7 @@ const TextLine = ({ message }: any) => {
   const lines = message.split("\n");
 
   return (
-    <div className="font-sans hyphens-none break-words w-full">
+    <div className="hyphens-none break-words w-full">
       <span>
         {lines.map((line: string, index: number) => (
           <React.Fragment key={index}>

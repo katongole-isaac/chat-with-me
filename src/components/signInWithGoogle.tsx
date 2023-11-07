@@ -27,7 +27,7 @@ const SignInWithGoogle = ({
         className="flex items-center justify-center gap-2 border p-1 px-2 w-full hover:bg-slate-100 rounded-md"
       >
         <FcGoogle size={20} className="text-blue-700" color="blue" />
-        <span>SignIn with Google</span>
+        <span className="dark:text-black" >SignIn with Google</span>
       </button>
     </div>
   );
