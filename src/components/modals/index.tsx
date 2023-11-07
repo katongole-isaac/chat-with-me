@@ -20,7 +20,7 @@ const RenderModals = ({ modal, onClose }: RenderModalsProps) => {
       return <ThemeSwitch onCancel={onClose} />;
 
     case "friends": 
-      return <FriendExplore />
+      return <FriendExplore onClose={onClose} />;
     default:
       return null;
   }
