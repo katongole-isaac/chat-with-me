@@ -4,16 +4,20 @@
  */
 
 import React from "react";
+import { useRouter } from 'next/navigation';
 
 import PopupOptions from "@/components/common/popupOptions";
 import { IOption, IPopupOptions } from "@/misc/types/popupOptions";
+import authService from "@/services/authService";
 
 interface IMenuOptions {
   onShowMenu: React.Dispatch<React.SetStateAction<IPopupOptions>>;
   onOptionClick: Function;
 }
 const MenuOptions = ({ onShowMenu, onOptionClick }: IMenuOptions) => {
-  
+
+   const router = useRouter();
+
   const options: IOption[] = [
     {
       title: "New Chat",
@@ -31,7 +35,7 @@ const MenuOptions = ({ onShowMenu, onOptionClick }: IMenuOptions) => {
     },
     {
       title: "Logout",
-      onClick: onOptionClick,
+      onClick: () =>  authService.logout(router, "/login"),
     },
   ];
 

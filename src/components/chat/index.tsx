@@ -15,7 +15,7 @@ import CallHistory from "../calls/callHistory";
 
 type ActiveComponentOptions = "calls" | "call_history" | "";
 
-const Chats = ({ onOptionClick, onProfileClick }: ChatsProps) => {
+const Chats = ({ onOptionClick, onProfileClick, onShowModals }: ChatsProps) => {
   const [activeComponent, setActiveComponent] =
     useState<ActiveComponentOptions>("calls");
 
@@ -41,6 +41,7 @@ const Chats = ({ onOptionClick, onProfileClick }: ChatsProps) => {
       <div>
         <div className="">
           <ChatMenu
+            onShowModals={onShowModals}
             onOptionClick={onOptionClick}
             onProfileClick={onProfileClick}
             onCallClick={handleCallClick}

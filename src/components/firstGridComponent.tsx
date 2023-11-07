@@ -65,7 +65,11 @@ const FirstGridComponent = ({
 
     default:
       return (
-        <Chats onOptionClick={onOptionClick} onProfileClick={onProfileClick} />
+        <Chats
+          onOptionClick={onOptionClick}
+          onProfileClick={onProfileClick}
+          onShowModals={onShowModals}
+        />
       );
   }
 };

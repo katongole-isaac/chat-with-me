@@ -3,7 +3,7 @@
  *
  */
 
-import { TabsProps, ITab, TabProps } from "@/misc/types/tabs";
+import { TabsProps, TabProps } from "@/misc/types/tabs";
 
 export default function Tabs({ tabs, activeTab, setActiveTab }: TabsProps) {
   return (
@@ -26,7 +26,7 @@ const Tab = ({ label, activeTab, onActiveTab }: TabProps) => {
   const activeTabClasses =
     activeTab === label.toLowerCase().trim()
       ? "bg-neutral-300 dark:bg-neutral-700 dark:text-gray-100 text-slate-900 font-medium"
-      : "text-slate-600 dark:text-gray-300 ";
+      : "text-slate-600 dark:text-gray-800 ";
 
   return (
     <div

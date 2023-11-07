@@ -1,11 +1,15 @@
+
 /**
  * Types and interface related to chats
  * 
- */
-export interface ChatMenuProps  {
+*/
+import { IModal } from "./modals";
+
+export interface ChatMenuProps {
   onProfileClick: Function;
   onOptionClick: Function;
-  onCallClick?: React.MouseEventHandler<HTMLElement>
+  onShowModals: React.Dispatch<React.SetStateAction<IModal>>;
+  onCallClick?: React.MouseEventHandler<HTMLElement>;
 };
 
 export interface ChatsProps extends ChatMenuProps {}

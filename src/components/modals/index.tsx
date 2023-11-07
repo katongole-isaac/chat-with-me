@@ -5,6 +5,7 @@
 
 import { IModal } from "@/misc/types/modals";
 import { KeyboardShortcuts, ThemeSwitch } from "../settings";
+import FriendExplore from "../friends";
 
 interface RenderModalsProps {
   modal: IModal;
@@ -17,6 +18,9 @@ const RenderModals = ({ modal, onClose }: RenderModalsProps) => {
       return <KeyboardShortcuts onClickOk={onClose} />;
     case "theme":
       return <ThemeSwitch onCancel={onClose} />;
+
+    case "friends": 
+      return <FriendExplore />
     default:
       return null;
   }

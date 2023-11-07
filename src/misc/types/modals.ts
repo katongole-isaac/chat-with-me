@@ -5,7 +5,7 @@
 
 // use for modals that appear in the settings panel
 
-export type IModalLabel = "keyboard_shortcuts" | "theme" | "";
+export type IModalLabel = "keyboard_shortcuts" | "theme" | "friends" | "";
 
 export interface IModal {
   label: IModalLabel;
