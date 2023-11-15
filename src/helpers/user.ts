@@ -7,11 +7,13 @@ import { Auth } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { firebaseAuth } from "@/lib/firebaseApp";
-import NotifyToast from "@/components/toasts/notify";
-import { toast } from "react-hot-toast";
+const _checkForLocalStorage = () => {
+  if (!(typeof window !== "undefined" && window.localStorage)) return false;
 
-const useCurrentUser = () => {
+  return true;
+}
+
+export const useCurrentUser = () => {
   const [user, setUser] = useState<null | any>(null);
 
   useEffect(() => {
@@ -31,56 +33,8 @@ const useCurrentUser = () => {
   return { user };
 };
 
-
-const useUpdateToken = ({ onToken }: {onToken:Function}) => {
-
-const genToken = () => {
-
-  firebaseAuth.onAuthStateChanged(async (_user) => {
-    try {
-      const _token = (await _user?.getIdToken(true)) as string;
- 
-      onToken(_token);
- 
-      const user = getCurrentUser();
-      user.stsTokenManager.accessToken = _token;
- 
-      setAuthUser(user); // saving new token
- 
-    } catch (err) {
- 
-      // here something went wrong when fetching firebase user token
-      toast.custom(
-        NotifyToast({
-          message: "Token update failed",
-          ErrorIcon: true,
-        })
-      );
-    }
-  });
-
-}
-
-
-  useEffect(()=>{
-    // run on the first render
-    genToken();
-    
-    // get a new token every after 30 mins
-    setInterval(() => {
-      console.log('getting new token.... timer')
-      genToken();
-    }, 1000 * 60 * 30);
-
-  }, [])
-
- 
-
-}
-
-
 //used on login and signup
-const useRedirectToChat = ( ) => {
+export const useRedirectToChat = ( ) => {
 
   const { user } = useCurrentUser();
   
@@ -92,7 +46,7 @@ const useRedirectToChat = ( ) => {
 
 }
 
- async function logout(auth : Auth){
+ export  const logout =  async(auth : Auth) => {
 
     await auth.signOut();
 
@@ -102,41 +56,19 @@ const useRedirectToChat = ( ) => {
    
 }
 
-function _checkForLocalStorage() {
-  if (!(typeof window !== "undefined" && window.localStorage)) return false;
-
-  return true;
-}
-
-function setAuthUser(user: object) {
+export const setAuthUser =  (user: object) =>  {
   if (!_checkForLocalStorage()) return;
 
   localStorage.setItem("user", JSON.stringify(user));
 }
 
-function removeAuthUser() {
+export const removeAuthUser = () => {
   if (!_checkForLocalStorage()) return;
 
   localStorage.removeItem("user");
 }
 
-// store online status in localstorage
-function setStoredOnlineStatus(status: boolean) {
-  if (!_checkForLocalStorage()) return;
-
-  localStorage.setItem("online", `${status}`);
-}
-
-function getStoredOnlineStatus() {
-  if (!_checkForLocalStorage()) return null;
-
-   const status  = localStorage.getItem("online");
-
-   return status ? JSON.parse(status) : null
-}
-
-
-function getCurrentUser() {
+export const getCurrentUser = () => {
   if (!_checkForLocalStorage()) return null;
 
   const user = localStorage.getItem("user");
@@ -146,14 +78,3 @@ function getCurrentUser() {
   return JSON.parse(user);
 }
 
-export {
-  useRedirectToChat,
-  useCurrentUser,
-  useUpdateToken,
-  getStoredOnlineStatus,
-  getCurrentUser,
-  setAuthUser,
-  setStoredOnlineStatus,
-  removeAuthUser,
-  logout,
-};
