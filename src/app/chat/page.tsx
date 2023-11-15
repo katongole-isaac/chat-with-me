@@ -9,7 +9,7 @@ import { toast } from "react-hot-toast";
 import "react-tooltip/dist/react-tooltip.css";
 
 import withAuth from "@/lib/auth/withAuth";
-import { getCurrentUser, useUpdateToken } from "@/helpers/user";
+import { getCurrentUser } from "@/helpers/user";
 import {
   type ChatMessage,
   type LoggedInUser,
@@ -56,7 +56,6 @@ const Chat = () => {
 
   const chatRef = useRef<HTMLDivElement>(null);
 
-  useUpdateToken({ onToken: setToken });
   const { connect } = useConnect({ onWss: setWss, wss });
 
   // used to go back
