@@ -4,7 +4,7 @@
  */
 
 import React from "react";
-import { MdOutlineCall } from "react-icons/md";
+import { IoCall } from "react-icons/io5";
 import { MdCallMissedOutgoing } from "react-icons/md";
 
 import CallListItem from "./callListItem";
@@ -18,7 +18,7 @@ const CallHistory = () => {
     </div>
   );
 
-  const icons = [MdOutlineCall];
+  const icons = [IoCall];
 
   return (
     <div className="px-3 py-4 flex flex-col gap-3 divide-y dark:divide-[#343434]">

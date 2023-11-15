@@ -4,13 +4,12 @@
  */
 "use client";
 
-import React, { startTransition, useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import "react-tooltip/dist/react-tooltip.css";
 
 import withAuth from "@/lib/auth/withAuth";
-import { genUserId } from "@/helpers/genUserId";
-import { getCurrentUser, logout, useUpdateToken } from "@/helpers/user";
+import { getCurrentUser, useUpdateToken } from "@/helpers/user";
 import {
   CommandTypes,
   type ChatMessage,
@@ -34,6 +33,7 @@ import {
   IShowComponent,
   ShowComponentLabel,
 } from "@/misc/types/renderComponent";
+import DefaultChat from "./defaultChat";
 
 registerServiceWorker();
 
@@ -45,14 +45,10 @@ const Chat = () => {
   const [timerId, setTimerId] = useState<NodeJS.Timeout | number | null>(null);
   const [reconnecting, setReconnecting] = useState<boolean>(false);
   const [reconnectToastId, setReconnectToastId] = useState<string>("");
-  const [showProfile, setShowProfile] = useState<boolean>(false);
   const [showContactDialog, setShowContactDialog] = useState(false);
-  const [rooms, setRooms] = useState([]);
   const [activeTab, setActiveTab] = useState("media");
-  const [modal, setModal] = useState<IModal>({
-    label: "",
-    open: false,
-  });
+  const [showChatPanel, setShowChatPanel] = useState(false);
+  const [modal, setModal] = useState<IModal>({ label: "", open: false });
   const [firstGridComponent, setFirstGridComponent] = useState<IShowComponent>({
     label: "",
     open: false,
@@ -64,6 +60,9 @@ const Chat = () => {
   const [token, setToken] = useState<string>(accessToken);
 
   const chatRef = useRef<HTMLDivElement>(null);
+
+  useUpdateToken({ onToken: setToken });
+  const { connect } = useConnect({ onWss: setWss, wss });
 
   // used to go back
   const handleBackClick = () => {
@@ -96,59 +95,25 @@ const Chat = () => {
   const handleCloseModal = () =>
     setModal((prev) => ({ label: "", open: false }));
 
-  useUpdateToken({ onToken: setToken });
-
-  // setting the token
-  const { connect } = useConnect({
-    onWss: setWss,
-    wss,
-  });
-
   // open event
   const handleWebsocketOnOpen = (ev: Event) => {
     // clear any timeout id created on reconnecting
+
+    console.log("connected");
+
     if (timerId) clearInterval(timerId);
 
     if (reconnecting) {
       setReconnecting(false);
       toast.dismiss(reconnectToastId);
     }
-
-    const queries: MessageFormat[] = [
-      {
-        type: CommandTypes.GET_ROOMS_INFO,
-        params: { uid: user.uid },
-      },
-      {
-        type: CommandTypes.LOGIN,
-      },
-    ];
-
-    queries.forEach((query) => wss!.send(JSON.stringify(query)));
   };
 
   // message event
   const handleWebsocketOnMessage = (ev: MessageEvent) => {
     const data = JSON.parse(ev.data) as MessageFormat;
 
-    switch (data.type) {
-      case CommandTypes.ERROR_ROOM:
-        toast.custom(<NotifyToast message={data.params?.message} ErrorIcon />);
-        break;
-
-      case CommandTypes.SUCCESS_ROOM:
-        toast.success(`${data.params?.message}`, {
-          position: "bottom-left",
-          duration: 5000,
-        });
-        break;
-      case CommandTypes.GET_ROOMS_INFO:
-        setRooms(data.params?.rooms);
-        break;
-
-      default:
-        console.log("Invalid message type", data);
-    }
+    
 
     setMessages((prev) => [...prev, ev.data]);
   };
@@ -175,13 +140,21 @@ const Chat = () => {
     if (!reconnecting) setReconnecting(true);
 
     timeout = setInterval(() => {
-      connect(); // reconnect;
+      // connect(); // reconnect;
     }, 1000);
 
     setTimerId(timeout);
   };
 
+  const handleKeyPress = (e:KeyboardEvent) => {
+    console.log(e.code)
+    if(e.key === 'Escape') setShowChatPanel(false);
+  }
+
   useEffect(() => {
+
+    window.addEventListener('keydown', handleKeyPress);
+
     if (wss) {
       console.log("rendering...");
 
@@ -196,6 +169,8 @@ const Chat = () => {
         wss.removeEventListener("message", handleWebsocketOnMessage);
         wss.removeEventListener("error", handleWebsocketOnError);
         wss.removeEventListener("close", handleWebsocketOnClose);
+      window.removeEventListener("keydown", handleKeyPress);
+
       };
     }
   }, [wss]);
@@ -206,8 +181,8 @@ const Chat = () => {
       <RenderModals modal={modal} onClose={handleCloseModal} />
 
       <div className="w-screen h-screen bg-zinc-200  dark:bg-[#111111] ">
-        <div className="py-8 w-full h-full flex justify-center items-center ">
-          <div className="max-w-[1200px] bg-[#fafafa] dark:bg-[#232323] h-full shadow-lg  m-auto border dark:border-[#232323] ">
+        <div className="py-0 w-full h-full flex justify-center items-center ">
+          <div className="max-w-[1500px] min-w-[1500px] bg-[#fafafa] dark:bg-[#232323] h-full shadow-lg  m-auto border dark:border-[#232323] ">
             <div className="grid grid-cols-[1.5fr_3fr] h-full">
               {/* fist grid */}
               <div className="w-full h-full max-h-full  min-w-0 min-h-0 relative">
@@ -217,11 +192,18 @@ const Chat = () => {
                   onOptionClick={handleOptionClick}
                   onProfileClick={handleProfileClick}
                   firstGridComponent={firstGridComponent}
+                  onShowChatPanel={setShowChatPanel}
                 />
               </div>
 
               {/* second grid */}
               <div className="border-l dark:border-[#343434] min-w-0 min-h-0 max-h-full relative ">
+               
+               {
+                !showChatPanel ? 
+
+                <DefaultChat />
+                :
                 <div className="h-full max-h-full flex flex-col">
                   {showContactDialog && (
                     <ContactInfo
@@ -240,7 +222,7 @@ const Chat = () => {
                    * Conversation
                    */}
                   <div className="w-full max-w-full flex-1 overflow-y-auto custom-scrollbar ">
-                    <Conversation ref={chatRef} messages={messages} />
+                      <Conversation ref={chatRef} messages={messages} />
                   </div>
 
                   {/* message Input */}
@@ -251,6 +233,8 @@ const Chat = () => {
                   {/* This element occupy the space for the message input because the message input is postion absolute  */}
                   <div className="basis-20"></div>
                 </div>
+
+                  }
               </div>
             </div>
           </div>

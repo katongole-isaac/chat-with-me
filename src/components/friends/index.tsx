@@ -4,14 +4,19 @@
  */
 
 import React, { useState } from "react";
-import { GrClose } from "react-icons/gr";
+import { BsChatLeft } from "react-icons/bs";
+import { VscChromeClose } from "react-icons/vsc";
 
 import Tabs from "../common/tabs";
 import Backdrop from "../common/backdrop";
 import { ITab } from "@/misc/types/tabs";
+import UserListItem from "../common/userListItem";
 
-const FriendExplore = ({ onClose }: {onClose : React.MouseEventHandler<HTMLButtonElement>}) => {
-
+const FriendExplore = ({
+  onClose,
+}: {
+  onClose: React.MouseEventHandler<HTMLButtonElement>;
+}) => {
   const [activeTab, setActiveTab] = useState("explore");
 
   const tabs: ITab[] = [
@@ -20,32 +25,54 @@ const FriendExplore = ({ onClose }: {onClose : React.MouseEventHandler<HTMLButto
     { id: 3, label: "Friend Requests" },
   ];
 
+  const FriendActionButton = () => <BsChatLeft role="button" size={20} />;
+
+  const RequestActionBtn = () => (
+    <div className="">
+      <button className="text-blue-600 text-[12px] font-semibold">
+        Accept Request
+      </button>
+    </div>
+  );
+
   const renderActiveTab = () => {
     switch (activeTab.toLowerCase().trim()) {
       case "friends":
-        return <> "Friends" </>;
+        return <UserListItem action={<FriendActionButton />} />;
 
       case "friend requests":
-        return <> Friends Request </>;
+        return <UserListItem action={<RequestActionBtn />} />;
 
       default:
-        return <>"Explore"</>;
+        return <UserListItem action={<RequestActionBtn />} />;
     }
   };
 
   return (
     <Backdrop>
-      <div className="bg-white w-1/2 p-4 relative -top-40 rounded-md">
+      <div className="bg-white flex flex-col  dark:bg-neutral-800 w-[30%] min-h-[650px] h-[650px] max-h-[650px] p-4 relative  rounded-md">
         {/* close */}
-        <div className="py-2 flex w-full justify-end">
-          <GrClose size={20} onClick={onClose} className="dark:text-gray-800" role="button" />
+        <div className="">
+          <div className="py-2 flex w-full justify-end">
+            <VscChromeClose
+              size={20}
+              onClick={onClose}
+              className="dark:text-white"
+              role="button"
+            />
+          </div>
+
+          <Tabs
+            tabs={tabs}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            classes="dark:text-gray-200"
+          />
         </div>
-       
-        <Tabs tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
 
         {/* content of the active tab */}
-        <div className="dark:text-gray-800">
-          <div className="py-4">{renderActiveTab()}</div>
+        <div className="dark:text-gray-200 flex-1 overflow-y-auto custom-scrollbar p-2 ">
+          {renderActiveTab()}
         </div>
       </div>
     </Backdrop>

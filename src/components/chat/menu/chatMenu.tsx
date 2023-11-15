@@ -3,10 +3,10 @@
  *
  */
 
-import { MdOutlineCall } from "react-icons/md";
+import { IoCall } from "react-icons/io5";
+import { FaUserFriends } from "react-icons/fa";
 import React, { useContext, useState } from "react";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import { LiaUserFriendsSolid } from "react-icons/lia";
+import { SlOptionsVertical } from "react-icons/sl";
 
 import Avatar from "../../user/avatar";
 import MenuOptions from "./menuOptions";
@@ -15,6 +15,7 @@ import type { LoggedInUser } from "@/misc/types";
 import { ChatMenuProps } from "@/misc/types/chat";
 import { IPopupOptions } from "@/misc/types/popupOptions";
 import { IModalLabel } from "@/misc/types/modals";
+
 
 const ChatMenu = ({
   onProfileClick,
@@ -33,6 +34,7 @@ const ChatMenu = ({
   };
 
   const { photoURL, displayName } = user?.providerData[0];
+  const iconSize = 20;
 
   return (
     <div className="w-full bg-[#fafafa] dark:bg-[#232323] p-2">
@@ -45,17 +47,17 @@ const ChatMenu = ({
             imageClassName="max-w-[50px]"
           />
         </div>
-        <div className="flex items-center text-slate-800 dark:text-[#fafafac7] justify-center gap-3 ">
+        <div className="flex items-center  text-slate-800 dark:text-[#fafafac7] justify-center gap-4 ">
           {/* friends icon */}
-          <LiaUserFriendsSolid
-            size={20}
+          <FaUserFriends
+            size={iconSize}
             className="right-1"
             role="button"
             onClick={() => handleShowModal("friends")}
           />
 
-          <MdOutlineCall
-            size={18}
+          <IoCall
+            size={iconSize}
             role="button"
             onClick={(e: React.MouseEvent<HTMLElement>) =>
               onCallClick ? onCallClick(e) : null
@@ -63,12 +65,13 @@ const ChatMenu = ({
           />
           <div className="relative">
             <div
-              className={`rounded-full w-5 h-5 transition duration-300 ${
+              //  w-5 h-5
+              className={`rounded-full transition duration-300 ${
                 showMenu.isOpen ? " bg-zinc-200 dark:bg-[#525252ad] " : ""
               } flex items-center justify-center`}
             >
-              <BsThreeDotsVertical
-                size={20}
+              <SlOptionsVertical
+                size={iconSize}
                 role="button"
                 className="text-slate-800 dark:text-[#fafafac7]"
                 onClick={() =>

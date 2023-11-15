@@ -6,7 +6,11 @@ import React, { useState } from "react";
 
 import ChatList from "./chatList";
 
-export default function ChatLists() {
+interface Props {
+  onShowChatPanel: React.Dispatch<boolean>;
+}
+
+export default function ChatLists({onShowChatPanel}: Props) {
   const [activeChat, setActiveChat] = useState(0);
 
   const chats = Array(10).fill(null);
@@ -19,6 +23,7 @@ export default function ChatLists() {
           activeChat={activeChat}
           index={idx}
           onActiveChat={setActiveChat}
+          onShowChatPanel={onShowChatPanel}
         />
       ))}
     </div>

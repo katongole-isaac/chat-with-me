@@ -5,12 +5,12 @@
 
 import React from 'react'
 import CallListItem from './callListItem'
-import { MdOutlineCall } from "react-icons/md";
-import { VscDeviceCameraVideo } from "react-icons/vsc";
+import { IoCall } from "react-icons/io5";
+import { FaVideo } from "react-icons/fa";
 
 const Calls = () => {
 
- const icons = [MdOutlineCall, VscDeviceCameraVideo]
+ const icons = [IoCall, FaVideo];
     
   return (
     <div className="px-3 py-4">

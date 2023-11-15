@@ -23,6 +23,7 @@ interface FirstGridProps extends ChatsProps {
   onBackClick: any;
   onShowModals: React.Dispatch<React.SetStateAction<IModal>>;
   firstGridComponent: IShowComponent;
+  onShowChatPanel: React.Dispatch<boolean>
 }
 
 const FirstGridComponent = ({
@@ -31,6 +32,7 @@ const FirstGridComponent = ({
   onProfileClick,
   firstGridComponent,
   onShowModals,
+  onShowChatPanel
 }: FirstGridProps) => {
   switch (firstGridComponent.label.toLowerCase().trim()) {
     case "settings":
@@ -69,6 +71,7 @@ const FirstGridComponent = ({
           onOptionClick={onOptionClick}
           onProfileClick={onProfileClick}
           onShowModals={onShowModals}
+          onShowChatPanel={onShowChatPanel}
         />
       );
   }

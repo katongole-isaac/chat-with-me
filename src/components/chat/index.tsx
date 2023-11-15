@@ -15,9 +15,9 @@ import CallHistory from "../calls/callHistory";
 
 type ActiveComponentOptions = "calls" | "call_history" | "";
 
-const Chats = ({ onOptionClick, onProfileClick, onShowModals }: ChatsProps) => {
+const Chats = ({ onOptionClick, onProfileClick, onShowModals, onShowChatPanel }: ChatsProps) => {
   const [activeComponent, setActiveComponent] =
-    useState<ActiveComponentOptions>("calls");
+    useState<ActiveComponentOptions>("");
 
   const handleCallClick = (e: React.MouseEvent<HTMLElement>) => {
     setActiveComponent((prev) => (prev !== "calls" ? "calls" : ""));
@@ -32,7 +32,7 @@ const Chats = ({ onOptionClick, onProfileClick, onShowModals }: ChatsProps) => {
         return <CallHistory />;
 
       default:
-        return <ChatLists />;
+        return <ChatLists onShowChatPanel={onShowChatPanel} />;
     }
   };
 

@@ -10,23 +10,29 @@ import Avatar from "../user/avatar";
 import { UserContext } from "@/app/chat/page";
 import { type LoggedInUser } from "@/misc/types";
 
-type ChatProps = {
+interface ChatProps  {
   activeChat: number;
   index: number;
   onActiveChat: React.Dispatch<number>;
+  onShowChatPanel: React.Dispatch<boolean>
 };
 
-export default function Chat({ activeChat, index, onActiveChat }: ChatProps) {
+export default function Chat({ activeChat, index, onActiveChat, onShowChatPanel }: ChatProps) {
   const { user, wss } = useContext(UserContext) as LoggedInUser;
 
   const { photoURL, displayName } = user?.providerData[0];
 
   const label =
     "Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident unde maiores laboriosam similique, nobis edark:text-gray-300xercitationem praesentium enim architecto aperiam rerum?";
+  const handleClick = (index: number) => {
+    onShowChatPanel(true);
+    onActiveChat(index);
+  };
+
   return (
     <div
       role="button"
-      onClick={() => onActiveChat(index)}
+      onClick={() => handleClick(index)}
       className={` ${
         activeChat === index ? "bg-neutral-200   dark:bg-[#343434]" : ""
       } w-full px-2 py-3 cursor-pointer hover:bg-zinc-100 dark:hover:dark:bg-[#343434]`}

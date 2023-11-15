@@ -3,6 +3,7 @@
  * Types and interface related to chats
  * 
 */
+import React from "react";
 import { IModal } from "./modals";
 
 export interface ChatMenuProps {
@@ -12,4 +13,7 @@ export interface ChatMenuProps {
   onCallClick?: React.MouseEventHandler<HTMLElement>;
 };
 
-export interface ChatsProps extends ChatMenuProps {}
+export interface ChatsProps extends ChatMenuProps {
+  onShowChatPanel: React.Dispatch<boolean>
+
+}

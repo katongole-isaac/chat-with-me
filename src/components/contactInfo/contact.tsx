@@ -2,15 +2,14 @@
  * Friend Contact info display
  *
  */
-import { MdOutlineCall } from "react-icons/md";
-import { MdBlockFlipped } from "react-icons/md";
+import { IoCall } from "react-icons/io5";
+import { FaVideo } from "react-icons/fa";
+import { MdBlock } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { VscDeviceCameraVideo } from "react-icons/vsc";
 import React, { SetStateAction, useRef, useState } from "react";
 
 import TopHeader from "./topHeader";
 import IconButton from "./iconButton";
-import useClickOutside from "@/helpers/useOutClick";
 import Avatar from "../user/avatar";
 import Tabs from "../common/tabs";
 import MediaLink from "./media/mediaLink";
@@ -79,7 +78,7 @@ const ContactInfo = ({
 
   const buttons = [
     {
-      icon: MdBlockFlipped,
+      icon: MdBlock,
       label: "Block",
     },
     {
@@ -162,7 +161,7 @@ const ContactInfo = ({
         </div>
 
         {/* media content based on the active tab */}
-        <div className="w-full  min-h-[10%]  py-2 max-h-[50%] overflow-y-auto custom-scrollbar">
+        <div className="w-full  min-h-[50%]  py-2 max-h-[50%] overflow-y-auto custom-scrollbar">
           {/* No content div */}
 
           {/* <div className="w-full py-6 flex justify-center items-center">
@@ -204,8 +203,8 @@ const InfoSection = () => {
       />
       <span className="text-gray-800 dark:text-gray-300"> User Name </span>
       <div className="flex gap-10 text-gray-500 dark:text-gray-300 ">
-        <MdOutlineCall size={25} role="button" />
-        <VscDeviceCameraVideo size={25} role="button" />
+        <IoCall size={25} role="button" />
+        <FaVideo size={25} role="button" />
       </div>
     </div>
   );
