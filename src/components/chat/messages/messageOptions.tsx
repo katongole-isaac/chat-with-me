@@ -7,8 +7,7 @@ import React, { useContext } from "react";
 
 import { MessageOptionContext } from "../message";
 import PopupOptions from "../../common/popupOptions";
-import { IPopupOptionsContext } from "@/misc/types/popupOptions";
-import { MessageOptionsProps } from "../../../misc/types/messageOptions";
+import { MessageOptionsProps, IPopupOptionsContext } from "@/misc/types";
 
 const MessageOptions = ({id, classes}: MessageOptionsProps) => {
 

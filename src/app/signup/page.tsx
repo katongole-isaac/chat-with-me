@@ -9,12 +9,12 @@ import * as yup from "yup";
 import Link from "next/link";
 import { Formik, Form } from "formik";
 import { useRouter } from "next/navigation";
-import { toast, Toaster } from "react-hot-toast";
-import React, { useEffect, useState } from "react";
-import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import {  Toaster } from "react-hot-toast";
+import React, { useState } from "react";
+import {  getAuth } from "firebase/auth";
 
 import firebaseApp from "@/lib/firebaseApp";
-import { getCurrentUser, setAuthUser, useRedirectToChat } from "@/helpers/user";
+import { useRedirectToChat } from "@/helpers/user";
 import config from "@/config/defaults.json";
 
 import Input from "@/components/common/input";
@@ -35,10 +35,7 @@ export default function Login() {
   // don't show signup page
   useRedirectToChat();
 
-  const initialValues = {
-    email: "",
-    password: "",
-  };
+  const initialValues = { email: "", password: "" };
 
   const validationSchema = yup.object({
     email: yup

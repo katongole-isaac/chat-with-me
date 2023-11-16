@@ -11,12 +11,10 @@ import "react-tooltip/dist/react-tooltip.css";
 import withAuth from "@/lib/auth/withAuth";
 import { getCurrentUser, useUpdateToken } from "@/helpers/user";
 import {
-  CommandTypes,
   type ChatMessage,
   type LoggedInUser,
   type MessageFormat,
 } from "@/misc/types";
-import { IModal } from "@/misc/types/modals";
 import useConnect from "@/helpers/useConnect";
 import RenderModals from "@/components/modals";
 import NotifyToast from "@/components/toasts/notify";
@@ -29,10 +27,7 @@ import LostConnectivity from "@/components/lostConnectivity";
 import DefaultToaster from "@/components/toasts/toasterSetting";
 import InfinityToast from "@/components/toasts/reconnectToast";
 import FirstGridComponent from "@/components/firstGridComponent";
-import {
-  IShowComponent,
-  ShowComponentLabel,
-} from "@/misc/types/renderComponent";
+import {IShowComponent, ShowComponentLabel, IModal } from '@/misc/types'
 import DefaultChat from "./defaultChat";
 
 registerServiceWorker();

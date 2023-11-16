@@ -3,7 +3,7 @@
  *
  */
 
-import { IModal } from "@/misc/types/modals";
+import { IModal } from "@/misc/types";
 import { KeyboardShortcuts, ThemeSwitch } from "../settings";
 import FriendExplore from "../friends";
 

@@ -10,7 +10,7 @@ import Calls from "../calls";
 import ChatLists from "./chatLists";
 import ChatMenu from "./menu/chatMenu";
 import Search from "@/components/common/search";
-import { ChatsProps } from "@/misc/types/chat";
+import { ChatsProps } from "@/misc/types";
 import CallHistory from "../calls/callHistory";
 
 type ActiveComponentOptions = "calls" | "call_history" | "";

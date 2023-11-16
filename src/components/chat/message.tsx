@@ -14,7 +14,7 @@ import {
   TextMsg,
 } from "./messageTypes";
 
-import { IPopupOptionsContext, IPopupOptions } from "@/misc/types/popupOptions";
+import { IPopupOptionsContext, IPopupOptions } from "@/misc/types";
 
 export const MessageOptionContext =
   React.createContext<IPopupOptionsContext | null>(null);

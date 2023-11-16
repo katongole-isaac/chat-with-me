@@ -15,9 +15,7 @@ import Settings, {
 import Group from "./groups";
 import Chats from "./chat";
 import Profile from "./user/profile";
-import { IModal } from "@/misc/types/modals";
-import { ChatsProps } from "@/misc/types/chat";
-import { IShowComponent } from "@/misc/types/renderComponent";
+import { IShowComponent, ChatsProps, IModal } from "@/misc/types";
 
 interface FirstGridProps extends ChatsProps {
   onBackClick: any;

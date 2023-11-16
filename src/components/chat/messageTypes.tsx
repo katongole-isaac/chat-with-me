@@ -10,7 +10,7 @@ import { AiOutlineLink } from "react-icons/ai";
 
 import GameImage from "@/assets/images/games.png";
 import { MessageOptionContext } from "./message";
-import { IPopupOptionsContext } from "@/misc/types/popupOptions";
+import { IPopupOptionsContext } from "@/misc/types";
 import MessageOptions from "./messages/messageOptions";
 import { OptionsIcon } from "./messages/optionsIcon";
 
