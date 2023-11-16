@@ -18,7 +18,6 @@
 
 #message-input[contenteditable="true"]:empty:before {
       content: attr(data-placeholder);
-      color: #ccc; /* Placeholder text color */
       cursor: text;
     }
 
