@@ -3,7 +3,7 @@
  *
  */
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { useState } from "react";
 import { IoSendSharp } from "react-icons/io5";
 import EmojiPicker from "./emojiPicker";
@@ -17,43 +17,34 @@ interface MsgProps {
 const MessageInput = ({ onSubmit, chatDivRef }: MsgProps) => {
 
   const [message, setMessage] = useState("");
+  const [textOffset, setTextOffset] = useState<undefined|number>(undefined);
   const msgInputRef = useRef<HTMLDivElement>(null);
-  const placeholder = "Type your message here...";
+  const placeholder = "Type your message here";
 
   const [readyToSend, setReadyToSend] = useState(false);
 
+  const handleInputChange = (e:React.FormEvent<HTMLDivElement>) => {
+   
+    const range = window.getSelection()!.getRangeAt(0);
+    setTextOffset(range.startOffset);
 
-  const handleKeyPress = (e: KeyboardEvent) => {
-    // on press Enter key
-    if (
-      e.code === "Enter" &&
-      readyToSend &&
-      !(e.shiftKey && e.code === "Enter")
-    ) {
-      e.preventDefault();
-      onSubmit(message.trim());
-      // msgInputRef.current!.value = "";
-      setMessage("");
-      setReadyToSend(false);
+    const currentText = e.currentTarget.innerText;
+    setMessage(currentText);
+   
+  }
 
-      return;
-    }
+  const moveCaretPosition = () => {
+    if(!textOffset) return;
+    const newRange = document.createRange();
+    newRange.setStart(msgInputRef.current?.firstChild!, textOffset);
+    const selection = window.getSelection()!;
+    selection.removeAllRanges();
+    selection.addRange(newRange);
+  }
 
-    // if shiftkey + enterKey is pressed and
-    // the active element is the message input,
-    // increase the height of the message input
-    if (
-      e.shiftKey &&
-      e.code === "Enter" &&
-      document.activeElement === msgInputRef.current
-    )
-      // msgInputRef.current!.rows += 1;
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if(e.key === 'Enter' && !e.shiftKey) e.preventDefault();
 
-    // there are multi line without text, clear them and reset to rows =2
-    // if (e.code === "Enter" && !message && msgInputRef.current!.rows > 2) {
-      e.preventDefault();
-      // msgInputRef.current!.rows = 2;
-    // }
   };
 
   const handleSendClick = (msg: string) => {
@@ -74,13 +65,15 @@ const MessageInput = ({ onSubmit, chatDivRef }: MsgProps) => {
   }
 
   useEffect(() => {
-    document.addEventListener("keypress", handleKeyPress);
+    document.addEventListener("keydown", handleKeyDown);
     
     return () => {
-      document.removeEventListener("keypress", handleKeyPress);
+      document.removeEventListener("keydown", handleKeyDown);
 
     };
   });
+
+  useLayoutEffect(()=> { moveCaretPosition(); });
 
 
 
@@ -89,23 +82,25 @@ const MessageInput = ({ onSubmit, chatDivRef }: MsgProps) => {
       <div className="w-full flex items-center justify-center gap-4">
         <ChatActions />
         <div className="flex w-full items-center gap-2 px-3 bg-neutral-100 dark:bg-[#343434] rounded-md ">
-            {/* emoji picker */}
-            <div className="self-end pb-3 ">
-            <EmojiPicker onEmojiSelect={setMessage}  />
-            </div>
+          {/* emoji picker */}
+          <div className="self-end pb-3 ">
+            <EmojiPicker onEmojiSelect={setMessage} />
+          </div>
 
           <div className="w-full  flex-1 h-full max-h-28 overflow-y-auto custom-scrollbar ">
-           
             {/* message input */}
             <div
-              className="w-full min-h-[2.5em] max-h-[7.4em] py-2 px-2 placeholder:text-gray-500 focus:outline-none"
+              className="w-full min-h-[2.5em] max-h-[7.4em] py-2 px-2 text-gray-800 dark:text-gray-200 [&[data-placeholder]]:before:text-gray-500  dark:[&[data-placeholder]]:before:text-zinc-400 focus:outline-none whitespace-pre-wrap break-words"
               placeholder="write a message"
+              onInput={handleInputChange}
               title="Type a message"
               id="message-input"
+              dir="ltr"
               onPaste={handlePaste}
               ref={msgInputRef}
               data-placeholder={placeholder}
               spellCheck
+              suppressContentEditableWarning
               contentEditable
             >
               {message}
