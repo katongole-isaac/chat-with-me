@@ -30,9 +30,7 @@ export default function EmojiPicker({ onEmojiSelect }: EmojiPickerProps) {
           <Picker
             data={data}
             previewPosition="none"
-            onEmojiSelect={(emoji: any) =>
-              onEmojiSelect((prev: string) => prev + emoji?.native)
-            }
+            onEmojiSelect={(emoji: any) => onEmojiSelect((prev: string) => prev + emoji?.native) }
             theme="light"
             onClickOutside={() => setShowPicker((prev) => !prev)}
           />
