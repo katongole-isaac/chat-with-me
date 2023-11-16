@@ -136,9 +136,9 @@ export interface IPopupOptionsContext {
   onShowPopUpOptions: React.Dispatch<SetStateAction<IPopupOptions>>;
 }
 
+// Interface used in toggling specific component to be rendered at a given time.
 // ====================
 // Render/Show Component 
-// * Interface used in toggling specific component to be rendered at a given time.
 // ====================
 export interface IShowComponent {
   label: ShowComponentLabel;
@@ -158,9 +158,9 @@ export type ShowComponentLabel =
   | "group";
 
 
+// use for modals that appear in the settings panel
 // ====================
 // Settings
-// use for modals that appear in the settings panel
 // ====================
   export type ISettingModalLabel = "keyboard_shortcuts" | "theme" | "";
 
