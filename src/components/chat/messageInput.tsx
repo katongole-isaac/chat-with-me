@@ -26,25 +26,45 @@ const MessageInput = ({ onSubmit, chatDivRef }: MsgProps) => {
   const handleInputChange = (e:React.FormEvent<HTMLDivElement>) => {
    
     const range = window.getSelection()!.getRangeAt(0);
+    
     setTextOffset(range.startOffset);
-
+    
     const currentText = e.currentTarget.innerText;
     setMessage(currentText);
    
   }
 
   const moveCaretPosition = () => {
-    if(!textOffset) return;
-    const newRange = document.createRange();
-    newRange.setStart(msgInputRef.current?.firstChild!, textOffset);
+    if (!textOffset) return;
+
     const selection = window.getSelection()!;
+    const range = selection.getRangeAt(0);
+
+    range.setStart(msgInputRef.current?.firstChild!, textOffset);
+
     selection.removeAllRanges();
-    selection.addRange(newRange);
-  }
+    selection.addRange(range);
+  };
 
   const handleKeyDown = (e: KeyboardEvent) => {
     if(e.key === 'Enter' && !e.shiftKey) e.preventDefault();
 
+    //
+    if(e.key === 'Enter' && e.shiftKey) {
+      e.preventDefault();
+
+      const selection = window.getSelection()!;
+      const range = document.createRange();
+
+      range.selectNode(msgInputRef.current?.firstChild!);
+
+      const br = document.createElement("br");
+      range.insertNode(br);
+
+      // setTextOffset(range.startOffset);
+
+    } 
+    
   };
 
   const handleSendClick = (msg: string) => {
@@ -65,15 +85,17 @@ const MessageInput = ({ onSubmit, chatDivRef }: MsgProps) => {
   }
 
   useEffect(() => {
-    document.addEventListener("keydown", handleKeyDown);
+
+    msgInputRef.current!.addEventListener("keydown", handleKeyDown);
     
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
+      msgInputRef.current &&
+      msgInputRef.current.removeEventListener("keydown", handleKeyDown);
 
     };
   });
 
-  useLayoutEffect(()=> { moveCaretPosition(); });
+  useLayoutEffect(()=> {   moveCaretPosition();  });
 
 
 

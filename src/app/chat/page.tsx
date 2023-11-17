@@ -141,7 +141,6 @@ const Chat = () => {
   };
 
   const handleKeyPress = (e:KeyboardEvent) => {
-    console.log(e.code)
     if(e.key === 'Escape') setShowChatPanel(false);
   }
 
