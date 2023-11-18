@@ -2,48 +2,49 @@
  * Used to connect to websocket
  *
  */
-import { toast } from "react-hot-toast";
+
 import { useEffect, useState } from "react";
 
 import config from "@/config/defaults.json";
-import NotifyToast from "@/components/toasts/notify";
-import { getCurrentUser, logout } from "./user";
-import { firebaseAuth } from "@/lib/firebaseApp";
+import checkTokenExpiryAndRenew from "./checkTokenExpiry";
 
-type ConnectParams = {
+interface ConnectParams {
   onWss: Function;
   wss: WebSocket | null;
 };
 
-const useConnect = ({ wss, onWss, }: ConnectParams) => {
+const useConnect =  ({ wss, onWss }: ConnectParams) => {
+
+  const [token, setToken] = useState("");
   
+  const waitForToken = async() => {
+    
+    const _token =  await checkTokenExpiryAndRenew();
+    if(_token)  setToken(_token as string);
 
- const user  = getCurrentUser();
-
- const {accessToken: _token} = user.stsTokenManager;
+  }
 
   // connect func - is used in the onclose websocket handler
   // to reconnect to the server
-  const connect = () => {
+  const connect = async() => {
 
+    const _token = await checkTokenExpiryAndRenew();
+    if (_token) setToken(_token as string);
     // if we have the token and the websocket is closed or null
     // try to connect
-    if (!((wss === null || (wss && wss.readyState === WebSocket.CLOSED)) && _token))
-      return;
-
-    onWss(new WebSocket(`${config.websocketUrl}/?token=${_token}`, ["json"]));
-
+    if ((wss === null || (wss && wss.readyState === WebSocket.CLOSED)) && _token)
+      onWss(new WebSocket(`${config.websocketUrl}/?token=${_token}`, ["json"]));
 
   };
 
   useEffect(() => {
 
-    if (!wss && _token) connect();
+    if(!token) waitForToken();
+    if (!wss && token) connect();
 
-  }, [_token, wss]);
+  }, [token, wss]);
 
   return { connect };
 };
 
 export default useConnect;
-

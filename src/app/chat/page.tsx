@@ -37,7 +37,6 @@ export const UserContext = React.createContext<LoggedInUser | null>(null);
 const Chat = () => {
   const [wss, setWss] = useState<WebSocket | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [timerId, setTimerId] = useState<NodeJS.Timeout | number | null>(null);
   const [reconnecting, setReconnecting] = useState<boolean>(false);
   const [reconnectToastId, setReconnectToastId] = useState<string>("");
   const [showContactDialog, setShowContactDialog] = useState(false);
@@ -51,12 +50,12 @@ const Chat = () => {
   });
 
   const user = getCurrentUser();
-  const { accessToken } = user?.stsTokenManager;
-  const [token, setToken] = useState<string>(accessToken);
+  
+  // const [token, setToken] = useState<string>(checkTokenExpiryAndRenew()!);
 
   const chatRef = useRef<HTMLDivElement>(null);
 
-  const { connect } = useConnect({ onWss: setWss, wss });
+  const { connect } =  useConnect({ onWss: setWss, wss });
 
   // used to go back
   const handleBackClick = () => {
@@ -91,23 +90,19 @@ const Chat = () => {
 
   // open event
   const handleWebsocketOnOpen = (ev: Event) => {
-    // clear any timeout id created on reconnecting
 
-    console.log("connected");
-
-    if (timerId) clearInterval(timerId);
-
-    if (reconnecting) {
+      console.log("connected");
+      
       setReconnecting(false);
       toast.dismiss(reconnectToastId);
-    }
+    
+
+
   };
 
   // message event
   const handleWebsocketOnMessage = (ev: MessageEvent) => {
     const data = JSON.parse(ev.data) as MessageFormat;
-
-    
 
     setMessages((prev) => [...prev, ev.data]);
   };
@@ -125,32 +120,39 @@ const Chat = () => {
   };
 
   const handleWebsocketOnClose = (ev: CloseEvent) => {
-    console.log("socket closed");
-    let timeout;
+    console.log("socket closed: ", reconnecting);
 
-    // reseting reconnecting state
     setReconnecting(true);
 
-    if (!reconnecting) setReconnecting(true);
-
-    timeout = setInterval(() => {
-      // connect(); // reconnect;
-    }, 1000);
-
-    setTimerId(timeout);
   };
 
   const handleKeyPress = (e:KeyboardEvent) => {
     if(e.key === 'Escape') setShowChatPanel(false);
   }
 
+  useEffect(()=> {
+
+    let id : NodeJS.Timeout;
+
+    if(reconnecting && wss) {
+
+       id = setInterval(() => {  
+         connect(); // reconnect;   
+        }, 3000);
+
+    } 
+
+    return () => clearInterval(id);
+
+  }, [wss, reconnecting]);
+
   useEffect(() => {
 
     window.addEventListener('keydown', handleKeyPress);
 
     if (wss) {
-      console.log("rendering...");
 
+      
       wss.addEventListener("open", handleWebsocketOnOpen);
       wss.addEventListener("message", handleWebsocketOnMessage);
       wss.addEventListener("error", handleWebsocketOnError);
