@@ -19,7 +19,6 @@ import MessageInput from "@/components/chat/messageInput";
 import Conversation from "@/components/chat/conversation";
 import ContactInfo from "@/components/contactInfo/contact";
 import registerServiceWorker from "@/registerServiceWorker";
-import LostConnectivity from "@/components/lostConnectivity";
 import DefaultToaster from "@/components/toasts/toasterSetting";
 import InfinityToast from "@/components/toasts/reconnectToast";
 import FirstGridComponent from "@/components/firstGridComponent";
@@ -122,7 +121,7 @@ const Chat = () => {
 
   const handleWebsocketOnClose = (ev: CloseEvent) => {
     console.log("socket closed: ", reconnecting);
-    
+
     setReadyState(wss?.readyState as ReadyState);
     setReconnecting(true);
   };

@@ -28,7 +28,7 @@ const Avatar = ({
     <div
       role="button"
       onClick={() => (!!onProfileClick ? onProfileClick() : null)}
-      className="w-max h-max  flex justify-center items-center rounded-full overflow-hidden p-0"
+      className="w-max h-max  flex justify-center items-center rounded-full overflow-hidden p-0 relative"
     >
       {photoURL !== null && !!photoURL ? (
         <div className={`  ${imageClassName ? imageClassName :"max-w-[50px]" }`}>
@@ -46,6 +46,7 @@ const Avatar = ({
           className={`text-slate-400 bg-gradient-to-t from-cyan cursor-pointer ${avatarClassName}`}
         />
       )}
+    
     </div>
   );
 };

@@ -9,9 +9,11 @@ import { AiOutlineHistory } from "react-icons/ai";
 import Calls from "../calls";
 import ChatLists from "./chatLists";
 import ChatMenu from "./menu/chatMenu";
-import Search from "@/components/common/search";
 import { ChatsProps } from "@/misc/types";
 import CallHistory from "../calls/callHistory";
+import Search from "@/components/common/search";
+import LostConnectivity from "@/components/lostConnectivity";
+
 
 type ActiveComponentOptions = "calls" | "call_history" | "";
 
@@ -70,6 +72,10 @@ const Chats = ({ onOptionClick, onProfileClick, onShowModals, onShowChatPanel }:
           </div>
         </div>
       </div>
+
+
+        
+          <LostConnectivity />
 
       <div className="w-full flex-1 h-full overflow-y-auto  custom-scrollbar ">
         {renderActiveComponent()}

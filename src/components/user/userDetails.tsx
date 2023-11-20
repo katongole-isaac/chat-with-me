@@ -11,9 +11,9 @@ import { LoggedInUser } from "@/misc/types";
 import { UserContext } from "@/app/chat/page";
 import { Form, Formik } from "formik";
 import Input from "../common/input";
+import OnlineStatus from "./onlineStatus";
 
 export default function UserDetails() {
-
   const { user } = useContext(UserContext) as LoggedInUser;
 
   const aboutWordLimit = 200;
@@ -29,21 +29,26 @@ export default function UserDetails() {
     about: yup.string(),
   });
 
-  const handleSubmit = (values:Record<string, string>) => {
+  const handleSubmit = (values: Record<string, string>) => {
     console.log(values);
-  };  
+  };
 
   const darkModeInputClasses =
     "dark:bg-[#343434]  dark:text-gray-300  dark:border-[#343434]  dark:focus:outline-none ";
   return (
     <div className="w-full ">
-      <div className="w-full flex p-3 pb-4 items-center justify-center">
-        <Avatar
-          displayName={displayName}
-          photoURL={photoURL}
-          avatarSize={100}
-          imageClassName="max-w-[90px]"
-        />
+      <div className="w-full flex p-3 pb-4 items-center justify-center ">
+        <div className="w-max h-max relative ">
+          <Avatar
+            displayName={displayName}
+            photoURL={photoURL}
+            avatarSize={100}
+            imageClassName="max-w-[90px]"
+          />
+          <div className={`absolute ${photoURL ? "bottom-2 right-2" : "bottom-3 right-4 "} `}>
+            <OnlineStatus />
+          </div>
+        </div>
       </div>
 
       <div className="flex flex-col px-3 gap-2 ">
@@ -68,7 +73,7 @@ export default function UserDetails() {
               <div className="flex gap-2  mt-2 items-center text-[13px]">
                 {/* <FaInfo className="text-gray-800 font-semibold" /> */}
                 <span className="text-gray-600 dark:text-gray-400">
-                  This name is visible to you friends{" "}
+                  This name will be visible to your friends
                 </span>
               </div>
             </div>
@@ -104,5 +109,3 @@ export default function UserDetails() {
     </div>
   );
 }
-
-
