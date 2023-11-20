@@ -8,15 +8,11 @@ import React, { useRef, useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import "react-tooltip/dist/react-tooltip.css";
 
+import DefaultChat from "./defaultChat";
 import withAuth from "@/lib/auth/withAuth";
-import { getCurrentUser } from "@/helpers/user";
-import {
-  type ChatMessage,
-  type LoggedInUser,
-  type MessageFormat,
-} from "@/misc/types";
 import useConnect from "@/helpers/useConnect";
 import RenderModals from "@/components/modals";
+import { getCurrentUser } from "@/helpers/user";
 import NotifyToast from "@/components/toasts/notify";
 import ChatTopBar from "@/components/chat/chatTopBar";
 import MessageInput from "@/components/chat/messageInput";
@@ -27,15 +23,25 @@ import LostConnectivity from "@/components/lostConnectivity";
 import DefaultToaster from "@/components/toasts/toasterSetting";
 import InfinityToast from "@/components/toasts/reconnectToast";
 import FirstGridComponent from "@/components/firstGridComponent";
-import {IShowComponent, ShowComponentLabel, IModal } from '@/misc/types'
-import DefaultChat from "./defaultChat";
+import {
+  IShowComponent,
+  ShowComponentLabel,
+  IModal,
+  IWebSocket,
+  ChatMessage,
+  LoggedInUser,
+  MessageFormat,
+  ReadyState,
+} from "@/misc/types";
 
 registerServiceWorker();
 
 export const UserContext = React.createContext<LoggedInUser | null>(null);
+export const WebSocketContext = React.createContext<IWebSocket | null >(null);
 
 const Chat = () => {
   const [wss, setWss] = useState<WebSocket | null>(null);
+  const [readyState, setReadyState ] = useState<ReadyState>(0);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [reconnecting, setReconnecting] = useState<boolean>(false);
   const [reconnectToastId, setReconnectToastId] = useState<string>("");
@@ -51,11 +57,9 @@ const Chat = () => {
 
   const user = getCurrentUser();
   
-  // const [token, setToken] = useState<string>(checkTokenExpiryAndRenew()!);
-
   const chatRef = useRef<HTMLDivElement>(null);
 
-  const { connect } =  useConnect({ onWss: setWss, wss });
+  const { connect } = useConnect({ onWss: setWss, wss });
 
   // used to go back
   const handleBackClick = () => {
@@ -90,14 +94,11 @@ const Chat = () => {
 
   // open event
   const handleWebsocketOnOpen = (ev: Event) => {
+    console.log("connected, status: ", wss?.readyState);
 
-      console.log("connected");
-      
-      setReconnecting(false);
-      toast.dismiss(reconnectToastId);
-    
-
-
+    setReconnecting(false);
+    setReadyState(wss?.readyState as ReadyState);
+    toast.dismiss(reconnectToastId);
   };
 
   // message event
@@ -121,57 +122,50 @@ const Chat = () => {
 
   const handleWebsocketOnClose = (ev: CloseEvent) => {
     console.log("socket closed: ", reconnecting);
-
+    
+    setReadyState(wss?.readyState as ReadyState);
     setReconnecting(true);
-
   };
 
-  const handleKeyPress = (e:KeyboardEvent) => {
-    if(e.key === 'Escape') setShowChatPanel(false);
-  }
+  const handleKeyPress = (e: KeyboardEvent) => {
+    if (e.key === "Escape") setShowChatPanel(false);
+  };
 
-  useEffect(()=> {
+  useEffect(() => {
+    let id: NodeJS.Timeout;
 
-    let id : NodeJS.Timeout;
-
-    if(reconnecting && wss) {
-
-       id = setInterval(() => {  
-         connect(); // reconnect;   
-        }, 3000);
-
-    } 
+    if (reconnecting && wss) {
+      id = setInterval(() => {
+        connect(); // reconnect;
+      }, 3000);
+    }
 
     return () => clearInterval(id);
-
   }, [wss, reconnecting]);
 
   useEffect(() => {
-
-    window.addEventListener('keydown', handleKeyPress);
+    window.addEventListener("keydown", handleKeyPress);
 
     if (wss) {
-
-      
       wss.addEventListener("open", handleWebsocketOnOpen);
       wss.addEventListener("message", handleWebsocketOnMessage);
       wss.addEventListener("error", handleWebsocketOnError);
       wss.addEventListener("close", handleWebsocketOnClose);
-
-      // unsubcribe to events
-      return () => {
-        wss.removeEventListener("open", handleWebsocketOnOpen);
-        wss.removeEventListener("message", handleWebsocketOnMessage);
-        wss.removeEventListener("error", handleWebsocketOnError);
-        wss.removeEventListener("close", handleWebsocketOnClose);
-      window.removeEventListener("keydown", handleKeyPress);
-
-      };
     }
+    // unsubcribe to events
+    return () => {
+      wss?.removeEventListener("open", handleWebsocketOnOpen);
+      wss?.removeEventListener("message", handleWebsocketOnMessage);
+      wss?.removeEventListener("error", handleWebsocketOnError);
+      wss?.removeEventListener("close", handleWebsocketOnClose);
+      window.removeEventListener("keydown", handleKeyPress);
+    };
   }, [wss]);
 
   return (
-    <UserContext.Provider value={{ user, wss }}>
+    <UserContext.Provider value={{ user }}>
+
+      <WebSocketContext.Provider value={{ readyState, wss }}> 
       {/* modals */}
       <RenderModals modal={modal} onClose={handleCloseModal} />
 
@@ -244,6 +238,8 @@ const Chat = () => {
         />
       )}
       <DefaultToaster />
+
+      </WebSocketContext.Provider>
     </UserContext.Provider>
   );
 };

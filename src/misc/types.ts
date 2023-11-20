@@ -44,12 +44,20 @@ export interface MessageFormat {
 // User
 // ====================
 export interface LoggedInUser {
-  [index: string]: any;
-  wss?: WebSocket | null;
   user: {
     [index: string]: any;
   };
 }
+
+// ====================
+// Websocket
+// ====================
+export type ReadyState = 0 | 1 | 2 | 3 ;
+export interface IWebSocket {
+  wss?: WebSocket | null;
+  readyState : ReadyState
+}
+
 
 // ====================
 // Modals 
