@@ -5,7 +5,6 @@
 
 import React, { useRef } from "react";
 
-import useClickOutside from "@/helpers/useOutClick";
 
 type BackdropProps = {
   children?: React.ReactNode;

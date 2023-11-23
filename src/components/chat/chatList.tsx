@@ -18,7 +18,7 @@ interface ChatProps  {
 };
 
 export default function Chat({ activeChat, index, onActiveChat, onShowChatPanel }: ChatProps) {
-  const { user, wss } = useContext(UserContext) as LoggedInUser;
+  const { user } = useContext(UserContext) as LoggedInUser;
 
   const { photoURL, displayName } = user?.providerData[0];
 

@@ -3,7 +3,7 @@
  *
  */
 
-import { TabsProps, TabProps } from "@/misc/types/tabs";
+import { TabsProps, TabProps } from "@/misc/types";
 
 export default function Tabs({ tabs, activeTab, setActiveTab, classes }: TabsProps) {
   return (

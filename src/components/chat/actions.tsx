@@ -5,8 +5,8 @@ import { BiImage } from "react-icons/bi";
 import { IoClose } from "react-icons/io5";
 import { HiOutlineDocument } from "react-icons/hi";
 
-import { useShowHideModal } from "@/helpers/useShowHideModal";
-import useClickOutside from "@/helpers/useOutClick";
+import { useShowHideModal } from "@/hooks/useShowHideModal";
+import useClickOutside from "@/hooks/useOutClick";
 
 const iconSize = 24;
 const actionButtons = [

@@ -7,7 +7,7 @@ import React from "react";
 import { useRouter } from 'next/navigation';
 
 import PopupOptions from "@/components/common/popupOptions";
-import { IOption, IPopupOptions } from "@/misc/types/popupOptions";
+import { IOption, IPopupOptions } from "@/misc/types";
 import authService from "@/services/authService";
 
 interface IMenuOptions {

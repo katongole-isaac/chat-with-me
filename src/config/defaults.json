@@ -1,6 +1,5 @@
 {
   "websocketUrl": "ws://localhost:3001/chat",
   "onSuccessRouteUrl": "/chat",
-  "serverAuthenticateURL": "/auth",
-  "serverBaseURL": "http://localhost:3001"
+  "apiEndpoint": "http://localhost:3001" 
 }

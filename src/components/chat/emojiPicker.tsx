@@ -7,7 +7,7 @@ import React from "react";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { FaRegFaceSmile } from "react-icons/fa6";
-import { useShowHideModal } from "@/helpers/useShowHideModal";
+import { useShowHideModal } from "@/hooks/useShowHideModal";
 
 interface EmojiPickerProps {
   onEmojiSelect: React.Dispatch<(arg: string) => string | string>;

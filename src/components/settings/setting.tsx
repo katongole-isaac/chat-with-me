@@ -15,9 +15,12 @@ import { MdOutlineSecurity as PrivacyIcon } from "react-icons/md";
 import Avatar from "../user/avatar";
 import GeneralLayout from "../common/generalLayout";
 import GeneralListItem from "../common/generalListItem";
-import { GeneralListItemProps } from "@/misc/types/generalLayout";
-import { IModalLabel } from "@/misc/types/modals";
-import { ISettings } from "@/misc/types/settings";
+import {
+  GeneralListItemProps,
+  IModalLabel,
+  ISettings,
+} from "@/misc/types";
+
 
 
 const Settings = ({

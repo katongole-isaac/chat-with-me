@@ -6,7 +6,7 @@
 import React from "react";
 import { BiArrowBack } from "react-icons/bi";
 
-import { GeneralLayoutProps } from "@/misc/types/generalLayout";
+import { GeneralLayoutProps } from "@/misc/types";
 
 const GeneralLayout = ({
   children,

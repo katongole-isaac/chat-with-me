@@ -11,10 +11,8 @@ import { SlOptionsVertical } from "react-icons/sl";
 import Avatar from "../../user/avatar";
 import MenuOptions from "./menuOptions";
 import { UserContext } from "@/app/chat/page";
-import type { LoggedInUser } from "@/misc/types";
-import { ChatMenuProps } from "@/misc/types/chat";
-import { IPopupOptions } from "@/misc/types/popupOptions";
-import { IModalLabel } from "@/misc/types/modals";
+import { ChatMenuProps, IPopupOptions, IModalLabel, type LoggedInUser } from "@/misc/types";
+
 
 
 const ChatMenu = ({
@@ -23,7 +21,7 @@ const ChatMenu = ({
   onCallClick,
   onShowModals,
 }: ChatMenuProps) => {
-  const { user, wss } = useContext(UserContext) as LoggedInUser;
+  const { user } = useContext(UserContext) as LoggedInUser;
   const [showMenu, setShowMenu] = useState<IPopupOptions>({
     id: "",
     isOpen: false,

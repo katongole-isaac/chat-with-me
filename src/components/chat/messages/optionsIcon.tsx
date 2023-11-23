@@ -5,7 +5,7 @@
 
 import { PiCaretDown } from "react-icons/pi";
 
-import { OptionsIconProps } from "@/misc/types/popupOptions";
+import { OptionsIconProps } from "@/misc/types";
 
 export const OptionsIcon = ({incoming, id , onShowOptions }: OptionsIconProps) => {
 

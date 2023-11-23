@@ -2,7 +2,7 @@
  * This is used to display menu individual item in component such as Settings
  */
 
-import { GeneralListItemProps } from "@/misc/types/generalLayout";
+import { GeneralListItemProps } from "@/misc/types";
 
 const GeneralListItem = ({
   leftIcon,

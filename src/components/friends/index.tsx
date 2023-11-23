@@ -3,14 +3,15 @@
  *
  */
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BsChatLeft } from "react-icons/bs";
 import { VscChromeClose } from "react-icons/vsc";
 
 import Tabs from "../common/tabs";
 import Backdrop from "../common/backdrop";
-import { ITab } from "@/misc/types/tabs";
+import { ITab } from "@/misc/types";
 import UserListItem from "../common/userListItem";
+import apiClient from "@/services/apiClient";
 
 const FriendExplore = ({
   onClose,
@@ -18,6 +19,7 @@ const FriendExplore = ({
   onClose: React.MouseEventHandler<HTMLButtonElement>;
 }) => {
   const [activeTab, setActiveTab] = useState("explore");
+  const [ res, setRes ] = useState([]);
 
   const tabs: ITab[] = [
     { id: 1, label: "Explore" },
@@ -33,7 +35,32 @@ const FriendExplore = ({
         Accept Request
       </button>
     </div>
+
   );
+
+  
+  useEffect(()=>{
+
+    const controller = new AbortController();
+
+    const getFriends = async () => {
+      try{
+
+        const res = await apiClient.get('/users', { signal : controller.signal });
+        console.log('Res: ', res);
+
+      }catch(err){
+
+      }
+    }
+
+    getFriends();
+
+    return () => controller.abort();
+    
+    
+  }, [])
+
 
   const renderActiveTab = () => {
     switch (activeTab.toLowerCase().trim()) {

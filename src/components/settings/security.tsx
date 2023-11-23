@@ -13,7 +13,7 @@ import { IoLocationOutline  as LocationIcon} from "react-icons/io5";
 
 import GeneralLayout from "../common/generalLayout";
 import GeneralListItem from "../common/generalListItem";
-import { GeneralListItemProps } from "@/misc/types/generalLayout";
+import { GeneralListItemProps } from "@/misc/types";
 
 interface ISecurityProps {
   onBackClick: any;

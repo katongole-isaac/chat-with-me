@@ -10,7 +10,7 @@ import "react-tooltip/dist/react-tooltip.css";
 
 import DefaultChat from "./defaultChat";
 import withAuth from "@/lib/auth/withAuth";
-import useConnect from "@/helpers/useConnect";
+import useConnect from "@/hooks/useConnect";
 import RenderModals from "@/components/modals";
 import { getCurrentUser } from "@/helpers/user";
 import NotifyToast from "@/components/toasts/notify";

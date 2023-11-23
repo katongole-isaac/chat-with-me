@@ -7,7 +7,7 @@ import React from "react";
 import { HiOutlineClipboardDocumentList } from "react-icons/hi2";
 
 import GeneralLayout from "../common/generalLayout";
-import { GeneralListItemProps } from "@/misc/types/generalLayout";
+import { GeneralListItemProps } from "@/misc/types";
 
 import GeneralListItem from "../common/generalListItem";
 

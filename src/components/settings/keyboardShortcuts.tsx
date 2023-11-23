@@ -7,7 +7,7 @@ import React from "react";
 
 import Backdrop from "../common/backdrop";
 import keyboardShortcuts from "@/data/keyboardShortcuts";
-import { IShortCut } from "@/misc/types/keyboardShortcut";
+import { IShortCut } from "@/misc/types";
 
 interface KeyboardShortcutsProps {
   onClickOk: React.MouseEventHandler<HTMLButtonElement>;

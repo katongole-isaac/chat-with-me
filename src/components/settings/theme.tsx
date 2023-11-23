@@ -3,10 +3,10 @@
  *
  */
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 import Backdrop from "../common/backdrop";
-import { Theme } from "@/misc/types/theme";
+import { Theme } from "@/misc/types";
 import RadioButton from "../common/radioButton";
 import { useTheme } from "next-themes";
 

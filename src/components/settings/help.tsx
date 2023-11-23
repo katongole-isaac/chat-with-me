@@ -5,7 +5,7 @@
 
 import React from "react";
 import GeneralLayout from "../common/generalLayout";
-import { GeneralListItemProps } from "@/misc/types/generalLayout";
+import { GeneralListItemProps } from "@/misc/types";
 import {  IoFingerPrint } from "react-icons/io5";
 
 import GeneralListItem from "../common/generalListItem";
